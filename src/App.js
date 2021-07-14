@@ -1,4 +1,5 @@
 import bnr1 from "./images/collection/home12-category-bnr1.jpg";
+import bnr2 from "./images/collection/home12-category-bnr2.jpg";
 import bnr3 from "./images/collection/home12-category-bnr3.jpg";
 
 import SearchFormDrawer from "./components/SearchFormDrawer";
@@ -23,7 +24,6 @@ function App() {
       <Header />
       <MobileMenu />
 
-      {/*Body Content*/}
       <div id="page-content">
         <HomeSlider />
         <FeatureContent_ImgLeft
@@ -32,7 +32,12 @@ function App() {
           subTitle="Cover up in style with Hot Jackets now only $50"
           btnText="SHOP $50 Jackets"
         />
-        <FeatureContent_ImgRight />
+        <FeatureContent_ImgRight
+          img={bnr2}
+          title="Shoes Collection"
+          subTitle="Shoes we can't stop wearing!"
+          btnText="Shop Now"
+        />
         <HomeProductSlider />
 
         <FeatureContent_ImgLeft
@@ -47,7 +52,7 @@ function App() {
       <Footer />
       <ScrollTop />
       <QuickViewPopup />
-      <NewsletterPopup />  
+      <NewsletterPopup />
     </div>
   );
 }

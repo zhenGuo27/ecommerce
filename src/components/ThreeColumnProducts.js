@@ -6,6 +6,45 @@ import product_H5 from "../images/product-images/home7-product5.jpg";
 import product_H6 from "../images/product-images/home7-product6.jpg";
 
 const ThreeColumnProducts = (props) => {
+  const products = [
+    {
+      id: "clothing-1",
+      title: "Clothing-1 product",
+      img: product_H1,
+      price: 173.6,
+    },
+    {
+      id: "clothing-2",
+      title: "Clothing-2 product",
+      img: product_H2,
+      price: 378.0,
+    },
+    {
+      id: "clothing-3",
+      title: "Clothing-3 product",
+      img: product_H3,
+      price: 278.6,
+    },
+    {
+      id: "clothing-4",
+      title: "Clothing-4 product",
+      img: product_H4,
+      price: 173.6,
+    },
+    {
+      id: "clothing-5",
+      title: "Clothing-5 product",
+      img: product_H5,
+      price: 378.0,
+    },
+    {
+      id: "clothing-6",
+      title: "Clothing-6 product",
+      img: product_H6,
+      price: 278.6,
+    },
+  ];
+
   return (
     <div className="section three-column-pro">
       <div className="container">

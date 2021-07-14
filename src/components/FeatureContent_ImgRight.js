@@ -1,6 +1,4 @@
-import bnr2 from "../images/collection/home12-category-bnr2.jpg";
-
-const FeatureContent_ImgRight = () => {
+const FeatureContent_ImgRight = (props) => {
   return (
     <div className="section feature-content">
       <div className="container">
@@ -8,20 +6,20 @@ const FeatureContent_ImgRight = () => {
           <div className="feature-row">
             <div className="col-12 col-sm-12 col-md-6 feature-row__item feature-row__text feature-row__text--right text-right">
               <div className="row-text">
-                <h2 className="h2">Shoes Collection</h2>
-                <p>Shoes we can't stop wearing!</p>
+                <h2 className="h2">{props.title}</h2>
+                <p>{props.subTitle}</p>
                 <a href="#" className="btn">
-                  Shop Now
+                  {props.btnText}
                 </a>
               </div>
             </div>
             <div className="col-12 col-sm-12 col-md-6 feature-row__item text-center">
               <img
                 className=""
-                data-src={bnr2}
-                src={bnr2}
-                alt="Shoes Collection"
-                title="Shoes Collection"
+                data-src={props.img}
+                src={props.img}
+                alt={props.title}
+                title={props.title}
               />
             </div>
           </div>

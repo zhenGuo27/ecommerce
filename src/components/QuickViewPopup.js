@@ -1,3 +1,4 @@
+import 'bootstrap';
 import cameliaReversibleBig1 from "../images/product-detail-page/camelia-reversible-big1.jpg";
 
 const QuickViewPopup = (props) => {
