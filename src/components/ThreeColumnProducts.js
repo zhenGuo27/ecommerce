@@ -45,6 +45,41 @@ const ThreeColumnProducts = (props) => {
     },
   ];
 
+  const ProductsByIndex = (props) => {
+    const filterData = props.data
+      .filter((item, index) => {
+        return index >= props.inintIndex;
+      })
+      .slice(0, 3);
+
+    return filterData.map((item) => (
+      <div className="grid__item">
+        <div className="mini-list-item">
+          <div className="mini-view_image">
+            <a className="grid-view-item__link" href="#">
+              <img
+                className="grid-view-item__image "
+                data-src={item.img}
+                src={item.img}
+                alt=""
+              />
+            </a>
+          </div>
+          <div className="details">
+            <a className="grid-view-item__title" href="#">
+              {item.title}
+            </a>
+            <div className="grid-view-item__meta">
+              <span className="product-price__price">
+                <span className="money">${item.price}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="section three-column-pro">
       <div className="container">
@@ -54,83 +89,7 @@ const ThreeColumnProducts = (props) => {
               <h2 className="h2">Most Popular</h2>
             </div>
             <div className="grid">
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H1}
-                        src={product_H1}
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Camoscio Zip Heel
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$173.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H2}
-                        src={product_H2}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Camoscio Heel
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$378.00</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H3}
-                        src={product_H3}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Aqualina Sandal
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$278.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProductsByIndex data={products} inintIndex={0} />
             </div>
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-4">
@@ -138,80 +97,7 @@ const ThreeColumnProducts = (props) => {
               <h2 className="h2">Weekly Top Seller</h2>
             </div>
             <div className="grid">
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image"
-                        src={product_H4}
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      White Sneaker
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$173.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        src={product_H5}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Suede Loafers - Black/Blue
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$378.00</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        src={product_H6}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Stiro Oxford in Slate
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$278.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProductsByIndex data={products} inintIndex={3} />
             </div>
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-4">
@@ -219,83 +105,7 @@ const ThreeColumnProducts = (props) => {
               <h2 className="h2">Flash Sale</h2>
             </div>
             <div className="grid">
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H1}
-                        src={product_H1}
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Camoscio Zip Heel
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$173.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H2}
-                        src={product_H2}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Camoscio Heel
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$378.00</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid__item">
-                <div className="mini-list-item">
-                  <div className="mini-view_image">
-                    {" "}
-                    <a className="grid-view-item__link" href="#">
-                      <img
-                        className="grid-view-item__image "
-                        data-src={product_H3}
-                        src={product_H3}
-                        alt=""
-                      />
-                    </a>{" "}
-                  </div>
-                  <div className="details">
-                    {" "}
-                    <a className="grid-view-item__title" href="#">
-                      Aqualina Sandal
-                    </a>
-                    <div className="grid-view-item__meta">
-                      <span className="product-price__price">
-                        <span className="money">$278.60</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProductsByIndex data={products} inintIndex={0} />
             </div>
           </div>
         </div>

@@ -1,8 +1,312 @@
 import 'bootstrap';
+import { Fragment } from "react";
 import cameliaReversibleBig1 from "../images/product-detail-page/camelia-reversible-big1.jpg";
+import product7 from "../images/product-images/product-image7.jpg";
+import product7_1 from "../images/product-images/product-image7-1.jpg";
+import prodcutImg_red from "../images/product-detail-page/variant1-1.jpg";
+import prodcutImg_green from "../images/product-detail-page/variant1-3.jpg";
+import prodcutImg_gray from "../images/product-detail-page/variant1-4.jpg";
+
 
 const QuickViewPopup = (props) => {
+  const selectedColor = "Red";
+  const selectedSize = "XS";
+
+  const product =   {
+    id: "clothing-1",
+    title: "Clothing-2 product",
+    desc: "Belle is a minimalist modern eCommerce Html Template that will give you and your customers a smooth shopping experience which can be used for various kinds of stores such as fashion,...",
+    tagId: 1,
+    startDate: "2021-07-14",
+    rate: 1,
+  };
+
+  const productImg = {
+    productId: "clothing-1",
+    largeImg: [
+      {
+        src: product7,
+        homeSlider: true,
+        homeSliderHover: false,
+        skuId: null
+      },
+      {
+        src: product7_1,
+        homeSlider: true,
+        homeSliderHover: true,
+        skuId: null
+      },
+    ],
+    smallImg: [
+      {
+        src: prodcutImg_red,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 1,       
+      },
+      {
+        src: prodcutImg_red,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 2,       
+      },
+      {
+        src: prodcutImg_red,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 3,       
+      },
+      {
+        src: prodcutImg_red,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 4,       
+      },
+      {
+        src: prodcutImg_green,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 5,       
+      },
+      {
+        src: prodcutImg_green,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 6,       
+      },
+      {
+        src: prodcutImg_green,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 7,       
+      },
+      {
+        src: prodcutImg_green,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 8,       
+      },
+      {
+        src: prodcutImg_gray,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 9,       
+      },
+      {
+        src: prodcutImg_gray,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 10,       
+      },
+      {
+        src: prodcutImg_gray,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 11,       
+      },
+      {
+        src: prodcutImg_gray,
+        homeSlider: false,
+        homeSliderHover: false,
+        skuId: 12,       
+      } 
+    ]
+  };
+
+  const product_sku = [
+    {
+      id: 1,
+      productId: "clothing-1",
+      color: "Red",
+      size: "XS",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 2,
+      productId: "clothing-1",
+      color: "Red",
+      size: "S",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 3,
+      productId: "clothing-1",
+      color: "Red",
+      size: "M",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 4,
+      productId: "clothing-1",
+      color: "Red",
+      size: "L",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 5,
+      productId: "clothing-1",
+      color: "Green",
+      size: "XS",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 6,
+      productId: "clothing-1",
+      color: "Green",
+      size: "S",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 7,
+      productId: "clothing-1",
+      color: "Green",
+      size: "M",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 8,
+      productId: "clothing-1",
+      color: "Green",
+      size: "L",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 9,
+      productId: "clothing-1",
+      color: "Gray",
+      size: "XS",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 10,
+      productId: "clothing-1",
+      color: "Gray",
+      size: "S",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 11,
+      productId: "clothing-1",
+      color: "Gray",
+      size: "M",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+    {
+      id: 12,
+      productId: "clothing-1",
+      color: "Gray",
+      size: "L",
+      originalPrice: 280.68,
+      discount: 0.8,
+      stock: 100,
+    },
+  ];
+
   const inputOnChangeHandler = () => {};
+
+  let price;
+  const currentSku =  product_sku.filter(
+    (item) => item.color === selectedColor && item.size === selectedSize
+  )[0];
+
+  if(currentSku.discount === 0) {
+    price = <Fragment>
+              <span className="visually-hidden">Regular price</span>
+              <s id="ComparePrice-product-template">
+                <span className="money">${currentSku.originalPrice}</span>
+              </s>
+            </Fragment>;
+  }
+
+  if(currentSku.discount !== 0) {
+    price = <Fragment>
+              <span className="visually-hidden">Regular price</span>
+              <s id="ComparePrice-product-template">
+                <span className="money">${currentSku.originalPrice}</span>
+              </s>
+              <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
+                <span id="ProductPrice-product-template">                 
+                  <span className="money">${(currentSku.originalPrice * currentSku.discount).toFixed(2)}</span>
+                </span>
+              </span>
+            </Fragment>;
+  }
+
+  const productColors = [...new Set(product_sku.map(item => item.color))];
+
+  const ColorItem = (props) => {
+    const available = (props.available) ? "available" : "";
+    const classes = ` swatch-element color ${props.value.toString().toLowerCase()} ${available}`;
+    const sku = product_sku.filter((item)=> item.color === props.value);
+    const img = productImg.smallImg.filter((item)=> item.skuId === sku[0].id)[0].src;
+
+    return (
+      <div data-value={props.value} className={classes}>
+        <input
+          className="swatchInput"
+          id={`swatch-0-${props.value.toLowerCase()}`}
+          type="radio"
+          name="option-0"
+          value={props.value}
+          onChange={inputOnChangeHandler}
+        />
+        <label
+          className="swatchLbl color medium rectangle"
+          htmlFor={`swatch-0-${props.value.toString().toLowerCase()}`}
+          style={{
+            backgroundImage: "url(" + img + ")",
+          }}
+          title={props.value}
+        ></label>
+      </div>
+    );
+  };
+
+  const productSize = [...new Set(product_sku.map(item => item.size))]; 
+
+  const SizeItem = (props) => {
+    return (
+      <div data-value={props.value} className="swatch-element xs available">
+        <input
+          className="swatchInput"
+          id={`swatch-1-${props.value.toLowerCase()}`}
+          type="radio"
+          name="option-1"
+          value={props.value}
+          onChange={inputOnChangeHandler}
+        />
+        <label
+          className="swatchLbl medium rectangle"
+          htmlFor={`swatch-1-${props.value.toLowerCase()}`}
+          title={props.value}
+        >
+          {props.value}
+        </label>
+      </div>
+    );
+  };
 
   return (
     <div className="modal fade quick-view-popup" id="content_quickview">
@@ -35,34 +339,22 @@ const QuickViewPopup = (props) => {
                   <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div className="product-single__meta">
                       <h2 className="product-single__title">
-                        Product Quick View Popup
+                        {product.title}
                       </h2>
                       <div className="prInfoRow">
                         <div className="product-stock">
-                          {" "}
-                          <span className="instock ">In Stock</span>{" "}
-                          <span className="outstock hide">Unavailable</span>{" "}
+                          {product.stock !== 0 && <span className="instock ">In Stock</span>}
+                          {product.stock === 0 && <span className="outstock hide">Unavailable</span>}
                         </div>
                         <div className="product-sku">
-                          SKU: <span className="variant-sku">19115-rdxs</span>
+                          SKU: <span className="variant-sku">{product.id}</span>
                         </div>
                       </div>
-                      <p className="product-single__price product-single__price-product-template">
-                        <span className="visually-hidden">Regular price</span>
-                        <s id="ComparePrice-product-template">
-                          <span className="money">$600.00</span>
-                        </s>
-                        <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
-                          <span id="ProductPrice-product-template">
-                            <span className="money">$500.00</span>
-                          </span>
-                        </span>
+                      <p className="product-single__price product-single__price-product-template">                     
+                        {price}
                       </p>
                       <div className="product-single__description rte">
-                        Belle is a minimalist modern eCommerce Html Template
-                        that will give you and your customers a smooth shopping
-                        experience which can be used for various kinds of stores
-                        such as fashion,...
+                        {product.desc}
                       </div>
 
                       <form
@@ -81,102 +373,11 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Color: <span className="slVariant">Red</span>
                             </label>
-                            <div
-                              data-value="Red"
-                              className="swatch-element color red available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-0-red"
-                                type="radio"
-                                name="option-0"
-                                value="Red"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl color medium rectangle"
-                                htmlFor="swatch-0-red"
-                                style={{
-                                  backgroundImage:
-                                    "url(" +
-                                    ".//assets/images/product-detail-page/variant1-1.jpg" +
-                                    ")",
-                                }}
-                                title="Red"
-                              ></label>
-                            </div>
-                            <div
-                              data-value="Blue"
-                              className="swatch-element color blue available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-0-blue"
-                                type="radio"
-                                name="option-0"
-                                value="Blue"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl color medium rectangle"
-                                htmlFor="swatch-0-blue"
-                                style={{
-                                  backgroundImage:
-                                    "url(" +
-                                    ".//assets/images/product-detail-page/variant1-2.jpg" +
-                                    ")",
-                                }}
-                                title="Blue"
-                              ></label>
-                            </div>
-                            <div
-                              data-value="Green"
-                              className="swatch-element color green available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-0-green"
-                                type="radio"
-                                name="option-0"
-                                value="Green"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl color medium rectangle"
-                                htmlFor="swatch-0-green"
-                                style={{
-                                  backgroundImage:
-                                    "url(" +
-                                    ".//assets/images/product-detail-page/variant1-3.jpg" +
-                                    ")",
-                                }}
-                                title="Green"
-                              ></label>
-                            </div>
-                            <div
-                              data-value="Gray"
-                              className="swatch-element color gray available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-0-gray"
-                                type="radio"
-                                name="option-0"
-                                value="Gray"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl color medium rectangle"
-                                htmlFor="swatch-0-gray"
-                                style={{
-                                  backgroundImage:
-                                    "url(" +
-                                    ".//assets/images/product-detail-page/variant1-4.jpg" +
-                                    ")",
-                                }}
-                                title="Gray"
-                              ></label>
-                            </div>
+                            {
+                              productColors.map((item)=> 
+                                <ColorItem key={item} value={item} available={true} />                              
+                              )
+                            }                                                    
                           </div>
                         </div>
                         <div
@@ -187,86 +388,7 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Size: <span className="slVariant">XS</span>
                             </label>
-                            <div
-                              data-value="XS"
-                              className="swatch-element xs available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-1-xs"
-                                type="radio"
-                                name="option-1"
-                                value="XS"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl medium rectangle"
-                                htmlFor="swatch-1-xs"
-                                title="XS"
-                              >
-                                XS
-                              </label>
-                            </div>
-                            <div
-                              data-value="S"
-                              className="swatch-element s available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-1-s"
-                                type="radio"
-                                name="option-1"
-                                value="S"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl medium rectangle"
-                                htmlFor="swatch-1-s"
-                                title="S"
-                              >
-                                S
-                              </label>
-                            </div>
-                            <div
-                              data-value="M"
-                              className="swatch-element m available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-1-m"
-                                type="radio"
-                                name="option-1"
-                                value="M"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl medium rectangle"
-                                htmlFor="swatch-1-m"
-                                title="M"
-                              >
-                                M
-                              </label>
-                            </div>
-                            <div
-                              data-value="L"
-                              className="swatch-element l available"
-                            >
-                              <input
-                                className="swatchInput"
-                                id="swatch-1-l"
-                                type="radio"
-                                name="option-1"
-                                value="L"
-                                onChange={inputOnChangeHandler}
-                              />
-                              <label
-                                className="swatchLbl medium rectangle"
-                                htmlFor="swatch-1-l"
-                                title="L"
-                              >
-                                L
-                              </label>
-                            </div>
+                            {productSize.map((item)=> <SizeItem key={item} value={item}/>)}                                                    
                           </div>
                         </div>
                         {/* Product Action */}
@@ -309,23 +431,6 @@ const QuickViewPopup = (props) => {
                         </div>
                         {/* End Product Action */}
                       </form>
-                      <div className="display-table shareRow">
-                        <div className="display-table-cell">
-                          <div className="wishlist-btn">
-                            <a
-                              className="wishlist add-to-wishlist"
-                              href="#"
-                              title="Add to Wishlist"
-                            >
-                              <i
-                                className="icon anm anm-heart-l"
-                                aria-hidden="true"
-                              ></i>{" "}
-                              <span>Add to Wishlist</span>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
