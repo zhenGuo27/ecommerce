@@ -6,7 +6,7 @@ import megamenuBg2 from "../images/megamenu-bg2.jpg";
 import capeDress1 from "../images/product-images/cape-dress-1.jpg";
 import capeDress2 from "../images/product-images/cape-dress-2.jpg";
 
-const Header = () => {
+const Header = (props) => {
   useEffect(() => {
     minicart_dropdown();
 
@@ -41,8 +41,11 @@ const Header = () => {
 
   const inputOnChangeHandler = () => {};
 
+  const headerType = (props.type === "Home") ? "classicHeader" : "";
+  const classes = `header-wrap ${headerType} animated d-flex`;
+
   return (
-    <div className="header-wrap classicHeader animated d-flex">
+    <div className={classes}>
       <div className="container-fluid">
         <div className="row align-items-center">
           {/*Desktop Logo*/}
