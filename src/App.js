@@ -9,6 +9,7 @@ import NewsletterPopup from "./components/NewsletterPopup";
 
 import Home from "./components/Home";
 import ProductList from "./components/ProductList";
+import Product from "./components/Product";
 
 function App() {
   const headerType = "ProductList";
@@ -21,8 +22,8 @@ function App() {
       <MobileMenu />
 
       <div id="page-content">
-        {/* <Home /> */}
-
+         {/* <Home /> */}
+         {/* <Product /> */}
         <ProductList />
       </div>
 

@@ -12,7 +12,8 @@ import bnr3 from "../images/collection/home12-category-bnr3.jpg";
 
 const Home = (props) => {
   useEffect(()=> {
-    document.body.classList.add('template-index home12-category');
+    document.body.classList.add('template-index');
+    document.body.classList.add('home12-category');
   }, []);
 
   return (
