@@ -14,12 +14,13 @@ import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
   const headerType = "ProductList";
 
   return (
-    <div classNameName="pageWrapper">
+    <div className="pageWrapper">
       <SearchFormDrawer />
       <TopHeader />
       <Header type={headerType}/>
@@ -28,8 +29,8 @@ function App() {
       <div id="page-content">
          {/* <Home /> */}
          {/* <Product /> */}
-        {/* <ProductList /> */}
-        <Register />
+        <ProductList />
+        {/* <ForgetPassword /> */}
       </div>
 
       <Footer />

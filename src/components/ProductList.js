@@ -2,18 +2,46 @@ import $ from "jquery";
 import 'jquery-ui-bundle';
 import 'jquery-ui-bundle/jquery-ui.min.css';
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { getProducts } from "./product-action";
 
 const ProductList = (props) => {
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  let categoryInit = false;
+  const priceMin = 12;
+  const priceMax = 300;
+
   useEffect(() => {
     document.body.classList.add("template-collection");
-    categories_level();
     price_slider();
     color_swacthes();
+
+    getCategories();
+    getProducts(setProducts).then((items) => {
+      setProducts(items);
+    });    
   }, []);
+
+  const inputOnchange = () => {};
+
+  const getCategories = async () => {
+    const response = await fetch("https://localhost:44396/Api/values/GetCategories");
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+
+    const data = await response.json();
+    const reqItems = JSON.parse(data.content);
+    const loadedItems = reqItems.slice();
+
+    setCategories(loadedItems);
+  };
 
   const categories_level = () => {
     $(".sidebar_categories .sub-level a").on("click", function () {
+      console.log("click");
       $(this).toggleClass("active");
       $(this).next(".sublinks").slideToggle("slow");
     });
@@ -22,19 +50,38 @@ const ProductList = (props) => {
   const price_slider = () => {
     $("#slider-range").slider({
       range: true,
-      min: 12,
-      max: 200,
+      min: priceMin,
+      max: priceMax,
       values: [0, 100],
       slide: function (event, ui) {
+        console.log("ui", ui.values);
         $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-      },
+      }
     });
-    $("#amount").val(
-      "$" +
-        $("#slider-range").slider("values", 0) +
-        " - $" +
-        $("#slider-range").slider("values", 1)
-    );
+
+    setPriceInput($("#slider-range").slider("values", 0), $("#slider-range").slider("values", 1));
+  };
+
+  const setPriceInput = (start, end) => {
+    $("#amount").val("$" + start + " - $" + end);
+  };
+
+  const priceFilterInputOnchange = (event) => {
+    const value = event.target.value;
+    if(!value) {
+      $("#slider-range").slider("values", [priceMin, priceMax]);
+      setPriceInput(priceMin, priceMax);
+      return;
+    }
+
+    const valueSplit = value.split("-");
+    let priceStart = parseInt(valueSplit[0].replace("$", "").trim(), 10);
+    let priceEnd = parseInt(valueSplit[1].replace("$", "").trim(), 10);
+    priceStart = priceStart < priceMin ? priceMin : priceStart;
+    priceEnd = priceEnd > priceMax ? priceMax : priceEnd;
+
+    $("#slider-range").slider("values", [priceStart, priceEnd]);
+    setPriceInput(priceStart, priceEnd);
   };
 
   const color_swacthes =()=> {
@@ -46,6 +93,46 @@ const ProductList = (props) => {
       });
     });
   }
+
+  const CategoryItem = (props)=> {
+    useEffect(() => {
+      if (!categoryInit) {
+        categoryInit = true;
+        categories_level();
+      }
+    }, []);
+
+    const subItems = (props.item.tags.length !==0) ? <ul className="sublinks">
+          {
+            props.item.tags.map((item)=> 
+              <CategorySubItem title={item.title}/>           
+            )
+          }
+    </ul> : null;
+
+    const classes = (props.item.tags.length !==0)?"level1 sub-level": "level1";
+
+    return (
+      <li className={classes}>
+        <a href="#" className="site-nav">
+          {props.item.title}
+        </a>
+        {subItems}       
+      </li>
+    )
+  };
+
+  const CategorySubItem =(props)=> {
+    return (
+      <li className="level2">
+      <a href="#" className="site-nav">
+        {props.title}
+      </a>
+    </li>
+    )
+  };
+
+  ///const productColors = [...new Set(products.map(item => item..color))];
 
   return (
     <Fragment>
@@ -85,70 +172,9 @@ const ProductList = (props) => {
                 </div>
                 <div className="widget-content">
                   <ul className="sidebar_categories">
-                    <li className="level1 sub-level">
-                      <a href="#;" className="site-nav">
-                        Clothing
-                      </a>
-                      <ul className="sublinks">
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Men
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Women
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Child
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            View All Clothing
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li className="level1 sub-level">
-                      <a href="#;" className="site-nav">
-                        Jewellery
-                      </a>
-                      <ul className="sublinks">
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Ring
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Neckalses
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            Eaarings
-                          </a>
-                        </li>
-                        <li className="level2">
-                          <a href="#;" className="site-nav">
-                            View All Jewellery
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li className="lvl-1">
-                      <a href="#;" className="site-nav">
-                        Shoes
-                      </a>
-                    </li>
-                    <li className="lvl-1">
-                      <a href="#;" className="site-nav">
-                        Collections
-                      </a>
-                    </li>
+                    {
+                      categories.map((item, index)=> <CategoryItem item={item} key={index}/>)
+                    }                              
                   </ul>
                 </div>
               </div>
@@ -166,17 +192,17 @@ const ProductList = (props) => {
                     <div className="ui-slider-range ui-widget-header ui-corner-all"></div>
                     <span
                       className="ui-slider-handle ui-state-default ui-corner-all"
-                      tabindex="0"
+                      tabIndex="0"
                     ></span>
                     <span
                       className="ui-slider-handle ui-state-default ui-corner-all"
-                      tabindex="0"
+                      tabIndex="0"
                     ></span>
                   </div>
                   <div className="row">
                     <div className="col-6">
                       <p className="no-margin">
-                        <input id="amount" type="text" />
+                        <input id="amount" type="text" onBlur={priceFilterInputOnchange} placeholder="$12 - $300"/>
                       </p>
                     </div>
                     <div className="col-6 text-right margin-25px-top">
@@ -446,15 +472,17 @@ const ProductList = (props) => {
                     </div>
                     <div className="col-4 col-md-4 col-lg-4 text-right">
                       <div className="filters-toolbar__item">
-                        <label for="SortBy" className="hidden">
+                        <label htmlFor="SortBy" className="hidden">
                           Sort
                         </label>
                         <select
                           name="SortBy"
                           id="SortBy"
                           className="filters-toolbar__input filters-toolbar__input--sort"
+                          value="title-ascending"
+                          onChange={inputOnchange}                         
                         >
-                          <option value="title-ascending" selected="selected">
+                          <option value="title-ascending">
                             Sort
                           </option>
                           <option>Best Selling</option>
@@ -469,6 +497,7 @@ const ProductList = (props) => {
                           className="collection-header__default-sort"
                           type="hidden"
                           value="manual"
+                          onChange={inputOnchange}
                         />
                       </div>
                     </div>
@@ -513,8 +542,7 @@ const ProductList = (props) => {
                       {/* Start product button */}
                       <form
                         className="variants add"
-                        action="#"
-                        onclick="window.location.href='cart.html'"
+                        action="#"                       
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -523,7 +551,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -608,7 +636,6 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -617,7 +644,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -705,7 +732,6 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -714,7 +740,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -803,7 +829,6 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -812,7 +837,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -902,7 +927,6 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -911,7 +935,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1000,7 +1024,6 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1009,7 +1032,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1093,7 +1116,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1102,7 +1125,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1186,7 +1209,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1195,7 +1218,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1284,7 +1307,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1293,7 +1316,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1377,7 +1400,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1386,7 +1409,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1470,7 +1493,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1479,7 +1502,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1563,7 +1586,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1572,7 +1595,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1656,7 +1679,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1665,7 +1688,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1749,7 +1772,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1758,7 +1781,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1842,7 +1865,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1851,7 +1874,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -1938,7 +1961,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -1947,7 +1970,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -2031,7 +2054,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -2040,7 +2063,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -2124,7 +2147,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -2133,7 +2156,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -2217,7 +2240,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -2226,7 +2249,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
@@ -2310,7 +2333,7 @@ const ProductList = (props) => {
                       <form
                         className="variants add"
                         action="#"
-                        onclick="window.location.href='cart.html'"
+                        
                         method="post"
                       >
                         <button className="btn btn-addto-cart" type="button">
@@ -2319,7 +2342,7 @@ const ProductList = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          href="javascript:void(0)"
+                          href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           data-toggle="modal"
