@@ -637,6 +637,7 @@ a.quick-view { margin-bottom:5px !important; }
 .filterBox .filter-color .darkRed { background-color:#8B0000; }
 .filterBox .filter-color .dimGrey { background-color:#696969; }
 .filterBox .filter-color .khaki { background-color:#F0E68C; }
+.filterBox .filter-color .aqua { background-color: #0fffff; }
 
 .sidebar .sidebar_widget.categories .sub-level { position:relative; }
 .sidebar .sidebar_widget.categories .sub-level > a:after { content:'\ebe0'; font-family:'annimex-icons'; display:inline-block; position:absolute; right:0; top:3px; }
