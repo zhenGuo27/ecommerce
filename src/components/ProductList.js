@@ -3,17 +3,19 @@ import "jquery-ui-bundle";
 import "jquery-ui-bundle/jquery-ui.min.css";
 
 import { Fragment, useEffect, useState } from "react";
+import PriceFilter from "./PriceFilter";
 import { getProducts } from "./product-action";
+import SizeSwatches from "./SizeSwatches";
+import ColorSwatches from "./ColorSwatches";
+import SidebarProducts from "./SidebarProducts";
+import SidebarCategories from "./SidebarCategories";
 
 const ProductList = (props) => {
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
+  const [productData, setProducts] = useState([]);
   const [productColors, setProductColors] = useState([]);
   const [productSizes, setProductSizes] = useState([]);
-
-  let categoryInit = false;
-  const priceMin = 12;
-  const priceMax = 300;
+  // let categoryInit = false;
 
   const getDistinctSizeAndColor = (data) => {
     let skus = [];
@@ -30,8 +32,6 @@ const ProductList = (props) => {
 
   useEffect(() => {
     document.body.classList.add("template-collection");
-    price_slider();
-    color_swacthes();
 
     getCategories();
     getProducts(setProducts).then((items) => {
@@ -60,103 +60,53 @@ const ProductList = (props) => {
     setCategories(loadedItems);
   };
 
-  const categories_level = () => {
-    $(".sidebar_categories .sub-level a").on("click", function () {
-      console.log("click");
-      $(this).toggleClass("active");
-      $(this).next(".sublinks").slideToggle("slow");
-    });
-  };
+  // const categories_level = () => {
+  //   $(".sidebar_categories .sub-level a").on("click", function () {
+  //     console.log("click");
+  //     $(this).toggleClass("active");
+  //     $(this).next(".sublinks").slideToggle("slow");
+  //   });
+  // };
 
-  const price_slider = () => {
-    $("#slider-range").slider({
-      range: true,
-      min: priceMin,
-      max: priceMax,
-      values: [0, 100],
-      slide: function (event, ui) {
-        console.log("ui", ui.values);
-        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-      },
-    });
+  // const CategoryItem = (props) => {
+  //   useEffect(() => {
+  //     if (!categoryInit) {
+  //       categoryInit = true;
+  //       categories_level();
+  //     }
+  //   }, []);
 
-    setPriceInput(
-      $("#slider-range").slider("values", 0),
-      $("#slider-range").slider("values", 1)
-    );
-  };
+  //   const subItems =
+  //     props.item.tags.length !== 0 ? (
+  //       <ul className="sublinks">
+  //         {props.item.tags.map((item) => (
+  //           <CategorySubItem title={item.title} key={item.id} />
+  //         ))}
+  //       </ul>
+  //     ) : null;
 
-  const setPriceInput = (start, end) => {
-    $("#amount").val("$" + start + " - $" + end);
-  };
+  //   const classes =
+  //     props.item.tags.length !== 0 ? "level1 sub-level" : "level1";
 
-  const priceFilterInputOnchange = (event) => {
-    const value = event.target.value;
-    if (!value) {
-      $("#slider-range").slider("values", [priceMin, priceMax]);
-      setPriceInput(priceMin, priceMax);
-      return;
-    }
+  //   return (
+  //     <li className={classes}>
+  //       <a href="#" className="site-nav">
+  //         {props.item.title}
+  //       </a>
+  //       {subItems}
+  //     </li>
+  //   );
+  // };
 
-    const valueSplit = value.split("-");
-    let priceStart = parseInt(valueSplit[0].replace("$", "").trim(), 10);
-    let priceEnd = parseInt(valueSplit[1].replace("$", "").trim(), 10);
-    priceStart = priceStart < priceMin ? priceMin : priceStart;
-    priceEnd = priceEnd > priceMax ? priceMax : priceEnd;
-
-    $("#slider-range").slider("values", [priceStart, priceEnd]);
-    setPriceInput(priceStart, priceEnd);
-  };
-
-  const color_swacthes = () => {
-    $.each($(".swacth-list"), function () {
-      var n = $(".swacth-btn");
-      n.on("click", function () {
-        $(this).parent().find(n).removeClass("checked");
-        $(this).addClass("checked");
-      });
-    });
-  };
-
-  const CategoryItem = (props) => {
-    useEffect(() => {
-      if (!categoryInit) {
-        categoryInit = true;
-        categories_level();
-      }
-    }, []);
-
-    const subItems =
-      props.item.tags.length !== 0 ? (
-        <ul className="sublinks">
-          {props.item.tags.map((item) => (
-            <CategorySubItem title={item.title} key={item.id} />
-          ))}
-        </ul>
-      ) : null;
-
-    const classes =
-      props.item.tags.length !== 0 ? "level1 sub-level" : "level1";
-
-    return (
-      <li className={classes}>
-        <a href="#" className="site-nav">
-          {props.item.title}
-        </a>
-        {subItems}
-      </li>
-    );
-  };
-
-  const CategorySubItem = (props) => {
-    return (
-      <li className="level2">
-        <a href="#" className="site-nav">
-          {props.title}
-        </a>
-      </li>
-    );
-  };
+  // const CategorySubItem = (props) => {
+  //   return (
+  //     <li className="level2">
+  //       <a href="#" className="site-nav">
+  //         {props.title}
+  //       </a>
+  //     </li>
+  //   );
+  // };
 
   const ReteItem = (props) => {
     if (props.index <= props.rate) {
@@ -207,7 +157,9 @@ const ProductList = (props) => {
             </div>
             <div className="sidebar_tags">
               {/*Categories*/}
-              <div className="sidebar_widget categories filter-widget">
+              <SidebarCategories data={categories}/>
+
+              {/* <div className="sidebar_widget categories filter-widget">
                 <div className="widget-title">
                   <h2>Categories</h2>
                 </div>
@@ -218,132 +170,14 @@ const ProductList = (props) => {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </div> */}
               {/*Categories*/}
-              {/*Price Filter*/}
-              <div className="sidebar_widget filterBox filter-widget">
-                <div className="widget-title">
-                  <h2>Price</h2>
-                </div>
-                <form action="#" method="post" className="price-filter">
-                  <div
-                    id="slider-range"
-                    className="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                  >
-                    <div className="ui-slider-range ui-widget-header ui-corner-all"></div>
-                    <span
-                      className="ui-slider-handle ui-state-default ui-corner-all"
-                      tabIndex="0"
-                    ></span>
-                    <span
-                      className="ui-slider-handle ui-state-default ui-corner-all"
-                      tabIndex="0"
-                    ></span>
-                  </div>
-                  <div className="row">
-                    <div className="col-6">
-                      <p className="no-margin">
-                        <input
-                          id="amount"
-                          type="text"
-                          onBlur={priceFilterInputOnchange}
-                          placeholder="$12 - $300"
-                        />
-                      </p>
-                    </div>
-                    <div className="col-6 text-right margin-25px-top">
-                      <button className="btn btn-secondary btn--small">
-                        filter
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              {/*End Price Filter*/}
-              {/*Size Swatches*/}
-              <div className="sidebar_widget filterBox filter-widget size-swacthes">
-                <div className="widget-title">
-                  <h2>Size</h2>
-                </div>
-                <div className="filter-color swacth-list">
-                  <ul>
-                    {productSizes.map((item, index) => {
-                      const colorClasses =
-                        index === 0 ? "swacth-btn checked" : "swacth-btn";
-                      return (
-                        <li key={item}>
-                          <span className={colorClasses}>{item}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-              {/*End Size Swatches*/}
-              {/*Color Swatches*/}
-              <div className="sidebar_widget filterBox filter-widget">
-                <div className="widget-title">
-                  <h2>Color</h2>
-                </div>
-                <div className="filter-color swacth-list clearfix">
-                  {productColors.map((item, index) => {
-                    const colorClasses =
-                      index === 0
-                        ? "swacth-btn " + item.toLowerCase() + " checked"
-                        : "swacth-btn " + item.toLowerCase();
-                    return <span className={colorClasses} key={item}></span>;
-                  })}
-                </div>
-              </div>
-              {/*End Color Swatches*/}
+              <PriceFilter />
 
-              {/*Popular Products*/}
-              <div className="sidebar_widget">
-                <div className="widget-title">
-                  <h2>Popular Products</h2>
-                </div>
-                <div className="widget-content">
-                  <div className="list list-sidebar-products">
-                    <div className="grid">
-                      {products.products &&
-                        products.products.map((item) => {
-                          return (
-                            <div className="grid__item" key={item.id}>
-                              <div className="mini-list-item">
-                                <div className="mini-view_image">
-                                  <a className="grid-view-item__link" href="#">
-                                    <img
-                                      className="grid-view-item__image"
-                                      src={item.largeImgs[0].src}
-                                      alt={item.title}
-                                    />
-                                  </a>
-                                </div>
-                                <div className="details">
-                                  <a className="grid-view-item__title" href="#">
-                                    {item.title}
-                                  </a>
-                                  <div className="grid-view-item__meta">
-                                    <span className="product-price__price">
-                                      <span className="money">
-                                        $
-                                        {(
-                                          item.sku[0].originalPrice *
-                                          item.sku[0].discount
-                                        ).toFixed(2)}
-                                      </span>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/*End Popular Products*/}
+              <SizeSwatches title="Size" data={productSizes} />
+              <ColorSwatches title="Color" data={productColors} />
+              <SidebarProducts title="Popular Products" data={productData.products}/>
+              
               {/*Banner*/}
               <div className="sidebar_widget static-banner">
                 <img src="assets/images/side-banner-2.jpg" alt="" />
@@ -459,8 +293,8 @@ const ProductList = (props) => {
 
               <div className="grid-products grid--view-items">
                 <div className="row">
-                  {products.products &&
-                    products.products.map((item) => {
+                  {productData.products &&
+                    productData.products.map((item) => {
                       const isSoldOut = item.sku.every(function (
                         item,
                         index,
