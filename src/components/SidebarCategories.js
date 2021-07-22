@@ -9,7 +9,7 @@ const SidebarCategories = (props) => {
       <div className="widget-content">
         <ul className="sidebar_categories">
           {props.data.map((item, index) => (
-            <CategoryItem item={item} key={index} />
+            <CategoryItem item={item} key={index} index={index}/>
           ))}
         </ul>
       </div>

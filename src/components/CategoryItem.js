@@ -1,28 +1,28 @@
 import $ from "jquery";
-import { useEffect } from "react";
+import { useState } from "react";
 import CategorySubItem from "./CategorySubItem";
 
 const CategoryItem = (props) => {
-  let categoryInit = false;
-
-  useEffect(() => {
-    if (!categoryInit) {
-      categoryInit = true;
-      categories_level();
+  const [itemClass, setItemClass] = useState([
+    "site-nav",
+    props.item.tags.length !== 0 ? "cursorPointer" : "",
+  ]);
+  const categoryClickHandler = () => {
+    const updatedClass = [...itemClass];
+    if (updatedClass.includes("active")) {
+      const targetIndex = updatedClass.indexOf("active");
+      updatedClass.splice(targetIndex, 1);
+    } else {
+      updatedClass.push("active");
     }
-  }, []);
 
-  const categories_level = () => {
-    $(".sidebar_categories .sub-level a").on("click", function () {
-      console.log("click");
-      $(this).toggleClass("active");
-      $(this).next(".sublinks").slideToggle("slow");
-    });
+    setItemClass(updatedClass);
+    $(".sublinks_" + props.index).slideToggle("slow");
   };
 
   const subItems =
     props.item.tags.length !== 0 ? (
-      <ul className="sublinks">
+      <ul className={`sublinks_${props.index}`}>
         {props.item.tags.map((item) => (
           <CategorySubItem title={item.title} key={item.id} />
         ))}
@@ -33,7 +33,7 @@ const CategoryItem = (props) => {
 
   return (
     <li className={classes}>
-      <a href="#" className="site-nav">
+      <a className={itemClass.join(" ")} onClick={categoryClickHandler}>
         {props.item.title}
       </a>
       {subItems}
