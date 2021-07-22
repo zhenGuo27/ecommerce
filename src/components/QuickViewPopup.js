@@ -231,7 +231,7 @@ const QuickViewPopup = (props) => {
     (item) => item.color === selectedColor && item.size === selectedSize
   )[0];
 
-  if(currentSku.discount === 0) {
+  if(currentSku.discount === 1) {
     price = <Fragment>
               <span className="visually-hidden">Regular price</span>
               <s id="ComparePrice-product-template">
@@ -240,7 +240,7 @@ const QuickViewPopup = (props) => {
             </Fragment>;
   }
 
-  if(currentSku.discount !== 0) {
+  if(currentSku.discount !== 1) {
     price = <Fragment>
               <span className="visually-hidden">Regular price</span>
               <s id="ComparePrice-product-template">

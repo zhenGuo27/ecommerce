@@ -1,6 +1,7 @@
-export const getProducts = async (setFn) => {
+export const getProducts = async (sort) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetActiveProductList"
+    "https://localhost:44396/Api/values/GetActiveProductList?"+ new URLSearchParams({
+      sort: sort })
   );
 
   if (!response.ok) {
@@ -11,9 +12,4 @@ export const getProducts = async (setFn) => {
   const reqItems = JSON.parse(data.content);
 
   return reqItems;
-
-  //const loadedItems = reqItems.slice();
-  // if (typeof afterGetProducts === "function") {
-  //   afterGetProducts(reqItems);
-  // }
 };
