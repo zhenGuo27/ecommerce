@@ -698,7 +698,7 @@ a.quick-view { margin-bottom:5px !important; }
 .filters-toolbar-wrapper .change-view { cursor:pointer; background:none; opacity:0.6; border:0; padding:0 3px; }
 .filters-toolbar-wrapper .change-view--active { opacity:1; }
 .filters-toolbar__product-count { font-size:0.92308em; line-height:35px; margin-bottom:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.filters-toolbar-wrapper select { width:auto; font-size:12px; }
+.filters-toolbar-wrapper select { width:auto; font-size:12px; padding-right: 25px; }
 .filters-toolbar__input { -ms-transition: all ease-out 0.15s; -webkit-transition:all ease-out 0.15s; transition:all ease-out 0.15s; background-color: #fff; border:0 solid transparent; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; height:35px; opacity:1; }
 
 .infinitpagin { clear:both; padding:15px 0 30px; text-align:center; }

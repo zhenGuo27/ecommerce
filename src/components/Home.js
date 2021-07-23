@@ -5,6 +5,7 @@ import FeatureContent_ImgLeft from "../components/FeatureContent_ImgLeft";
 import FeatureContent_ImgRight from "../components/FeatureContent_ImgRight";
 import HomeProductSlider from "../components/HomeProductSlider";
 import ThreeColumnProducts from "../components/ThreeColumnProducts";
+import QuickViewPopup from "./QuickViewPopup";
 
 import bnr1 from "../images/collection/home12-category-bnr1.jpg";
 import bnr2 from "../images/collection/home12-category-bnr2.jpg";
@@ -40,6 +41,7 @@ const Home = (props) => {
         btnText="Explore Now"
       />
       <ThreeColumnProducts />
+      <QuickViewPopup />
     </Fragment>
   );
 };

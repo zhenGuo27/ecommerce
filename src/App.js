@@ -4,7 +4,6 @@ import Header from "./components/Header";
 import MobileMenu from "./components/MobileMenu";
 import Footer from "./components/Footer.js";
 import ScrollTop from "./components/ScrollTop";
-import QuickViewPopup from "./components/QuickViewPopup";
 import NewsletterPopup from "./components/NewsletterPopup";
 
 import Home from "./components/Home";
@@ -35,7 +34,6 @@ function App() {
 
       <Footer />
       <ScrollTop />
-      <QuickViewPopup />
       <NewsletterPopup />
     </div>
   );

@@ -1,5 +1,5 @@
-import 'bootstrap';
-import { Fragment } from "react";
+import "bootstrap";
+import { Fragment, useEffect, useState } from "react";
 import cameliaReversibleBig1 from "../images/product-detail-page/camelia-reversible-big1.jpg";
 import product7 from "../images/product-images/product-image7.jpg";
 import product7_1 from "../images/product-images/product-image7-1.jpg";
@@ -7,260 +7,291 @@ import prodcutImg_red from "../images/product-detail-page/variant1-1.jpg";
 import prodcutImg_green from "../images/product-detail-page/variant1-3.jpg";
 import prodcutImg_gray from "../images/product-detail-page/variant1-4.jpg";
 
-
 const QuickViewPopup = (props) => {
-  const selectedColor = "Red";
-  const selectedSize = "XS";
+  console.log("props data", props.data);
 
-  const product =   {
-    id: "clothing-1",
-    title: "Clothing-2 product",
-    desc: "Belle is a minimalist modern eCommerce Html Template that will give you and your customers a smooth shopping experience which can be used for various kinds of stores such as fashion,...",
-    tagId: 1,
-    startDate: "2021-07-14",
-    rate: 1,
-  };
+  const [selectedColor, setSelectedColor] = useState(
+    Object.keys(props.data).length !== 0 ? props.data.sku[0].color : ""
+  );
+  const [selectedSize, setSelectedSize] = useState(
+    Object.keys(props.data).length !== 0 ? props.data.sku[0].size : ""
+  );
+  const [currentSku, setCurrentSku] = useState({});
+  //const [currentPrice, setCurrentPrice] = useState();
 
-  const productImg = {
-    productId: "clothing-1",
-    largeImg: [
-      {
-        src: product7,
-        homeSlider: true,
-        homeSliderHover: false,
-        skuId: null
-      },
-      {
-        src: product7_1,
-        homeSlider: true,
-        homeSliderHover: true,
-        skuId: null
-      },
-    ],
-    smallImg: [
-      {
-        src: prodcutImg_red,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 1,       
-      },
-      {
-        src: prodcutImg_red,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 2,       
-      },
-      {
-        src: prodcutImg_red,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 3,       
-      },
-      {
-        src: prodcutImg_red,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 4,       
-      },
-      {
-        src: prodcutImg_green,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 5,       
-      },
-      {
-        src: prodcutImg_green,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 6,       
-      },
-      {
-        src: prodcutImg_green,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 7,       
-      },
-      {
-        src: prodcutImg_green,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 8,       
-      },
-      {
-        src: prodcutImg_gray,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 9,       
-      },
-      {
-        src: prodcutImg_gray,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 10,       
-      },
-      {
-        src: prodcutImg_gray,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 11,       
-      },
-      {
-        src: prodcutImg_gray,
-        homeSlider: false,
-        homeSliderHover: false,
-        skuId: 12,       
-      } 
-    ]
-  };
+  useEffect(() => {
+    if (Object.keys(props.data).length !== 0) {
+      const updatedCurrentSku = props.data.sku.find(
+        (x) => x.color === selectedColor && x.size === selectedSize
+      );
+      setCurrentSku(updatedCurrentSku);
+      //setCurrentPrice((updatedCurrentSku.discount * updatedCurrentSku.originalPrice).toFixed(2));
+    }
+  }, [selectedColor, selectedSize]);
 
-  const product_sku = [
-    {
-      id: 1,
-      productId: "clothing-1",
-      color: "Red",
-      size: "XS",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 2,
-      productId: "clothing-1",
-      color: "Red",
-      size: "S",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 3,
-      productId: "clothing-1",
-      color: "Red",
-      size: "M",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 4,
-      productId: "clothing-1",
-      color: "Red",
-      size: "L",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 5,
-      productId: "clothing-1",
-      color: "Green",
-      size: "XS",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 6,
-      productId: "clothing-1",
-      color: "Green",
-      size: "S",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 7,
-      productId: "clothing-1",
-      color: "Green",
-      size: "M",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 8,
-      productId: "clothing-1",
-      color: "Green",
-      size: "L",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 9,
-      productId: "clothing-1",
-      color: "Gray",
-      size: "XS",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 10,
-      productId: "clothing-1",
-      color: "Gray",
-      size: "S",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 11,
-      productId: "clothing-1",
-      color: "Gray",
-      size: "M",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-    {
-      id: 12,
-      productId: "clothing-1",
-      color: "Gray",
-      size: "L",
-      originalPrice: 280.68,
-      discount: 0.8,
-      stock: 100,
-    },
-  ];
+  // const product = {
+  //   id: "clothing-1",
+  //   title: "Clothing-2 product",
+  //   desc: "Belle is a minimalist modern eCommerce Html Template that will give you and your customers a smooth shopping experience which can be used for various kinds of stores such as fashion,...",
+  //   tagId: 1,
+  //   startDate: "2021-07-14",
+  //   rate: 1,
+  // };
+
+  // const productImg = {
+  //   productId: "clothing-1",
+  //   largeImg: [
+  //     {
+  //       src: product7,
+  //       homeSlider: true,
+  //       homeSliderHover: false,
+  //       skuId: null,
+  //     },
+  //     {
+  //       src: product7_1,
+  //       homeSlider: true,
+  //       homeSliderHover: true,
+  //       skuId: null,
+  //     },
+  //   ],
+  //   smallImg: [
+  //     {
+  //       src: prodcutImg_red,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 1,
+  //     },
+  //     {
+  //       src: prodcutImg_red,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 2,
+  //     },
+  //     {
+  //       src: prodcutImg_red,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 3,
+  //     },
+  //     {
+  //       src: prodcutImg_red,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 4,
+  //     },
+  //     {
+  //       src: prodcutImg_green,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 5,
+  //     },
+  //     {
+  //       src: prodcutImg_green,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 6,
+  //     },
+  //     {
+  //       src: prodcutImg_green,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 7,
+  //     },
+  //     {
+  //       src: prodcutImg_green,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 8,
+  //     },
+  //     {
+  //       src: prodcutImg_gray,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 9,
+  //     },
+  //     {
+  //       src: prodcutImg_gray,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 10,
+  //     },
+  //     {
+  //       src: prodcutImg_gray,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 11,
+  //     },
+  //     {
+  //       src: prodcutImg_gray,
+  //       homeSlider: false,
+  //       homeSliderHover: false,
+  //       skuId: 12,
+  //     },
+  //   ],
+  // };
+
+  // const product_sku = [
+  //   {
+  //     id: 1,
+  //     productId: "clothing-1",
+  //     color: "Red",
+  //     size: "XS",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 2,
+  //     productId: "clothing-1",
+  //     color: "Red",
+  //     size: "S",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 3,
+  //     productId: "clothing-1",
+  //     color: "Red",
+  //     size: "M",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 4,
+  //     productId: "clothing-1",
+  //     color: "Red",
+  //     size: "L",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 5,
+  //     productId: "clothing-1",
+  //     color: "Green",
+  //     size: "XS",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 6,
+  //     productId: "clothing-1",
+  //     color: "Green",
+  //     size: "S",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 7,
+  //     productId: "clothing-1",
+  //     color: "Green",
+  //     size: "M",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 8,
+  //     productId: "clothing-1",
+  //     color: "Green",
+  //     size: "L",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 9,
+  //     productId: "clothing-1",
+  //     color: "Gray",
+  //     size: "XS",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 10,
+  //     productId: "clothing-1",
+  //     color: "Gray",
+  //     size: "S",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 11,
+  //     productId: "clothing-1",
+  //     color: "Gray",
+  //     size: "M",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  //   {
+  //     id: 12,
+  //     productId: "clothing-1",
+  //     color: "Gray",
+  //     size: "L",
+  //     originalPrice: 280.68,
+  //     discount: 0.8,
+  //     stock: 100,
+  //   },
+  // ];
 
   const inputOnChangeHandler = () => {};
 
   let price;
-  const currentSku =  product_sku.filter(
-    (item) => item.color === selectedColor && item.size === selectedSize
-  )[0];
+  // const currentSku = product_sku.filter(
+  //   (item) => item.color === selectedColor && item.size === selectedSize
+  // )[0];
 
-  if(currentSku.discount === 1) {
-    price = <Fragment>
-              <span className="visually-hidden">Regular price</span>
-              <s id="ComparePrice-product-template">
-                <span className="money">${currentSku.originalPrice}</span>
-              </s>
-            </Fragment>;
+  if (currentSku.discount === 1) {
+    price = (
+      <Fragment>
+        <span className="visually-hidden">Regular price</span>
+        <s id="ComparePrice-product-template">
+          <span className="money">${currentSku.originalPrice}</span>
+        </s>
+      </Fragment>
+    );
   }
 
-  if(currentSku.discount !== 1) {
-    price = <Fragment>
-              <span className="visually-hidden">Regular price</span>
-              <s id="ComparePrice-product-template">
-                <span className="money">${currentSku.originalPrice}</span>
-              </s>
-              <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
-                <span id="ProductPrice-product-template">                 
-                  <span className="money">${(currentSku.originalPrice * currentSku.discount).toFixed(2)}</span>
-                </span>
-              </span>
-            </Fragment>;
+  if (currentSku.discount !== 1) {
+    price = (
+      <Fragment>
+        <span className="visually-hidden">Regular price</span>
+        <s id="ComparePrice-product-template">
+          <span className="money">${currentSku.originalPrice}</span>
+        </s>
+        <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
+          <span id="ProductPrice-product-template">
+            <span className="money">
+              ${(currentSku.originalPrice * currentSku.discount).toFixed(2)}
+            </span>
+          </span>
+        </span>
+      </Fragment>
+    );
   }
 
-  const productColors = [...new Set(product_sku.map(item => item.color))];
+  const productColors =
+    Object.keys(props.data).length !== 0
+      ? [...new Set(props.data.sku.map((item) => item.color))]
+      : [];
 
   const ColorItem = (props) => {
-    const available = (props.available) ? "available" : "";
-    const classes = ` swatch-element color ${props.value.toString().toLowerCase()} ${available}`;
-    const sku = product_sku.filter((item)=> item.color === props.value);
-    const img = productImg.smallImg.filter((item)=> item.skuId === sku[0].id)[0].src;
+    const available = props.available ? "available" : "";
+    const classes = ` swatch-element color ${props.value
+      .toString()
+      .toLowerCase()} ${available}`;
+    const sku = props.skus.filter((item) => item.color === props.value);
+    const img = props.smallImgs.filter(
+      (item) => item.skuId === sku[0].id
+    )[0].src;
+    const checked = (props.value === selectedColor);
 
     return (
       <div data-value={props.value} className={classes}>
@@ -271,6 +302,7 @@ const QuickViewPopup = (props) => {
           name="option-0"
           value={props.value}
           onChange={inputOnChangeHandler}
+          defaultChecked={checked}
         />
         <label
           className="swatchLbl color medium rectangle"
@@ -284,9 +316,14 @@ const QuickViewPopup = (props) => {
     );
   };
 
-  const productSize = [...new Set(product_sku.map(item => item.size))]; 
+  const productSize =
+    Object.keys(props.data).length !== 0
+      ? [...new Set(props.data.sku.map((item) => item.size))]
+      : [];
 
   const SizeItem = (props) => {
+    const checked = (props.value === selectedSize);
+
     return (
       <div data-value={props.value} className="swatch-element xs available">
         <input
@@ -296,6 +333,7 @@ const QuickViewPopup = (props) => {
           name="option-1"
           value={props.value}
           onChange={inputOnChangeHandler}
+          defaultChecked={checked}
         />
         <label
           className="swatchLbl medium rectangle"
@@ -339,22 +377,27 @@ const QuickViewPopup = (props) => {
                   <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div className="product-single__meta">
                       <h2 className="product-single__title">
-                        {product.title}
+                        {props.data.title}
                       </h2>
                       <div className="prInfoRow">
                         <div className="product-stock">
-                          {product.stock !== 0 && <span className="instock ">In Stock</span>}
-                          {product.stock === 0 && <span className="outstock hide">Unavailable</span>}
+                          {currentSku.stock !== 0 && (
+                            <span className="instock ">In Stock</span>
+                          )}
+                          {currentSku.stock === 0 && (
+                            <span className="outstock hide">Unavailable</span>
+                          )}
                         </div>
                         <div className="product-sku">
-                          SKU: <span className="variant-sku">{product.id}</span>
+                          SKU:{" "}
+                          <span className="variant-sku">{props.data.id}</span>
                         </div>
                       </div>
-                      <p className="product-single__price product-single__price-product-template">                     
+                      <p className="product-single__price product-single__price-product-template">
                         {price}
                       </p>
                       <div className="product-single__description rte">
-                        {product.desc}
+                        {props.data.desc}
                       </div>
 
                       <form
@@ -373,11 +416,15 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Color: <span className="slVariant">Red</span>
                             </label>
-                            {
-                              productColors.map((item)=> 
-                                <ColorItem key={item} value={item} available={true} />                              
-                              )
-                            }                                                    
+                            {productColors.map((item) => (
+                              <ColorItem
+                                key={item}
+                                value={item}
+                                available={currentSku.stock !== 0}
+                                skus={props.data.sku}
+                                smallImgs={props.data.smallImgs}
+                              />
+                            ))}
                           </div>
                         </div>
                         <div
@@ -388,7 +435,9 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Size: <span className="slVariant">XS</span>
                             </label>
-                            {productSize.map((item)=> <SizeItem key={item} value={item}/>)}                                                    
+                            {productSize.map((item) => (
+                              <SizeItem key={item} value={item} />
+                            ))}
                           </div>
                         </div>
                         {/* Product Action */}

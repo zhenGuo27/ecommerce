@@ -5,7 +5,6 @@ import { Fragment, useEffect, useState } from "react";
 import PriceFilter from "./PriceFilter";
 import { getProducts } from "./product-action";
 import SizeSwatches from "./SizeSwatches";
-import ColorSwatches from "./ColorSwatches";
 import SidebarProducts from "./SidebarProducts";
 import SidebarCategories from "./SidebarCategories";
 import GridProducts from "./GridProducts";
@@ -13,7 +12,6 @@ import GridProducts from "./GridProducts";
 const ProductList = (props) => {
   const [categories, setCategories] = useState([]);
   const [productData, setProducts] = useState([]);
-  const [productColors, setProductColors] = useState([]);
   const [productSizes, setProductSizes] = useState([]);
 
   const getDistinctSizeAndColor = (data) => {
@@ -23,10 +21,7 @@ const ProductList = (props) => {
     }
 
     const size = [...new Set(skus.map((item) => item.size))];
-    const colors = [...new Set(skus.map((item) => item.color))];
-
     setProductSizes(size);
-    setProductColors(colors);
   };
 
   useEffect(() => {
@@ -89,7 +84,6 @@ const ProductList = (props) => {
               <SidebarCategories data={categories}/>     
               <PriceFilter />
               <SizeSwatches title="Size" data={productSizes} />
-              {/* <ColorSwatches title="Color" data={productColors} /> */}
               <SidebarProducts title="Popular Products" data={productData.products}/>
               
               {/*Banner*/}
@@ -139,7 +133,7 @@ const ProductList = (props) => {
               </p>
             </div>
             <hr />
-            <GridProducts data={productData.products}/>
+            <GridProducts />
             <hr className="clear" />
             <div className="pagination">
               <ul>
