@@ -1,15 +1,8 @@
 import "bootstrap";
 import { Fragment, useEffect, useState } from "react";
 import cameliaReversibleBig1 from "../images/product-detail-page/camelia-reversible-big1.jpg";
-import product7 from "../images/product-images/product-image7.jpg";
-import product7_1 from "../images/product-images/product-image7-1.jpg";
-import prodcutImg_red from "../images/product-detail-page/variant1-1.jpg";
-import prodcutImg_green from "../images/product-detail-page/variant1-3.jpg";
-import prodcutImg_gray from "../images/product-detail-page/variant1-4.jpg";
 
 const QuickViewPopup = (props) => {
-  console.log("props data", props.data);
-
   const [selectedColor, setSelectedColor] = useState(
     Object.keys(props.data).length !== 0 ? props.data.sku[0].color : ""
   );
@@ -17,7 +10,7 @@ const QuickViewPopup = (props) => {
     Object.keys(props.data).length !== 0 ? props.data.sku[0].size : ""
   );
   const [currentSku, setCurrentSku] = useState({});
-  //const [currentPrice, setCurrentPrice] = useState();
+  const [orderQuantity, setOrderQuantity] = useState(1);
 
   useEffect(() => {
     if (Object.keys(props.data).length !== 0) {
@@ -25,229 +18,30 @@ const QuickViewPopup = (props) => {
         (x) => x.color === selectedColor && x.size === selectedSize
       );
       setCurrentSku(updatedCurrentSku);
-      //setCurrentPrice((updatedCurrentSku.discount * updatedCurrentSku.originalPrice).toFixed(2));
     }
   }, [selectedColor, selectedSize]);
 
-  // const product = {
-  //   id: "clothing-1",
-  //   title: "Clothing-2 product",
-  //   desc: "Belle is a minimalist modern eCommerce Html Template that will give you and your customers a smooth shopping experience which can be used for various kinds of stores such as fashion,...",
-  //   tagId: 1,
-  //   startDate: "2021-07-14",
-  //   rate: 1,
-  // };
+  const orderQuantityChangeHandler = (event) => {
+    const quantity =
+      currentSku.stock >= event.target.value
+        ? event.target.value
+        : currentSku.stock;
+    setOrderQuantity(quantity);
+  };
 
-  // const productImg = {
-  //   productId: "clothing-1",
-  //   largeImg: [
-  //     {
-  //       src: product7,
-  //       homeSlider: true,
-  //       homeSliderHover: false,
-  //       skuId: null,
-  //     },
-  //     {
-  //       src: product7_1,
-  //       homeSlider: true,
-  //       homeSliderHover: true,
-  //       skuId: null,
-  //     },
-  //   ],
-  //   smallImg: [
-  //     {
-  //       src: prodcutImg_red,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 1,
-  //     },
-  //     {
-  //       src: prodcutImg_red,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 2,
-  //     },
-  //     {
-  //       src: prodcutImg_red,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 3,
-  //     },
-  //     {
-  //       src: prodcutImg_red,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 4,
-  //     },
-  //     {
-  //       src: prodcutImg_green,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 5,
-  //     },
-  //     {
-  //       src: prodcutImg_green,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 6,
-  //     },
-  //     {
-  //       src: prodcutImg_green,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 7,
-  //     },
-  //     {
-  //       src: prodcutImg_green,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 8,
-  //     },
-  //     {
-  //       src: prodcutImg_gray,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 9,
-  //     },
-  //     {
-  //       src: prodcutImg_gray,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 10,
-  //     },
-  //     {
-  //       src: prodcutImg_gray,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 11,
-  //     },
-  //     {
-  //       src: prodcutImg_gray,
-  //       homeSlider: false,
-  //       homeSliderHover: false,
-  //       skuId: 12,
-  //     },
-  //   ],
-  // };
+  const increaseQuantity = () => {
+    let updatedQuantiy = orderQuantity;
+    updatedQuantiy = (currentSku.stock > updatedQuantiy) ? updatedQuantiy + 1 : updatedQuantiy;
+    setOrderQuantity(updatedQuantiy);
+  };
 
-  // const product_sku = [
-  //   {
-  //     id: 1,
-  //     productId: "clothing-1",
-  //     color: "Red",
-  //     size: "XS",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 2,
-  //     productId: "clothing-1",
-  //     color: "Red",
-  //     size: "S",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 3,
-  //     productId: "clothing-1",
-  //     color: "Red",
-  //     size: "M",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 4,
-  //     productId: "clothing-1",
-  //     color: "Red",
-  //     size: "L",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 5,
-  //     productId: "clothing-1",
-  //     color: "Green",
-  //     size: "XS",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 6,
-  //     productId: "clothing-1",
-  //     color: "Green",
-  //     size: "S",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 7,
-  //     productId: "clothing-1",
-  //     color: "Green",
-  //     size: "M",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 8,
-  //     productId: "clothing-1",
-  //     color: "Green",
-  //     size: "L",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 9,
-  //     productId: "clothing-1",
-  //     color: "Gray",
-  //     size: "XS",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 10,
-  //     productId: "clothing-1",
-  //     color: "Gray",
-  //     size: "S",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 11,
-  //     productId: "clothing-1",
-  //     color: "Gray",
-  //     size: "M",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  //   {
-  //     id: 12,
-  //     productId: "clothing-1",
-  //     color: "Gray",
-  //     size: "L",
-  //     originalPrice: 280.68,
-  //     discount: 0.8,
-  //     stock: 100,
-  //   },
-  // ];
-
-  const inputOnChangeHandler = () => {};
+  const decreaseQuantity = () => {
+    let updatedQuantiy = orderQuantity;
+    updatedQuantiy = (updatedQuantiy !== 1) ? updatedQuantiy - 1 : updatedQuantiy;
+    setOrderQuantity(updatedQuantiy);
+  };
 
   let price;
-  // const currentSku = product_sku.filter(
-  //   (item) => item.color === selectedColor && item.size === selectedSize
-  // )[0];
-
   if (currentSku.discount === 1) {
     price = (
       <Fragment>
@@ -277,6 +71,10 @@ const QuickViewPopup = (props) => {
     );
   }
 
+  const colorChangeHandler = (color) => {
+    setSelectedColor(color);
+  };
+
   const productColors =
     Object.keys(props.data).length !== 0
       ? [...new Set(props.data.sku.map((item) => item.color))]
@@ -294,14 +92,13 @@ const QuickViewPopup = (props) => {
     const checked = (props.value === selectedColor);
 
     return (
-      <div data-value={props.value} className={classes}>
+      <div data-value={props.value} className={classes} onClick={colorChangeHandler.bind(null, props.value)}>
         <input
           className="swatchInput"
           id={`swatch-0-${props.value.toLowerCase()}`}
           type="radio"
           name="option-0"
           value={props.value}
-          onChange={inputOnChangeHandler}
           defaultChecked={checked}
         />
         <label
@@ -316,6 +113,10 @@ const QuickViewPopup = (props) => {
     );
   };
 
+  const sizeChangeHandler = (size) => {
+    setSelectedSize(size);
+  };
+
   const productSize =
     Object.keys(props.data).length !== 0
       ? [...new Set(props.data.sku.map((item) => item.size))]
@@ -325,14 +126,13 @@ const QuickViewPopup = (props) => {
     const checked = (props.value === selectedSize);
 
     return (
-      <div data-value={props.value} className="swatch-element xs available">
+      <div data-value={props.value} className={`swatch-element ${props.value.toLowerCase()} available`} onClick={sizeChangeHandler.bind(null, props.value)}>
         <input
           className="swatchInput"
           id={`swatch-1-${props.value.toLowerCase()}`}
           type="radio"
           name="option-1"
           value={props.value}
-          onChange={inputOnChangeHandler}
           defaultChecked={checked}
         />
         <label
@@ -347,7 +147,7 @@ const QuickViewPopup = (props) => {
   };
 
   return (
-    <div className="modal fade quick-view-popup" id="content_quickview">
+    <div className="modal fade quick-view-popup" id="content_quickview" data-backdrop="static">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-body">
@@ -358,8 +158,7 @@ const QuickViewPopup = (props) => {
               <div className="product-single">
                 {/* Start model close */}
                 <a
-                  href="#"
-                  data-dismiss="modal"
+                  onClick={props.onClose}
                   className="model-close-btn pull-right"
                   title="close"
                 >
@@ -414,7 +213,7 @@ const QuickViewPopup = (props) => {
                         >
                           <div className="product-form__item">
                             <label className="header">
-                              Color: <span className="slVariant">Red</span>
+                              Color: <span className="slVariant">{selectedColor}</span>
                             </label>
                             {productColors.map((item) => (
                               <ColorItem
@@ -433,7 +232,7 @@ const QuickViewPopup = (props) => {
                         >
                           <div className="product-form__item">
                             <label className="header">
-                              Size: <span className="slVariant">XS</span>
+                              Size: <span className="slVariant">{selectedSize}</span>
                             </label>
                             {productSize.map((item) => (
                               <SizeItem key={item} value={item} />
@@ -445,7 +244,7 @@ const QuickViewPopup = (props) => {
                           <div className="product-form__item--quantity">
                             <div className="wrapQtyBtn">
                               <div className="qtyField">
-                                <a className="qtyBtn minus" href="#">
+                                <a className="qtyBtn minus" onClick={decreaseQuantity}>
                                   <i
                                     className="fa anm anm-minus-r"
                                     aria-hidden="true"
@@ -455,11 +254,11 @@ const QuickViewPopup = (props) => {
                                   type="text"
                                   id="Quantity"
                                   name="quantity"
-                                  value="1"
+                                  value={orderQuantity}
                                   className="product-form__input qty"
-                                  onChange={inputOnChangeHandler}
+                                  onChange={orderQuantityChangeHandler}
                                 />
-                                <a className="qtyBtn plus" href="#">
+                                <a className="qtyBtn plus" onClick={increaseQuantity}>
                                   <i
                                     className="fa anm anm-plus-r"
                                     aria-hidden="true"

@@ -19,11 +19,19 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     if (!popupInit) {
+      // $("#content_quickview").on("shown.bs.modal", function (e) {
+      //   setPopupShow(true);
+      // });
       $("#content_quickview").modal("show");
     } else {
       popupInit = false;
     }
   }, [popupProduct]);
+
+  const closePopup = () => {
+    setPopupProduct({});
+    $("#content_quickview").modal("hide");
+  };
 
   const ReteItem = (props) => {
     if (props.index <= props.rate) {
@@ -223,7 +231,9 @@ const GridProducts = (props) => {
           </div>
         </div>
       </div>
-      {Object.keys(popupProduct).length !== 0 && <QuickViewPopup data={popupProduct} />} 
+      {Object.keys(popupProduct).length !== 0 && (
+        <QuickViewPopup data={popupProduct} onClose={closePopup} />
+      )}
     </Fragment>
   );
 };
