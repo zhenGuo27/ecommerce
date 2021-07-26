@@ -8,7 +8,7 @@ const SizeSwatches = (props) => {
   useEffect(() => {
     const initClasses = [];
     for (let i = 0; i < props.data.length; i++) {
-      initClasses.push(i == 0 ? activeClass : baseClass);
+      initClasses.push(baseClass);
     }
     setItemClasses(initClasses);
   }, [props.data]);

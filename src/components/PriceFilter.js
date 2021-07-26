@@ -4,8 +4,8 @@ import "jquery-ui-bundle/jquery-ui.min.css";
 import { useEffect } from "react";
 
 const PriceFilter = (props) => {
-  const priceMin = 12;
-  const priceMax = 300;
+  const priceMin = 0;
+  const priceMax = 600;
 
   useEffect(() => {
     price_slider();
@@ -16,17 +16,16 @@ const PriceFilter = (props) => {
       range: true,
       min: priceMin,
       max: priceMax,
-      values: [0, 100],
+      values: [priceMin, priceMax],
       slide: function (event, ui) {
-        console.log("ui", ui.values);
         $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+      },
+      create: function (event, ui) {
+        $("#amount").html($(this).slider("value"));
       },
     });
 
-    setPriceInput(
-      $("#slider-range").slider("values", 0),
-      $("#slider-range").slider("values", 1)
-    );
+    setPriceInput(priceMin, priceMax);
   };
 
   const setPriceInput = (start, end) => {
@@ -78,13 +77,13 @@ const PriceFilter = (props) => {
                 id="amount"
                 type="text"
                 onBlur={priceFilterInputOnchange}
-                placeholder="$12 - $300"
+                placeholder="$0 - $600"
               />
             </p>
           </div>
-          <div className="col-6 text-right margin-25px-top">
+          {/* <div className="col-6 text-right margin-25px-top">
             <button className="btn btn-secondary btn--small">filter</button>
-          </div>
+          </div> */}
         </div>
       </form>
     </div>

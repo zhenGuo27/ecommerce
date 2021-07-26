@@ -1,7 +1,8 @@
-export const getProducts = async (sort) => {
+export const getProducts = async (sort, filter = "") => {
   const response = await fetch(
     "https://localhost:44396/Api/values/GetActiveProductList?"+ new URLSearchParams({
-      sort: sort })
+      sort: sort,
+      filter: filter })
   );
 
   if (!response.ok) {

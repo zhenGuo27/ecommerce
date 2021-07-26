@@ -1,6 +1,5 @@
 import "bootstrap";
 import { Fragment, useEffect, useState } from "react";
-import cameliaReversibleBig1 from "../images/product-detail-page/camelia-reversible-big1.jpg";
 
 const QuickViewPopup = (props) => {
   const [selectedColor, setSelectedColor] = useState(
@@ -169,7 +168,7 @@ const QuickViewPopup = (props) => {
                   <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div className="product-details-img">
                       <div className="pl-20">
-                        <img src={cameliaReversibleBig1} alt="" />
+                        <img src={props.data.largeImgs[0].src} alt={props.data.title} />
                       </div>
                     </div>
                   </div>
@@ -188,7 +187,7 @@ const QuickViewPopup = (props) => {
                           )}
                         </div>
                         <div className="product-sku">
-                          SKU:{" "}
+                          SKU:
                           <span className="variant-sku">{props.data.id}</span>
                         </div>
                       </div>

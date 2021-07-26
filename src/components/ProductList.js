@@ -84,6 +84,8 @@ const ProductList = (props) => {
               <SidebarCategories data={categories}/>     
               <PriceFilter />
               <SizeSwatches title="Size" data={productSizes} />
+              <button className="btn btn-secondary btn--small">filter</button>
+              <hr />
               <SidebarProducts title="Popular Products" data={productData.products}/>
               
               {/*Banner*/}

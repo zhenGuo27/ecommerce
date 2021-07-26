@@ -1,16 +1,26 @@
 import $ from 'jquery';
 import { Fragment, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { getProducts } from "./product-action";
 import QuickViewPopup from "./QuickViewPopup";
 
 let popupInit = true;
 
 const GridProducts = (props) => {
+  const location = useLocation();
   const [productData, setProducts] = useState([]);
   const [popupProduct, setPopupProduct] = useState({});
 
   useEffect(() => {
-    getProducts(1).then((items) => {
+    console.log("Location", location);
+    
+    const filter = {
+      category: 0,
+      tag: 0,
+      priceRange: [0, 600],
+      sizeRange: ["XS", "S", "M", "L", "XL"]
+    };
+    getProducts(1, JSON.stringify(filter)).then((items) => {
       if (items && items.products.length != 0) {
         setProducts(items.products);
       }
@@ -19,9 +29,6 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     if (!popupInit) {
-      // $("#content_quickview").on("shown.bs.modal", function (e) {
-      //   setPopupShow(true);
-      // });
       $("#content_quickview").modal("show");
     } else {
       popupInit = false;
@@ -146,7 +153,7 @@ const GridProducts = (props) => {
                     {/* start product image */}
                     <div className="product-image">
                       {/* start product image */}
-                      <a href="#">
+                      <a>
                         {/* image */}
                         <img
                           className="primary blur-up lazyload"
@@ -185,12 +192,9 @@ const GridProducts = (props) => {
                       </form>
                       <div className="button-set">
                         <a
-                          // href="#"
                           title="Quick View"
                           className="quick-view-popup quick-view"
                           onClick={showQuickPopup.bind(null, item.id)}
-                          // data-toggle="modal"
-                          // data-target="#content_quickview"
                         >
                           <i className="icon anm anm-search-plus-r"></i>
                         </a>
@@ -203,7 +207,7 @@ const GridProducts = (props) => {
                     <div className="product-details text-center">
                       {/* product name */}
                       <div className="product-name">
-                        <a href="#">Edna Dress</a>
+                        <a>{item.title}</a>
                       </div>
                       {/* End product name */}
                       {/* product price */}
