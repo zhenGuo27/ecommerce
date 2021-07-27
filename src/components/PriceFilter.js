@@ -4,9 +4,6 @@ import "jquery-ui-bundle/jquery-ui.min.css";
 import { useEffect } from "react";
 
 const PriceFilter = (props) => {
-  const priceMin = 0;
-  const priceMax = 600;
-
   useEffect(() => {
     price_slider();
   }, []);
@@ -14,9 +11,9 @@ const PriceFilter = (props) => {
   const price_slider = () => {
     $("#slider-range").slider({
       range: true,
-      min: priceMin,
-      max: priceMax,
-      values: [priceMin, priceMax],
+      min: props.priceMin,
+      max: props.priceMax,
+      values: [props.priceMin, props.priceMax],
       slide: function (event, ui) {
         $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
       },
@@ -25,7 +22,7 @@ const PriceFilter = (props) => {
       },
     });
 
-    setPriceInput(priceMin, priceMax);
+    setPriceInput(props.priceMin, props.priceMax);
   };
 
   const setPriceInput = (start, end) => {
@@ -35,19 +32,21 @@ const PriceFilter = (props) => {
   const priceFilterInputOnchange = (event) => {
     const value = event.target.value;
     if (!value) {
-      $("#slider-range").slider("values", [priceMin, priceMax]);
-      setPriceInput(priceMin, priceMax);
+      $("#slider-range").slider("values", [props.priceMin, props.priceMax]);
+      setPriceInput(props.priceMin, props.priceMax);
       return;
     }
 
     const valueSplit = value.split("-");
     let priceStart = parseInt(valueSplit[0].replace("$", "").trim(), 10);
     let priceEnd = parseInt(valueSplit[1].replace("$", "").trim(), 10);
-    priceStart = priceStart < priceMin ? priceMin : priceStart;
-    priceEnd = priceEnd > priceMax ? priceMax : priceEnd;
+    priceStart = priceStart < props.priceMin ? props.priceMin : priceStart;
+    priceEnd = priceEnd > props.priceMax ? props.priceMax : priceEnd;
 
     $("#slider-range").slider("values", [priceStart, priceEnd]);
     setPriceInput(priceStart, priceEnd);
+
+    props.change(priceStart, priceEnd);
   };
 
   return (

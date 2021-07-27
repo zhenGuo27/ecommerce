@@ -1,31 +1,21 @@
 import $ from 'jquery';
 import { Fragment, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { getProducts } from "./product-action";
 import QuickViewPopup from "./QuickViewPopup";
 
 let popupInit = true;
 
 const GridProducts = (props) => {
-  const location = useLocation();
   const [productData, setProducts] = useState([]);
   const [popupProduct, setPopupProduct] = useState({});
 
-  useEffect(() => {
-    console.log("Location", location);
-    
-    const filter = {
-      category: 0,
-      tag: 0,
-      priceRange: [0, 600],
-      sizeRange: ["XS", "S", "M", "L", "XL"]
-    };
-    getProducts(1, JSON.stringify(filter)).then((items) => {
-      if (items && items.products.length != 0) {
+  useEffect(()=> {
+    getProducts(1, JSON.stringify(props.filter)).then((items) => {
+      if (items && items.products.length !== 0) {
         setProducts(items.products);
       }
     });
-  }, []);
+  }, [props.filter])
 
   useEffect(() => {
     if (!popupInit) {

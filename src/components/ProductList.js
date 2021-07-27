@@ -2,6 +2,7 @@ import "jquery-ui-bundle";
 import "jquery-ui-bundle/jquery-ui.min.css";
 
 import { Fragment, useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
 import { getProducts } from "./product-action";
 import SizeSwatches from "./SizeSwatches";
@@ -9,9 +10,26 @@ import SidebarProducts from "./SidebarProducts";
 import SidebarCategories from "./SidebarCategories";
 import GridProducts from "./GridProducts";
 
+const priceMin = 0;
+const priceMax = 600;
+
 const ProductList = (props) => {
+  const location = useLocation();
+  const queries = new URLSearchParams(location.search)
+  const category = queries.get("category");
+  const tag = queries.get("tag");
+  const inintFilter = {
+    category: category != null ? category : 0,
+    tag: tag != null ? tag : 0,
+    priceRange: [priceMin, priceMax],
+    sizeRange: ["XS", "S", "M", "L", "XL"],
+  };
+
   const [categories, setCategories] = useState([]);
   const [productData, setProducts] = useState([]);
+  const [productFilter, setProductFilter] = useState(inintFilter);
+  const [priceRange, setPriceRange] = useState([priceMin, priceMax]);
+  const [sizeRange, setSizeRange] = useState(inintFilter.sizeRange);
   const [productSizes, setProductSizes] = useState([]);
 
   const getDistinctSizeAndColor = (data) => {
@@ -26,6 +44,7 @@ const ProductList = (props) => {
 
   useEffect(() => {
     document.body.classList.add("template-collection");
+    //productFilterHandler();
 
     getCategories();
     getProducts(1).then((items) => {
@@ -33,6 +52,50 @@ const ProductList = (props) => {
       getDistinctSizeAndColor(items);
     });
   }, []);
+
+  useEffect(()=> {
+    productFilterHandler();
+  }, [sizeRange, priceRange]);
+
+  // useEffect(()=> {
+  //   getProducts(1, JSON.stringify(productFilter)).then((items) => {
+  //     setProducts(items);
+  //     getDistinctSizeAndColor(items);
+  //   });
+  // }, [productFilter]);
+
+  const productFilterHandler = () => {
+    const filter = {
+      category: category !== null ? parseInt(category, 10) : 0,
+      tag: category !== null ? parseInt(tag, 10) : 0,
+      priceRange: priceRange,
+      sizeRange: sizeRange,
+    }; 
+
+    setProductFilter(filter);
+  };
+
+  const priceOnchangeHandler = (start, end) => {
+    let updatedRange = [...priceRange];
+    updatedRange[0] = start;
+    updatedRange[1] = end;
+    setPriceRange(updatedRange);
+  };
+
+  const sizeOnchangeHandler = (target) => {
+    //if exist , remove , else add target
+    let updatedRange = [...sizeRange];
+    if (sizeRange.some((item) => item === target)) {
+      const index = updatedRange.indexOf(target);
+      if (index !== -1) {
+        updatedRange.splice(index, 1);
+      }
+    } else {
+      updatedRange.push(target);
+    }
+
+    setSizeRange(updatedRange);
+  };
 
   const getCategories = async () => {
     const response = await fetch(
@@ -81,13 +144,25 @@ const ProductList = (props) => {
               <i className="icon icon anm anm-times-l"></i>
             </div>
             <div className="sidebar_tags">
-              <SidebarCategories data={categories}/>     
-              <PriceFilter />
-              <SizeSwatches title="Size" data={productSizes} />
+              <SidebarCategories data={categories} />
+              <PriceFilter
+                priceMin={priceRange[0]}
+                priceMax={priceRange[1]}
+                change={priceOnchangeHandler}
+              />
+              <SizeSwatches
+                title="Size"
+                data={productSizes}
+                selected={sizeRange}
+                change={sizeOnchangeHandler}
+              />
               <button className="btn btn-secondary btn--small">filter</button>
               <hr />
-              <SidebarProducts title="Popular Products" data={productData.products}/>
-              
+              <SidebarProducts
+                title="Popular Products"
+                data={productData.products}
+              />
+
               {/*Banner*/}
               <div className="sidebar_widget static-banner">
                 <img src="assets/images/side-banner-2.jpg" alt="" />
@@ -135,7 +210,7 @@ const ProductList = (props) => {
               </p>
             </div>
             <hr />
-            <GridProducts />
+            <GridProducts filter={productFilter} />
             <hr className="clear" />
             <div className="pagination">
               <ul>
