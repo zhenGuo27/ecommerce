@@ -1,7 +1,15 @@
+import { useHistory } from "react-router-dom";
+
 const CategorySubItem = (props) => {
+  const history = useHistory();
+
+  const clickHandler = () => {
+    history.push("/?category=" + props.categoryId + "&tag=" + props.id);
+  };
+
   return (
     <li className="level2">
-      <a href="#" className="site-nav">
+      <a className="site-nav" onClick={clickHandler}>
         {props.title}
       </a>
     </li>

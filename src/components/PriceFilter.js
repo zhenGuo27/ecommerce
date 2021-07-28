@@ -15,7 +15,9 @@ const PriceFilter = (props) => {
       max: props.priceMax,
       values: [props.priceMin, props.priceMax],
       slide: function (event, ui) {
-        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+        const amountValue = "$" + ui.values[0] + " - $" + ui.values[1];
+        $("#amount").val(amountValue);
+        priceFilterInputOnchange(amountValue);
       },
       create: function (event, ui) {
         $("#amount").html($(this).slider("value"));
@@ -29,14 +31,7 @@ const PriceFilter = (props) => {
     $("#amount").val("$" + start + " - $" + end);
   };
 
-  const priceFilterInputOnchange = (event) => {
-    const value = event.target.value;
-    if (!value) {
-      $("#slider-range").slider("values", [props.priceMin, props.priceMax]);
-      setPriceInput(props.priceMin, props.priceMax);
-      return;
-    }
-
+  const priceFilterInputOnchange=(value)=> {
     const valueSplit = value.split("-");
     let priceStart = parseInt(valueSplit[0].replace("$", "").trim(), 10);
     let priceEnd = parseInt(valueSplit[1].replace("$", "").trim(), 10);
@@ -47,6 +42,17 @@ const PriceFilter = (props) => {
     setPriceInput(priceStart, priceEnd);
 
     props.change(priceStart, priceEnd);
+  }
+
+  const beforeInputOnchange = (event) => {
+    const value = event.target.value;
+    if (!value) {
+      $("#slider-range").slider("values", [props.priceMin, props.priceMax]);
+      setPriceInput(props.priceMin, props.priceMax);
+      return;
+    }
+
+    priceFilterInputOnchange(value);
   };
 
   return (
@@ -75,7 +81,7 @@ const PriceFilter = (props) => {
               <input
                 id="amount"
                 type="text"
-                onBlur={priceFilterInputOnchange}
+                onBlur={beforeInputOnchange}
                 placeholder="$0 - $600"
               />
             </p>

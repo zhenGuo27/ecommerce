@@ -15,7 +15,7 @@ const GridProducts = (props) => {
         setProducts(items.products);
       }
     });
-  }, [props.filter])
+  }, [props.filter]);
 
   useEffect(() => {
     if (!popupInit) {

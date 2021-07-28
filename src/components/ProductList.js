@@ -2,7 +2,7 @@ import "jquery-ui-bundle";
 import "jquery-ui-bundle/jquery-ui.min.css";
 
 import { Fragment, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
 import { getProducts } from "./product-action";
 import SizeSwatches from "./SizeSwatches";
@@ -12,6 +12,8 @@ import GridProducts from "./GridProducts";
 
 const priceMin = 0;
 const priceMax = 600;
+const initCategory = 0;
+const initTag = 0;
 
 const ProductList = (props) => {
   const location = useLocation();
@@ -19,13 +21,14 @@ const ProductList = (props) => {
   const category = queries.get("category");
   const tag = queries.get("tag");
   const inintFilter = {
-    category: category != null ? category : 0,
-    tag: tag != null ? tag : 0,
+    category: category !== null ? category : initCategory,
+    tag: tag !== null ? tag : initTag,
     priceRange: [priceMin, priceMax],
     sizeRange: ["XS", "S", "M", "L", "XL"],
   };
 
   const [categories, setCategories] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState(null);
   const [productData, setProducts] = useState([]);
   const [productFilter, setProductFilter] = useState(inintFilter);
   const [priceRange, setPriceRange] = useState([priceMin, priceMax]);
@@ -44,7 +47,6 @@ const ProductList = (props) => {
 
   useEffect(() => {
     document.body.classList.add("template-collection");
-    //productFilterHandler();
 
     getCategories();
     getProducts(1).then((items) => {
@@ -54,20 +56,25 @@ const ProductList = (props) => {
   }, []);
 
   useEffect(()=> {
+    // when url change update product data
     productFilterHandler();
-  }, [sizeRange, priceRange]);
 
-  // useEffect(()=> {
-  //   getProducts(1, JSON.stringify(productFilter)).then((items) => {
-  //     setProducts(items);
-  //     getDistinctSizeAndColor(items);
-  //   });
-  // }, [productFilter]);
+    const updatedCategory = categories.find(
+      (item) => item.id === parseInt(category, 10)
+    );
+    if (updatedCategory) {
+      setCurrentCategory(updatedCategory);
+    }
+  }, [category, tag]);
+
+  useEffect(()=> {
+    productFilterHandler(); 
+  }, [sizeRange, priceRange]);
 
   const productFilterHandler = () => {
     const filter = {
-      category: category !== null ? parseInt(category, 10) : 0,
-      tag: category !== null ? parseInt(tag, 10) : 0,
+      category: category !== null ? parseInt(category, 10) : initCategory,
+      tag: tag !== null ? parseInt(tag, 10) : initTag,
       priceRange: priceRange,
       sizeRange: sizeRange,
     }; 
@@ -113,6 +120,37 @@ const ProductList = (props) => {
     setCategories(loadedItems);
   };
 
+
+  let description = <Fragment>
+                      <h3>Category Description</h3>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and typesetting
+                        industry. Lorem Ipsum has been the industry's standard dummy
+                        text ever since the 1500s, when an unknown printer took a galley
+                        of type and scrambled it to make a type specimen book. It has
+                        survived not only five centuries, but also the leap into
+                        electronic typesetting, remaining essentially unchanged. It was
+                        popularised in the 1960s with the release of Letraset sheets
+                        containing.
+                      </p>
+                      <p>
+                        Contrary to popular belief, Lorem Ipsum is not simply random
+                        text. It has roots in a piece of classical Latin literature from
+                        45 BC, making it over 2000 years old. Richard McClintock, a
+                        Latin professor at Hampden-Sydney College in Virginia, looked up
+                        one of the more obscure Latin words, consectetur, from a Lorem
+                        Ipsum passage, and going through the cites of the word in
+                        classical literature, discovered the undoubtable source.
+                      </p>
+                    </Fragment>;
+
+  if(currentCategory) {
+    description = <Fragment>
+                    <h3>{currentCategory.title}</h3>
+                    <p>{currentCategory.desc}</p>
+                  </Fragment>;
+  }
+
   return (
     <Fragment>
       {/*Collection Banner*/}
@@ -156,7 +194,6 @@ const ProductList = (props) => {
                 selected={sizeRange}
                 change={sizeOnchangeHandler}
               />
-              <button className="btn btn-secondary btn--small">filter</button>
               <hr />
               <SidebarProducts
                 title="Popular Products"
@@ -188,32 +225,18 @@ const ProductList = (props) => {
           {/*Main Content*/}
           <div className="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
             <div className="category-description">
-              <h3>Category Description</h3>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing.
-              </p>
-              <p>
-                Contrary to popular belief, Lorem Ipsum is not simply random
-                text. It has roots in a piece of classical Latin literature from
-                45 BC, making it over 2000 years old. Richard McClintock, a
-                Latin professor at Hampden-Sydney College in Virginia, looked up
-                one of the more obscure Latin words, consectetur, from a Lorem
-                Ipsum passage, and going through the cites of the word in
-                classical literature, discovered the undoubtable source.
-              </p>
+              {description}
             </div>
             <hr />
             <GridProducts filter={productFilter} />
             <hr className="clear" />
             <div className="pagination">
               <ul>
+                <li className="previous">
+                  <a href="#">
+                    <i className="fa fa-caret-left" aria-hidden="true"></i>
+                  </a>
+                </li>
                 <li className="active">
                   <a href="#">1</a>
                 </li>
