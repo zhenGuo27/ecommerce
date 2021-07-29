@@ -229,27 +229,6 @@ const ProductList = (props) => {
             </div>
             <hr />
             <GridProducts filter={productFilter} />
-            <hr className="clear" />
-            <div className="pagination">
-              <ul>
-                <li className="previous">
-                  <a href="#">
-                    <i className="fa fa-caret-left" aria-hidden="true"></i>
-                  </a>
-                </li>
-                <li className="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li className="next">
-                  <a href="#">
-                    <i className="fa fa-caret-right" aria-hidden="true"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
           {/*End Main Content*/}
         </div>

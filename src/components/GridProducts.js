@@ -1,15 +1,47 @@
-import $ from 'jquery';
+import $ from "jquery";
 import { Fragment, useEffect, useState } from "react";
+import Pagination from "./Pagination";
 import { getProducts } from "./product-action";
 import QuickViewPopup from "./QuickViewPopup";
 
 let popupInit = true;
+const intitPagination = {
+  totalPage: 0,
+  contentDataIndex: 0,
+  currentPage: 1,
+  currentLayer: 1,
+  previous: false,
+  next: false,
+};
+
+const pageSize = 6;
+const pageRange = 5;
 
 const GridProducts = (props) => {
   const [productData, setProducts] = useState([]);
   const [popupProduct, setPopupProduct] = useState({});
+  const [page, setPage] = useState(intitPagination);
 
-  useEffect(()=> {
+  useEffect(() => {
+    pageHandler(pageSize, 1);
+  }, []);
+
+  useEffect(() => {
+    const updated = { ...page };
+    const dividedResult = productData.length / pageSize;
+    const modResult = productData.length % pageSize;
+
+    if (productData.length < pageSize) {
+      updated.totalPage = 1;
+    } else if (modResult !== 0) {
+      updated.totalPage = dividedResult + 1;
+    } else {
+      updated.totalPage = dividedResult;
+    }
+    setPage(updated);
+  }, [productData]);
+
+  useEffect(() => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
       if (items && items.products.length !== 0) {
         setProducts(items.products);
@@ -24,6 +56,21 @@ const GridProducts = (props) => {
       popupInit = false;
     }
   }, [popupProduct]);
+
+  const pageHandler = (size, newPage) => {
+    let updatedPagination = { ...page };
+    updatedPagination.currentIndex = (newPage - 1) * size;
+    updatedPagination.currentPage = newPage;
+    updatedPagination.previous = newPage !== 1;
+    updatedPagination.next = newPage !== updatedPagination.totalPage;
+
+    const rangeDivided = newPage / pageRange;
+    const rangeModulo = newPage % pageRange;
+    updatedPagination.currentLayer =
+      rangeModulo === 0 ? rangeDivided : rangeDivided + 1;
+
+    setPage(updatedPagination);
+  };
 
   const closePopup = () => {
     setPopupProduct({});
@@ -57,7 +104,7 @@ const GridProducts = (props) => {
   };
 
   const showQuickPopup = (id) => {
-    const pItem = productData.find((item)=> item.id === id);
+    const pItem = productData.find((item) => item.id === id);
     setPopupProduct(pItem);
   };
 
@@ -225,6 +272,13 @@ const GridProducts = (props) => {
           </div>
         </div>
       </div>
+      <hr className="clear" />
+      <Pagination
+        handler={pageHandler}
+        page={page}
+        pageRange={pageRange}
+        pageSize={pageSize}
+      />
       {Object.keys(popupProduct).length !== 0 && (
         <QuickViewPopup data={popupProduct} onClose={closePopup} />
       )}
