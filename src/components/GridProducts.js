@@ -21,6 +21,7 @@ const GridProducts = (props) => {
   const [productData, setProducts] = useState([]);
   const [popupProduct, setPopupProduct] = useState({});
   const [page, setPage] = useState(intitPagination);
+  const [noItems, setNoItems] = useState(false);
 
   useEffect(() => {
     pageHandler(pageSize, 1);
@@ -44,7 +45,11 @@ const GridProducts = (props) => {
   useEffect(() => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
       if (items && items.products.length !== 0) {
+        setNoItems(false);
         setProducts(items.products);
+      } else {
+        setProducts([]);
+        setNoItems(true);
       }
     });
   }, [props.filter]);
@@ -149,7 +154,8 @@ const GridProducts = (props) => {
           </div>
         </div>
         {/*End Toolbar*/}
-        <div className="grid-products grid--view-items">
+        {noItems && <h2>No Items Were Founded.</h2>}
+        {!noItems && <div className="grid-products grid--view-items">
           <div className="row">
             {productData &&
               productData.map((item) => {
@@ -271,6 +277,7 @@ const GridProducts = (props) => {
               })}
           </div>
         </div>
+      }     
       </div>
       <hr className="clear" />
       <Pagination
