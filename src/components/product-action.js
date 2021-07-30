@@ -14,3 +14,19 @@ export const getProducts = async (sort, filter = "") => {
 
   return reqItems;
 };
+
+export const getProductById = async (id) => {
+  const response = await fetch(
+    "https://localhost:44396/Api/values/GetProductById?"+ new URLSearchParams({
+      id: id })
+  );
+
+  if (!response.ok) {
+    throw new Error("Something went wrong!");
+  }
+
+  const data = await response.json();
+  const reqItems = JSON.parse(data.content);
+
+  return reqItems;
+};

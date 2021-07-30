@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import { getProducts } from "./product-action";
 import QuickViewPopup from "./QuickViewPopup";
+import ProductRate from "./ProductRate";
 
 let popupInit = true;
 const intitPagination = {
@@ -82,22 +83,22 @@ const GridProducts = (props) => {
     $("#content_quickview").modal("hide");
   };
 
-  const ReteItem = (props) => {
-    if (props.index <= props.rate) {
-      return <i className="font-13 fa fa-star"></i>;
-    } else {
-      return <i className="font-13 fa fa-star-o"></i>;
-    }
-  };
+  // const ReteItem = (props) => {
+  //   if (props.index <= props.rate) {
+  //     return <i className="font-13 fa fa-star"></i>;
+  //   } else {
+  //     return <i className="font-13 fa fa-star-o"></i>;
+  //   }
+  // };
 
-  const ProductRate = (props) => {
-    const rate = [];
-    for (let i = 1; i <= 5; i++) {
-      rate.push(<ReteItem rate={props.rate} index={i} key={`rateItem${i}`} />);
-    }
+  // const ProductRate = (props) => {
+  //   const rate = [];
+  //   for (let i = 1; i <= 5; i++) {
+  //     rate.push(<ReteItem rate={props.rate} index={i} key={`rateItem${i}`} />);
+  //   }
 
-    return rate;
-  };
+  //   return rate;
+  // };
 
   const sortHandler = (event) => {
     const sort = parseInt(event.target.value, 10);

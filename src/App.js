@@ -27,8 +27,8 @@ function App() {
 
       <div id="page-content">
          {/* <Home /> */}
-         {/* <Product /> */}
-        <ProductList />
+         <Product id="clothing-1"/>
+        {/* <ProductList /> */}
         {/* <ForgetPassword /> */}
       </div>
 

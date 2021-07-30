@@ -1,13 +1,137 @@
-import $ from 'jquery';
-import { Fragment, useEffect } from "react";
+import $ from "jquery";
+import * as PhotoSwipe from 'photoswipe';
+import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default';
+import "photoswipe/dist/photoswipe.css";
+import "photoswipe/dist/default-skin/default-skin.css";
+import { Fragment, useEffect, useState } from "react";
+import { getProductById } from "./product-action";
+import ProductRate from "./ProductRate";
 window.jQuery = window.$ = $;
 require("ez-plus");
 
 const Product = (props) => {
+  const [product, setProduct] = useState({});
+  const [currentSku, setCurrentSku] = useState({});
+
   useEffect(() => {
+    document.body.classList.add("template-product");
+
+    getProductById(props.id).then((item) => {
+      setProduct(item);
+      setCurrentSku(item.sku[0]);
+      console.log("item", item);
+    });
+
+    product_thumb();
     product_slider_ppage();
     product_zoom();
+    setTabs();
+    imgPopup();
   }, []);
+
+  const imgPopup = () => {
+    var $pswp = $(".pswp")[0],
+      image = [],
+      getItems = function () {
+        var items = [];
+        $(".lightboximages a").each(function () {
+          var $href = $(this).attr("href"),
+            $size = $(this).data("size").split("x"),
+            item = {
+              src: $href,
+              w: $size[0],
+              h: $size[1],
+            };
+          items.push(item);
+        });
+        return items;
+      };
+    var items = getItems();
+
+    $.each(items, function (index, value) {
+      image[index] = new Image();
+      image[index].src = value["src"];
+    });
+    $(".prlightbox").on("click", function (event) {
+      event.preventDefault();
+
+      var $index = $(".active-thumb").parent().attr("data-slick-index");
+      $index++;
+      $index = $index - 1;
+
+      var options = {
+        index: $index,
+        bgOpacity: 0.9,
+        showHideOpacity: true,
+        shareEl: false
+      };
+      var lightBox = new PhotoSwipe(
+        $pswp,
+        PhotoSwipeUI_Default,
+        items,
+        options
+      );
+      lightBox.init();
+    });
+  };
+
+  const product_thumb = () => {
+    $(".product-dec-slider-2").slick({
+      infinite: true,
+      slidesToShow: 5,
+      vertical: true,
+      slidesToScroll: 1,
+      centerPadding: "60px",
+    });
+  };
+
+  const setTabs = () => {
+    $(".tab-content").hide();
+    $(".tab-content:first").show();
+    /* if in tab mode */
+    $(".product-tabs li").on("click", function () {
+      $(".tab-content").hide();
+      var activeTab = $(this).attr("rel");
+      $("#" + activeTab).fadeIn();
+
+      $(".product-tabs li").removeClass("active");
+      $(this).addClass("active");
+
+      $(this).fadeIn();
+      if ($(window).width() < 767) {
+        var tabposition = $(this).offset();
+        $("html, body").animate({ scrollTop: tabposition.top }, 700);
+      }
+    });
+
+    $(".product-tabs li:first-child").addClass("active");
+    $(".tab-container h3:first-child + .tab-content").show();
+
+    /* if in drawer mode */
+    $(".acor-ttl").on("click", function () {
+      $(".tab-content").hide();
+      var activeTab = $(this).attr("rel");
+      $("#" + activeTab).fadeIn();
+
+      $(".acor-ttl").removeClass("active");
+      $(this).addClass("active");
+    });
+
+    $(".reviewLink").on("click", function (e) {
+      e.preventDefault();
+      $(".product-tabs li").removeClass("active");
+      $(".reviewtab").addClass("active");
+      var tab = $(this).attr("href");
+      $(".tab-content").not(tab).css("display", "none");
+      $(tab).fadeIn();
+      var tabposition = $("#tab2").offset();
+      if ($(window).width() < 767) {
+        $("html, body").animate({ scrollTop: tabposition.top - 50 }, 700);
+      } else {
+        $("html, body").animate({ scrollTop: tabposition.top - 80 }, 700);
+      }
+    });
+  };
 
   const product_slider_ppage = () => {
     $(".productPageSlider").slick({
@@ -45,7 +169,7 @@ const Product = (props) => {
             slidesToScroll: 1,
           },
         },
-      ]
+      ],
     });
   };
 
@@ -61,6 +185,53 @@ const Product = (props) => {
     });
   };
 
+  const testHandler = () => {};
+
+  let actionHtml = null;
+  if (currentSku.stock != 0) {
+    actionHtml = (
+      <div className="product-action clearfix">
+        <div className="product-form__item--quantity">
+          <div className="wrapQtyBtn">
+            <div className="qtyField">
+              <a className="qtyBtn minus">
+                <i className="fa anm anm-minus-r" aria-hidden="true"></i>
+              </a>
+              <input
+                type="text"
+                id="Quantity"
+                name="quantity"
+                value="1"
+                onChange={testHandler}
+                className="product-form__input qty"
+              />
+              <a className="qtyBtn plus">
+                <i className="fa anm anm-plus-r" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="product-form__item--submit">
+          <button
+            type="button"
+            name="add"
+            className="btn product-form__cart-submit"
+          >
+            <span>Add to cart</span>
+          </button>
+        </div>
+        <div className="shopify-payment-button" data-shopify="payment-button">
+          <button
+            type="button"
+            className="shopify-payment-button__button shopify-payment-button__button--unbranded"
+          >
+            Buy it now
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Fragment>
       <div id="MainContent" className="main-content" role="main">
@@ -71,7 +242,7 @@ const Product = (props) => {
               Home
             </a>
             <span aria-hidden="true">›</span>
-            <span>Product Layout Style1</span>
+            <span>{product.title}</span>
           </div>
         </div>
         {/*End Breadcrumb*/}
@@ -96,7 +267,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="-4"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -111,7 +282,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="-3"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -126,7 +297,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="-2"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -141,7 +312,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="-1"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -156,7 +327,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="0"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -171,7 +342,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="1"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -186,7 +357,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="2"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -201,7 +372,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="3"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -216,7 +387,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="4"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -231,7 +402,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="5"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -246,7 +417,7 @@ const Product = (props) => {
                         className="slick-slide slick-cloned"
                         data-slick-index="6"
                         aria-hidden="true"
-                        tabindex="-1"
+                        tabIndex="-1"
                       >
                         <img
                           className="blur-up lazyload"
@@ -271,17 +442,7 @@ const Product = (props) => {
                       <span className="lbl pr-label1">new</span>
                     </div>
                     <div className="product-buttons">
-                      <a
-                        href="https://www.youtube.com/watch?v=93A2jOW5Mog"
-                        className="btn popup-video"
-                        title="View Video"
-                      >
-                        <i
-                          className="icon anm anm-play-r"
-                          aria-hidden="true"
-                        ></i>
-                      </a>
-                      <a href="#" className="btn prlightbox" title="Zoom">
+                      <a className="btn prlightbox" title="Zoom">
                         <i
                           className="icon anm anm-expand-l-arrows"
                           aria-hidden="true"
@@ -340,86 +501,47 @@ const Product = (props) => {
               <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                 <div className="product-single__meta">
                   <h1 className="product-single__title">
-                    Product Layout Style1
+                    {product.title}
                   </h1>
-                  <div className="product-nav clearfix">
-                    <a href="#" className="next" title="Next">
-                      <i className="fa fa-angle-right" aria-hidden="true"></i>
-                    </a>
-                  </div>
                   <div className="prInfoRow">
                     <div className="product-stock">
-                      {" "}
-                      <span className="instock ">In Stock</span>{" "}
-                      <span className="outstock hide">Unavailable</span>{" "}
+                      {currentSku.stock!==0 && <span className="instock ">In Stock</span>}
+                      {currentSku.stock === 0 && <span className="outstock">Unavailable</span>}
                     </div>
                     <div className="product-sku">
-                      SKU: <span className="variant-sku">19115-rdxs</span>
+                      SKU: <span className="variant-sku">{currentSku.id}</span>
                     </div>
                     <div className="product-review">
-                      <a className="reviewLink" href="#tab2">
-                        <i className="font-13 fa fa-star"></i>
-                        <i className="font-13 fa fa-star"></i>
-                        <i className="font-13 fa fa-star"></i>
-                        <i className="font-13 fa fa-star-o"></i>
-                        <i className="font-13 fa fa-star-o"></i>
-                        <span className="spr-badge-caption">6 reviews</span>
+                      <a className="reviewLink">
+                        <ProductRate rate={product.rate} />
                       </a>
                     </div>
                   </div>
                   <p className="product-single__price product-single__price-product-template">
                     <span className="visually-hidden">Regular price</span>
                     <s id="ComparePrice-product-template">
-                      <span className="money">$600.00</span>
+                      <span className="money">${currentSku.originalPrice}</span>
                     </s>
                     <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
                       <span id="ProductPrice-product-template">
-                        <span className="money">$500.00</span>
-                      </span>
-                    </span>
-                    <span className="discount-badge">
-                      {" "}
-                      <span className="devider">|</span>&nbsp;
-                      <span>You Save</span>
-                      <span
-                        id="SaveAmount-product-template"
-                        className="product-single__save-amount"
-                      >
-                        <span className="money">$100.00</span>
-                      </span>
-                      <span className="off">
-                        (<span>16</span>%)
+                        <span className="money">${currentSku.price}</span>
                       </span>
                     </span>
                   </p>
-                  <div className="orderMsg" data-user="23" data-time="24">
-                    <img src="assets/images/order-icon.jpg" alt="" />{" "}
-                    <strong className="items">5</strong> sold in last{" "}
-                    <strong className="time">26</strong> hours
-                  </div>
                 </div>
                 <div className="product-single__description rte">
-                  <ul>
-                    <li>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </li>
-                    <li>Sed ut perspiciatis unde omnis iste natus error sit</li>
-                    <li>
-                      Neque porro quisquam est qui dolorem ipsum quia dolor
-                    </li>
-                    <li>Lorem Ipsum is not simply random text.</li>
-                  </ul>
+                  {product.desc}
                 </div>
                 <div id="quantity_message">
-                  Hurry! Only <span className="items">4</span> left in stock.
+                <span className="items">{currentSku.stock}</span> left in stock.
                 </div>
                 <form
                   method="post"
                   action="http://annimexweb.com/cart/add"
                   id="product_form_10508262282"
-                  accept-charset="UTF-8"
+                  acceptCharset="UTF-8"
                   className="product-form product-form-product-template hidedropdown"
-                  enctype="multipart/form-data"
+                  encType="multipart/form-data"
                 >
                   <div
                     className="swatch clearfix swatch-0 option1"
@@ -439,10 +561,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="Red"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-red"
+                          htmlFor="swatch-0-red"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-1.jpg)",
@@ -460,10 +583,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="Blue"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-blue"
+                          htmlFor="swatch-0-blue"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-2.jpg)",
@@ -481,10 +605,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="Green"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-green"
+                          htmlFor="swatch-0-green"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-3.jpg)",
@@ -502,10 +627,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="Gray"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-gray"
+                          htmlFor="swatch-0-gray"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-4.jpg)",
@@ -523,10 +649,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="aqua"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-aqua"
+                          htmlFor="swatch-0-aqua"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-5.jpg)",
@@ -544,10 +671,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-0"
                           value="Orange"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl color medium rectangle"
-                          for="swatch-0-orange"
+                          htmlFor="swatch-0-orange"
                           style={{
                             backgroundImage:
                               "url(assets/images/product-detail-page/variant1-6.jpg)",
@@ -575,10 +703,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-1"
                           value="XS"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl medium rectangle"
-                          for="swatch-1-xs"
+                          htmlFor="swatch-1-xs"
                           title="XS"
                         >
                           XS
@@ -594,10 +723,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-1"
                           value="S"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl medium rectangle"
-                          for="swatch-1-s"
+                          htmlFor="swatch-1-s"
                           title="S"
                         >
                           S
@@ -613,10 +743,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-1"
                           value="M"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl medium rectangle"
-                          for="swatch-1-m"
+                          htmlFor="swatch-1-m"
                           title="M"
                         >
                           M
@@ -632,10 +763,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-1"
                           value="L"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl medium rectangle"
-                          for="swatch-1-l"
+                          htmlFor="swatch-1-l"
                           title="L"
                         >
                           L
@@ -651,10 +783,11 @@ const Product = (props) => {
                           type="radio"
                           name="option-1"
                           value="XL"
+                          onChange={testHandler}
                         />
                         <label
                           className="swatchLbl medium rectangle"
-                          for="swatch-1-xl"
+                          htmlFor="swatch-1-xl"
                           title="XL"
                         >
                           XL
@@ -662,167 +795,8 @@ const Product = (props) => {
                       </div>
                     </div>
                   </div>
-                  <p className="infolinks">
-                    <a href="#sizechart" className="sizelink btn">
-                      {" "}
-                      Size Guide
-                    </a>{" "}
-                    <a href="#productInquiry" className="emaillink btn">
-                      {" "}
-                      Ask About this Product
-                    </a>
-                  </p>
-                  {/*Product Action*/}
-                  <div className="product-action clearfix">
-                    <div className="product-form__item--quantity">
-                      <div className="wrapQtyBtn">
-                        <div className="qtyField">
-                          <a
-                            className="qtyBtn minus"
-                            href="javascript:void(0);"
-                          >
-                            <i
-                              className="fa anm anm-minus-r"
-                              aria-hidden="true"
-                            ></i>
-                          </a>
-                          <input
-                            type="text"
-                            id="Quantity"
-                            name="quantity"
-                            value="1"
-                            className="product-form__input qty"
-                          />
-                          <a className="qtyBtn plus" href="javascript:void(0);">
-                            <i
-                              className="fa anm anm-plus-r"
-                              aria-hidden="true"
-                            ></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="product-form__item--submit">
-                      <button
-                        type="button"
-                        name="add"
-                        className="btn product-form__cart-submit"
-                      >
-                        <span>Add to cart</span>
-                      </button>
-                    </div>
-                    <div
-                      className="shopify-payment-button"
-                      data-shopify="payment-button"
-                    >
-                      <button
-                        type="button"
-                        className="shopify-payment-button__button shopify-payment-button__button--unbranded"
-                      >
-                        Buy it now
-                      </button>
-                    </div>
-                  </div>
-                  {/*End Product Action*/}
+                  {actionHtml}
                 </form>
-                <div className="display-table shareRow">
-                  <div className="display-table-cell medium-up--one-third">
-                    <div className="wishlist-btn">
-                      <a
-                        className="wishlist add-to-wishlist"
-                        href="#"
-                        title="Add to Wishlist"
-                      >
-                        <i
-                          className="icon anm anm-heart-l"
-                          aria-hidden="true"
-                        ></i>{" "}
-                        <span>Add to Wishlist</span>
-                      </a>
-                    </div>
-                  </div>
-                  <div className="display-table-cell text-right">
-                    <div className="social-sharing">
-                      <a
-                        target="_blank"
-                        href="#"
-                        className="btn btn--small btn--secondary btn--share share-facebook"
-                        title="Share on Facebook"
-                      >
-                        <i
-                          className="fa fa-facebook-square"
-                          aria-hidden="true"
-                        ></i>{" "}
-                        <span className="share-title" aria-hidden="true">
-                          Share
-                        </span>
-                      </a>
-                      <a
-                        target="_blank"
-                        href="#"
-                        className="btn btn--small btn--secondary btn--share share-twitter"
-                        title="Tweet on Twitter"
-                      >
-                        <i className="fa fa-twitter" aria-hidden="true"></i>{" "}
-                        <span className="share-title" aria-hidden="true">
-                          Tweet
-                        </span>
-                      </a>
-                      <a
-                        href="#"
-                        title="Share on google+"
-                        className="btn btn--small btn--secondary btn--share"
-                      >
-                        <i className="fa fa-google-plus" aria-hidden="true"></i>{" "}
-                        <span className="share-title" aria-hidden="true">
-                          Google+
-                        </span>
-                      </a>
-                      <a
-                        target="_blank"
-                        href="#"
-                        className="btn btn--small btn--secondary btn--share share-pinterest"
-                        title="Pin on Pinterest"
-                      >
-                        <i className="fa fa-pinterest" aria-hidden="true"></i>{" "}
-                        <span className="share-title" aria-hidden="true">
-                          Pin it
-                        </span>
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn--small btn--secondary btn--share share-pinterest"
-                        title="Share by Email"
-                        target="_blank"
-                      >
-                        <i className="fa fa-envelope" aria-hidden="true"></i>{" "}
-                        <span className="share-title" aria-hidden="true">
-                          Email
-                        </span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <p id="freeShipMsg" className="freeShipMsg" data-price="199">
-                  <i className="fa fa-truck" aria-hidden="true"></i> GETTING
-                  CLOSER! ONLY{" "}
-                  <b className="freeShip">
-                    <span
-                      className="money"
-                      data-currency-usd="$199.00"
-                      data-currency="USD"
-                    >
-                      $199.00
-                    </span>
-                  </b>{" "}
-                  AWAY FROM <b>FREE SHIPPING!</b>
-                </p>
-                <p className="shippingMsg">
-                  <i className="fa fa-clock-o" aria-hidden="true"></i> ESTIMATED
-                  DELIVERY BETWEEN <b id="fromDate">Wed. May 1</b> and{" "}
-                  <b id="toDate">Tue. May 7</b>.
-                </p>
                 <div className="userViewMsg" data-user="20" data-time="11000">
                   <i className="fa fa-users" aria-hidden="true"></i>{" "}
                   <strong className="uersView">14</strong> PEOPLE ARE LOOKING
@@ -832,64 +806,11 @@ const Product = (props) => {
             </div>
           </div>
           {/*End-product-single*/}
-          {/*Product Fearure*/}
-          <div className="prFeatures">
-            <div className="row">
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3 feature">
-                <img
-                  src="assets/images/credit-card.png"
-                  alt="Safe Payment"
-                  title="Safe Payment"
-                />
-                <div className="details">
-                  <h3>Safe Payment</h3>Pay with the world's most payment
-                  methods.
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3 feature">
-                <img
-                  src="assets/images/shield.png"
-                  alt="Confidence"
-                  title="Confidence"
-                />
-                <div className="details">
-                  <h3>Confidence</h3>Protection covers your purchase and
-                  personal data.
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3 feature">
-                <img
-                  src="assets/images/worldwide.png"
-                  alt="Worldwide Delivery"
-                  title="Worldwide Delivery"
-                />
-                <div className="details">
-                  <h3>Worldwide Delivery</h3>FREE &amp; fast shipping to over
-                  200+ countries &amp; regions.
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3 feature">
-                <img
-                  src="assets/images/phone-call.png"
-                  alt="Hotline"
-                  title="Hotline"
-                />
-                <div className="details">
-                  <h3>Hotline</h3>Talk to help line for your question on 4141
-                  456 789, 4125 666 888
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*End Product Fearure*/}
           {/*Product Tabs*/}
           <div className="tabs-listing">
             <ul className="product-tabs">
               <li rel="tab1">
                 <a className="tablink">Product Details</a>
-              </li>
-              <li rel="tab2">
-                <a className="tablink">Product Reviews</a>
               </li>
               <li rel="tab3">
                 <a className="tablink">Size Chart</a>
@@ -985,241 +906,6 @@ const Product = (props) => {
                     standard dummy text ever since the 1500s, when an unknown
                     printer took a galley of type and scrambled.
                   </p>
-                </div>
-              </div>
-
-              <div id="tab2" className="tab-content">
-                <div id="shopify-product-reviews">
-                  <div className="spr-container">
-                    <div className="spr-header clearfix">
-                      <div className="spr-summary">
-                        <span className="product-review">
-                          <a className="reviewLink">
-                            <i className="font-13 fa fa-star"></i>
-                            <i className="font-13 fa fa-star"></i>
-                            <i className="font-13 fa fa-star"></i>
-                            <i className="font-13 fa fa-star-o"></i>
-                            <i className="font-13 fa fa-star-o"></i>{" "}
-                          </a>
-                          <span className="spr-summary-actions-togglereviews">
-                            Based on 6 reviews456
-                          </span>
-                        </span>
-                        <span className="spr-summary-actions">
-                          <a
-                            href="#"
-                            className="spr-summary-actions-newreview btn"
-                          >
-                            Write a review
-                          </a>
-                        </span>
-                      </div>
-                    </div>
-                    <div className="spr-content">
-                      <div className="spr-form clearfix">
-                        <form
-                          method="post"
-                          action="#"
-                          id="new-review-form"
-                          className="new-review-form"
-                        >
-                          <h3 className="spr-form-title">Write a review</h3>
-                          <fieldset className="spr-form-contact">
-                            <div className="spr-form-contact-name">
-                              <label
-                                className="spr-form-label"
-                                for="review_author_10508262282"
-                              >
-                                Name
-                              </label>
-                              <input
-                                className="spr-form-input spr-form-input-text "
-                                id="review_author_10508262282"
-                                type="text"
-                                name="review[author]"
-                                value=""
-                                placeholder="Enter your name"
-                              />
-                            </div>
-                            <div className="spr-form-contact-email">
-                              <label
-                                className="spr-form-label"
-                                for="review_email_10508262282"
-                              >
-                                Email
-                              </label>
-                              <input
-                                className="spr-form-input spr-form-input-email "
-                                id="review_email_10508262282"
-                                type="email"
-                                name="review[email]"
-                                value=""
-                                placeholder="john.smith@example.com"
-                              />
-                            </div>
-                          </fieldset>
-                          <fieldset className="spr-form-review">
-                            <div className="spr-form-review-rating">
-                              <label className="spr-form-label">Rating</label>
-                              <div className="spr-form-input spr-starrating">
-                                <div className="product-review">
-                                  <a className="reviewLink" href="#">
-                                    <i className="fa fa-star-o"></i>
-                                    <i className="font-13 fa fa-star-o"></i>
-                                    <i className="font-13 fa fa-star-o"></i>
-                                    <i className="font-13 fa fa-star-o"></i>
-                                    <i className="font-13 fa fa-star-o"></i>
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="spr-form-review-title">
-                              <label
-                                className="spr-form-label"
-                                for="review_title_10508262282"
-                              >
-                                Review Title
-                              </label>
-                              <input
-                                className="spr-form-input spr-form-input-text "
-                                id="review_title_10508262282"
-                                type="text"
-                                name="review[title]"
-                                value=""
-                                placeholder="Give your review a title"
-                              />
-                            </div>
-
-                            <div className="spr-form-review-body">
-                              <label
-                                className="spr-form-label"
-                                for="review_body_10508262282"
-                              >
-                                Body of Review{" "}
-                                <span className="spr-form-review-body-charactersremaining">
-                                  (1500)
-                                </span>
-                              </label>
-                              <div className="spr-form-input">
-                                <textarea
-                                  className="spr-form-input spr-form-input-textarea "
-                                  id="review_body_10508262282"
-                                  data-product-id="10508262282"
-                                  name="review[body]"
-                                  rows="10"
-                                  placeholder="Write your comments here"
-                                ></textarea>
-                              </div>
-                            </div>
-                          </fieldset>
-                          <fieldset className="spr-form-actions">
-                            <input
-                              type="submit"
-                              className="spr-button spr-button-primary button button-primary btn btn-primary"
-                              value="Submit Review"
-                            />
-                          </fieldset>
-                        </form>
-                      </div>
-                      <div className="spr-reviews">
-                        <div className="spr-review">
-                          <div className="spr-review-header">
-                            <span className="product-review spr-starratings spr-review-header-starratings">
-                              <span className="reviewLink">
-                                <i className="fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                              </span>
-                            </span>
-                            <h3 className="spr-review-header-title">
-                              Lorem ipsum dolor sit amet
-                            </h3>
-                            <span className="spr-review-header-byline">
-                              <strong>dsacc</strong> on{" "}
-                              <strong>Apr 09, 2019</strong>
-                            </span>
-                          </div>
-                          <div className="spr-review-content">
-                            <p className="spr-review-content-body">
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit, sed do eiusmod tempor incididunt ut labore
-                              et dolore magna aliqua. Ut enim ad minim veniam,
-                              quis nostrud exercitation ullamco laboris nisi ut
-                              aliquip ex ea commodo consequat.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="spr-review">
-                          <div className="spr-review-header">
-                            <span className="product-review spr-starratings spr-review-header-starratings">
-                              <span className="reviewLink">
-                                <i className="fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                              </span>
-                            </span>
-                            <h3 className="spr-review-header-title">
-                              Lorem Ipsum is simply dummy text of the printing
-                            </h3>
-                            <span className="spr-review-header-byline">
-                              <strong>larrydude</strong> on{" "}
-                              <strong>Dec 30, 2018</strong>
-                            </span>
-                          </div>
-
-                          <div className="spr-review-content">
-                            <p className="spr-review-content-body">
-                              Sed ut perspiciatis unde omnis iste natus error
-                              sit voluptatem accusantium doloremque laudantium,
-                              totam rem aperiam, eaque ipsa quae ab illo
-                              inventore veritatis et quasi architecto beatae
-                              vitae dicta sunt explicabo.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="spr-review">
-                          <div className="spr-review-header">
-                            <span className="product-review spr-starratings spr-review-header-starratings">
-                              <span className="reviewLink">
-                                <i className="fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                                <i className="font-13 fa fa-star"></i>
-                              </span>
-                            </span>
-                            <h3 className="spr-review-header-title">
-                              Neque porro quisquam est qui dolorem ipsum quia
-                              dolor sit amet, consectetur, adipisci velit...
-                            </h3>
-                            <span className="spr-review-header-byline">
-                              <strong>quoctri1905</strong> on{" "}
-                              <strong>Dec 30, 2018</strong>
-                            </span>
-                          </div>
-
-                          <div className="spr-review-content">
-                            <p className="spr-review-content-body">
-                              Lorem Ipsum is simply dummy text of the printing
-                              and typesetting industry. Lorem Ipsum has been the
-                              industry's standard dummy text ever since the
-                              1500s, when an unknown printer took a galley of
-                              type and scrambled.
-                              <br />
-                              <br />
-                              Lorem Ipsum is simply dummy text of the printing
-                              and typesetting industry.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -1398,16 +1084,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -1417,7 +1098,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -1524,16 +1205,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -1543,7 +1219,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -1642,16 +1318,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -1661,7 +1332,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -1761,16 +1432,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -1780,7 +1446,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -1881,16 +1547,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -1900,7 +1561,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -2001,16 +1662,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -2020,7 +1676,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -2087,16 +1743,11 @@ const Product = (props) => {
                   {/*end product image*/}
 
                   {/*Start product button*/}
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
-                  >
+                  <form className="variants add" action="#" method="post">
                     <button
                       className="btn btn-addto-cart"
                       type="button"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       Select Options
                     </button>
@@ -2106,7 +1757,7 @@ const Product = (props) => {
                       href="#"
                       title="Quick View"
                       className="quick-view"
-                      tabindex="0"
+                      tabIndex="0"
                     >
                       <i className="icon anm anm-search-plus-r"></i>
                     </a>
@@ -2480,7 +2131,7 @@ const Product = (props) => {
         {/*#ProductSection-product-template*/}
       </div>
 
-      <div class="hide">
+      <div className="hide">
         <div id="sizechart">
           <h3>WOMEN'S BODY SIZING CHART</h3>
           <table>
@@ -2581,7 +2232,59 @@ const Product = (props) => {
           </div>
         </div>
       </div>
-      <div class="hide"></div>
+      <div className="hide"></div>
+      <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+          <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+          </div>
+          <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+              <div class="pswp__counter"></div>
+              <button
+                class="pswp__button pswp__button--close"
+                title="Close (Esc)"
+              ></button>
+              <button
+                class="pswp__button pswp__button--share"
+                title="Share"
+              ></button>
+              <button
+                class="pswp__button pswp__button--fs"
+                title="Toggle fullscreen"
+              ></button>
+              <button
+                class="pswp__button pswp__button--zoom"
+                title="Zoom in/out"
+              ></button>
+              <div class="pswp__preloader">
+                <div class="pswp__preloader__icn">
+                  <div class="pswp__preloader__cut">
+                    <div class="pswp__preloader__donut"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+              <div class="pswp__share-tooltip"></div>
+            </div>
+            <button
+              class="pswp__button pswp__button--arrow--left"
+              title="Previous (arrow left)"
+            ></button>
+            <button
+              class="pswp__button pswp__button--arrow--right"
+              title="Next (arrow right)"
+            ></button>
+            <div class="pswp__caption">
+              <div class="pswp__caption__center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </Fragment>
   );
 };
