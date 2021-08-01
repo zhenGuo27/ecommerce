@@ -1,5 +1,7 @@
 import "bootstrap";
 import { Fragment, useEffect, useState } from "react";
+import ColorItems from "./ColorItems";
+import SizeItems from "./SizeItems";
 
 const QuickViewPopup = (props) => {
   const [selectedColor, setSelectedColor] = useState(
@@ -74,75 +76,8 @@ const QuickViewPopup = (props) => {
     setSelectedColor(color);
   };
 
-  const productColors =
-    Object.keys(props.data).length !== 0
-      ? [...new Set(props.data.sku.map((item) => item.color))]
-      : [];
-
-  const ColorItem = (props) => {
-    const available = props.available ? "available" : "";
-    const classes = ` swatch-element color ${props.value
-      .toString()
-      .toLowerCase()} ${available}`;
-    const sku = props.skus.filter((item) => item.color === props.value);
-    const img = props.smallImgs.filter(
-      (item) => item.skuId === sku[0].id
-    )[0].src;
-    const checked = (props.value === selectedColor);
-
-    return (
-      <div data-value={props.value} className={classes} onClick={colorChangeHandler.bind(null, props.value)}>
-        <input
-          className="swatchInput"
-          id={`swatch-0-${props.value.toLowerCase()}`}
-          type="radio"
-          name="option-0"
-          value={props.value}
-          defaultChecked={checked}
-        />
-        <label
-          className="swatchLbl color medium rectangle"
-          htmlFor={`swatch-0-${props.value.toString().toLowerCase()}`}
-          style={{
-            backgroundImage: "url(" + img + ")",
-          }}
-          title={props.value}
-        ></label>
-      </div>
-    );
-  };
-
   const sizeChangeHandler = (size) => {
     setSelectedSize(size);
-  };
-
-  const productSize =
-    Object.keys(props.data).length !== 0
-      ? [...new Set(props.data.sku.map((item) => item.size))]
-      : [];
-
-  const SizeItem = (props) => {
-    const checked = (props.value === selectedSize);
-
-    return (
-      <div data-value={props.value} className={`swatch-element ${props.value.toLowerCase()} available`} onClick={sizeChangeHandler.bind(null, props.value)}>
-        <input
-          className="swatchInput"
-          id={`swatch-1-${props.value.toLowerCase()}`}
-          type="radio"
-          name="option-1"
-          value={props.value}
-          defaultChecked={checked}
-        />
-        <label
-          className="swatchLbl medium rectangle"
-          htmlFor={`swatch-1-${props.value.toLowerCase()}`}
-          title={props.value}
-        >
-          {props.value}
-        </label>
-      </div>
-    );
   };
 
   return (
@@ -183,7 +118,7 @@ const QuickViewPopup = (props) => {
                             <span className="instock ">In Stock</span>
                           )}
                           {currentSku.stock === 0 && (
-                            <span className="outstock hide">Unavailable</span>
+                            <span className="outstock">Unavailable</span>
                           )}
                         </div>
                         <div className="product-sku">
@@ -214,15 +149,7 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Color: <span className="slVariant">{selectedColor}</span>
                             </label>
-                            {productColors.map((item) => (
-                              <ColorItem
-                                key={item}
-                                value={item}
-                                available={currentSku.stock !== 0}
-                                skus={props.data.sku}
-                                smallImgs={props.data.smallImgs}
-                              />
-                            ))}
+                            <ColorItems data={props.data} selectedColor={selectedColor} change={colorChangeHandler} currentSku={currentSku}/>
                           </div>
                         </div>
                         <div
@@ -233,9 +160,7 @@ const QuickViewPopup = (props) => {
                             <label className="header">
                               Size: <span className="slVariant">{selectedSize}</span>
                             </label>
-                            {productSize.map((item) => (
-                              <SizeItem key={item} value={item} />
-                            ))}
+                            <SizeItems data={props.data} selectedSize={selectedSize} change={sizeChangeHandler} />                        
                           </div>
                         </div>
                         {/* Product Action */}

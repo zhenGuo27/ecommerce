@@ -6,12 +6,17 @@ import "photoswipe/dist/default-skin/default-skin.css";
 import { Fragment, useEffect, useState } from "react";
 import { getProductById } from "./product-action";
 import ProductRate from "./ProductRate";
+import ColorItems from "./ColorItems";
+import SizeItems from "./SizeItems";
 window.jQuery = window.$ = $;
 require("ez-plus");
 
 const Product = (props) => {
-  const [product, setProduct] = useState({});
+  const [productData, setProduct] = useState({});
   const [currentSku, setCurrentSku] = useState({});
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [orderQuantity, setOrderQuantity] = useState(1);
 
   useEffect(() => {
     document.body.classList.add("template-product");
@@ -19,7 +24,6 @@ const Product = (props) => {
     getProductById(props.id).then((item) => {
       setProduct(item);
       setCurrentSku(item.sku[0]);
-      console.log("item", item);
     });
 
     product_thumb();
@@ -28,6 +32,41 @@ const Product = (props) => {
     setTabs();
     imgPopup();
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(productData).length !== 0) {
+      setSelectedColor(productData.sku[0].color);
+      setSelectedSize(productData.sku[0].size);
+    }
+  }, [productData]);
+
+  const orderQuantityChangeHandler = (event) => {
+    const quantity =
+      currentSku.stock >= event.target.value
+        ? event.target.value
+        : currentSku.stock;
+    setOrderQuantity(quantity);
+  };
+
+  const increaseQuantity = () => {
+    let updatedQuantiy = orderQuantity;
+    updatedQuantiy = (currentSku.stock > updatedQuantiy) ? updatedQuantiy + 1 : updatedQuantiy;
+    setOrderQuantity(updatedQuantiy);
+  };
+
+  const decreaseQuantity = () => {
+    let updatedQuantiy = orderQuantity;
+    updatedQuantiy = (updatedQuantiy !== 1) ? updatedQuantiy - 1 : updatedQuantiy;
+    setOrderQuantity(updatedQuantiy);
+  };
+
+  const colorChangeHandler = (color) => {
+    setSelectedColor(color);
+  };
+
+  const sizeChangeHandler = (size) => {
+    setSelectedSize(size);
+  };
 
   const imgPopup = () => {
     var $pswp = $(".pswp")[0],
@@ -185,8 +224,6 @@ const Product = (props) => {
     });
   };
 
-  const testHandler = () => {};
-
   let actionHtml = null;
   if (currentSku.stock != 0) {
     actionHtml = (
@@ -194,18 +231,18 @@ const Product = (props) => {
         <div className="product-form__item--quantity">
           <div className="wrapQtyBtn">
             <div className="qtyField">
-              <a className="qtyBtn minus">
+              <a className="qtyBtn minus" onClick={decreaseQuantity}>
                 <i className="fa anm anm-minus-r" aria-hidden="true"></i>
               </a>
               <input
                 type="text"
                 id="Quantity"
                 name="quantity"
-                value="1"
-                onChange={testHandler}
+                value={orderQuantity}
+                onChange={orderQuantityChangeHandler}
                 className="product-form__input qty"
               />
-              <a className="qtyBtn plus">
+              <a className="qtyBtn plus" onClick={increaseQuantity}>
                 <i className="fa anm anm-plus-r" aria-hidden="true"></i>
               </a>
             </div>
@@ -242,7 +279,7 @@ const Product = (props) => {
               Home
             </a>
             <span aria-hidden="true">›</span>
-            <span>{product.title}</span>
+            <span>{productData.title}</span>
           </div>
         </div>
         {/*End Breadcrumb*/}
@@ -501,7 +538,7 @@ const Product = (props) => {
               <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                 <div className="product-single__meta">
                   <h1 className="product-single__title">
-                    {product.title}
+                    {productData.title}
                   </h1>
                   <div className="prInfoRow">
                     <div className="product-stock">
@@ -513,7 +550,7 @@ const Product = (props) => {
                     </div>
                     <div className="product-review">
                       <a className="reviewLink">
-                        <ProductRate rate={product.rate} />
+                        <ProductRate rate={productData.rate} />
                       </a>
                     </div>
                   </div>
@@ -530,7 +567,7 @@ const Product = (props) => {
                   </p>
                 </div>
                 <div className="product-single__description rte">
-                  {product.desc}
+                  {productData.desc}
                 </div>
                 <div id="quantity_message">
                 <span className="items">{currentSku.stock}</span> left in stock.
@@ -549,140 +586,9 @@ const Product = (props) => {
                   >
                     <div className="product-form__item">
                       <label className="header">
-                        Color: <span className="slVariant">Red</span>
+                        Color: <span className="slVariant">{selectedColor}</span>
                       </label>
-                      <div
-                        data-value="Red"
-                        className="swatch-element color red available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-red"
-                          type="radio"
-                          name="option-0"
-                          value="Red"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-red"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-1.jpg)",
-                          }}
-                          title="Red"
-                        ></label>
-                      </div>
-                      <div
-                        data-value="Blue"
-                        className="swatch-element color blue available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-blue"
-                          type="radio"
-                          name="option-0"
-                          value="Blue"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-blue"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-2.jpg)",
-                          }}
-                          title="Blue"
-                        ></label>
-                      </div>
-                      <div
-                        data-value="Green"
-                        className="swatch-element color green available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-green"
-                          type="radio"
-                          name="option-0"
-                          value="Green"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-green"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-3.jpg)",
-                          }}
-                          title="Green"
-                        ></label>
-                      </div>
-                      <div
-                        data-value="Gray"
-                        className="swatch-element color gray available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-gray"
-                          type="radio"
-                          name="option-0"
-                          value="Gray"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-gray"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-4.jpg)",
-                          }}
-                          title="Gray"
-                        ></label>
-                      </div>
-                      <div
-                        data-value="aqua"
-                        className="swatch-element color aqua available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-aqua"
-                          type="radio"
-                          name="option-0"
-                          value="aqua"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-aqua"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-5.jpg)",
-                          }}
-                          title="aqua"
-                        ></label>
-                      </div>
-                      <div
-                        data-value="Orange"
-                        className="swatch-element color orange available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-0-orange"
-                          type="radio"
-                          name="option-0"
-                          value="Orange"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl color medium rectangle"
-                          htmlFor="swatch-0-orange"
-                          style={{
-                            backgroundImage:
-                              "url(assets/images/product-detail-page/variant1-6.jpg)",
-                          }}
-                          title="Orange"
-                        ></label>
-                      </div>
+                      <ColorItems data={productData} selectedColor={selectedColor} change={colorChangeHandler} currentSku={currentSku} />                     
                     </div>
                   </div>
                   <div
@@ -691,108 +597,9 @@ const Product = (props) => {
                   >
                     <div className="product-form__item">
                       <label className="header">
-                        Size: <span className="slVariant">XS</span>
+                        Size: <span className="slVariant">{selectedSize}</span>
                       </label>
-                      <div
-                        data-value="XS"
-                        className="swatch-element xs available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-1-xs"
-                          type="radio"
-                          name="option-1"
-                          value="XS"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl medium rectangle"
-                          htmlFor="swatch-1-xs"
-                          title="XS"
-                        >
-                          XS
-                        </label>
-                      </div>
-                      <div
-                        data-value="S"
-                        className="swatch-element s available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-1-s"
-                          type="radio"
-                          name="option-1"
-                          value="S"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl medium rectangle"
-                          htmlFor="swatch-1-s"
-                          title="S"
-                        >
-                          S
-                        </label>
-                      </div>
-                      <div
-                        data-value="M"
-                        className="swatch-element m available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-1-m"
-                          type="radio"
-                          name="option-1"
-                          value="M"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl medium rectangle"
-                          htmlFor="swatch-1-m"
-                          title="M"
-                        >
-                          M
-                        </label>
-                      </div>
-                      <div
-                        data-value="L"
-                        className="swatch-element l available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-1-l"
-                          type="radio"
-                          name="option-1"
-                          value="L"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl medium rectangle"
-                          htmlFor="swatch-1-l"
-                          title="L"
-                        >
-                          L
-                        </label>
-                      </div>
-                      <div
-                        data-value="XL"
-                        className="swatch-element xl available"
-                      >
-                        <input
-                          className="swatchInput"
-                          id="swatch-1-xl"
-                          type="radio"
-                          name="option-1"
-                          value="XL"
-                          onChange={testHandler}
-                        />
-                        <label
-                          className="swatchLbl medium rectangle"
-                          htmlFor="swatch-1-xl"
-                          title="XL"
-                        >
-                          XL
-                        </label>
-                      </div>
+                      <SizeItems data={productData} selectedSize={selectedSize} change={sizeChangeHandler} />                     
                     </div>
                   </div>
                   {actionHtml}
@@ -2233,54 +2040,54 @@ const Product = (props) => {
         </div>
       </div>
       <div className="hide"></div>
-      <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="pswp__bg"></div>
-        <div class="pswp__scroll-wrap">
-          <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
+      <div className="pswp" tabIndex="-1" role="dialog" aria-hidden="true">
+        <div className="pswp__bg"></div>
+        <div className="pswp__scroll-wrap">
+          <div className="pswp__container">
+            <div className="pswp__item"></div>
+            <div className="pswp__item"></div>
+            <div className="pswp__item"></div>
           </div>
-          <div class="pswp__ui pswp__ui--hidden">
-            <div class="pswp__top-bar">
-              <div class="pswp__counter"></div>
+          <div className="pswp__ui pswp__ui--hidden">
+            <div className="pswp__top-bar">
+              <div className="pswp__counter"></div>
               <button
-                class="pswp__button pswp__button--close"
+                className="pswp__button pswp__button--close"
                 title="Close (Esc)"
               ></button>
               <button
-                class="pswp__button pswp__button--share"
+                className="pswp__button pswp__button--share"
                 title="Share"
               ></button>
               <button
-                class="pswp__button pswp__button--fs"
+                className="pswp__button pswp__button--fs"
                 title="Toggle fullscreen"
               ></button>
               <button
-                class="pswp__button pswp__button--zoom"
+                className="pswp__button pswp__button--zoom"
                 title="Zoom in/out"
               ></button>
-              <div class="pswp__preloader">
-                <div class="pswp__preloader__icn">
-                  <div class="pswp__preloader__cut">
-                    <div class="pswp__preloader__donut"></div>
+              <div className="pswp__preloader">
+                <div className="pswp__preloader__icn">
+                  <div className="pswp__preloader__cut">
+                    <div className="pswp__preloader__donut"></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-              <div class="pswp__share-tooltip"></div>
+            <div className="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+              <div className="pswp__share-tooltip"></div>
             </div>
             <button
-              class="pswp__button pswp__button--arrow--left"
+              className="pswp__button pswp__button--arrow--left"
               title="Previous (arrow left)"
             ></button>
             <button
-              class="pswp__button pswp__button--arrow--right"
+              className="pswp__button pswp__button--arrow--right"
               title="Next (arrow right)"
             ></button>
-            <div class="pswp__caption">
-              <div class="pswp__caption__center"></div>
+            <div className="pswp__caption">
+              <div className="pswp__caption__center"></div>
             </div>
           </div>
         </div>
