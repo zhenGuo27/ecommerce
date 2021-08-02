@@ -28,9 +28,7 @@ const Product = (props) => {
       setCurrentSku(item.sku[0]);
     });
 
-    product_thumb();
     product_slider_ppage();
-    product_zoom();
     setTabs();
     imgPopup();
   }, []);
@@ -119,7 +117,7 @@ const Product = (props) => {
   const product_thumb = () => {
     $(".product-dec-slider-2").slick({
       infinite: true,
-      slidesToShow: 5,
+      slidesToShow: 3,
       vertical: true,
       slidesToScroll: 1,
       centerPadding: "60px",
@@ -271,6 +269,49 @@ const Product = (props) => {
     );
   }
 
+  const ImgGallery = (props) => {
+    const [imgs, setImgs] = useState([]);
+
+    useEffect(() => {
+      getDistinctImgs();
+    }, [props.data]);
+
+    useEffect(() => {
+      if (imgs.length !== 0) {
+        product_thumb();
+        product_zoom();
+      }
+    }, [imgs]);
+
+    const getDistinctImgs = () => {
+      const filterImgs = props.data.filter((item)=> item.detail === true); 
+      const distinctImgs = [...new Set(filterImgs.map((item) => item.src))];
+      setImgs(distinctImgs);
+    };
+
+    return (
+      <div  id="gallery" className="product-dec-slider-2 product-tab-left">
+        {imgs.map((item, index) => {
+          return (
+            <a
+            data-image={item}
+            data-zoom-image={item}
+            aria-hidden="true"
+            tabIndex="-1"
+            key={`gallery_${index}`}
+          >
+            <img
+              data-src={item}
+              src={item}
+              alt={productData.title}
+            />
+          </a>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       <div id="MainContent" className="main-content" role="main">
@@ -296,176 +337,9 @@ const Product = (props) => {
               <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                 <div className="product-details-img">
                   <div className="product-thumb">
-                    <div
-                      id="gallery"
-                      className="product-dec-slider-2 product-tab-left"
-                    >
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big1.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big1.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="-4"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible0.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible0.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big2.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big2.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="-3"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big3.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big3.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="-2"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible6.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible6.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible7-big.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible7-big.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="-1"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible7.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible7.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big4.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big4.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="0"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible8.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible8.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big5.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big5.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="1"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible9.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible9.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big6.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big6.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="2"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible1.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible1.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big7.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big7.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="3"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible2.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible2.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big8.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big8.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="4"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible3.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible3.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big9.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big9.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="5"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible4.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible4.jpg"
-                          alt=""
-                        />
-                      </a>
-                      <a
-                        data-image="assets/images/product-detail-page/camelia-reversible-big10.jpg"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big10.jpg"
-                        className="slick-slide slick-cloned"
-                        data-slick-index="6"
-                        aria-hidden="true"
-                        tabIndex="-1"
-                      >
-                        <img
-                          className="blur-up lazyload"
-                          data-src="assets/images/product-detail-page/camelia-reversible5.jpg"
-                          src="assets/images/product-detail-page/camelia-reversible5.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
+                    {Object.keys(productData).length !== 0 && (
+                      <ImgGallery data={productData.largeImgs} />
+                    )}             
                   </div>
                   <div className="zoompro-wrap product-zoom-right pl-20">
                     <div className="zoompro-span">
@@ -539,13 +413,15 @@ const Product = (props) => {
               </div>
               <div className="col-lg-6 col-md-6 col-sm-12 col-12">
                 <div className="product-single__meta">
-                  <h1 className="product-single__title">
-                    {productData.title}
-                  </h1>
+                  <h1 className="product-single__title">{productData.title}</h1>
                   <div className="prInfoRow">
                     <div className="product-stock">
-                      {currentSku.stock!==0 && <span className="instock ">In Stock</span>}
-                      {currentSku.stock === 0 && <span className="outstock">Unavailable</span>}
+                      {currentSku.stock !== 0 && (
+                        <span className="instock ">In Stock</span>
+                      )}
+                      {currentSku.stock === 0 && (
+                        <span className="outstock">Unavailable</span>
+                      )}
                     </div>
                     <div className="product-sku">
                       SKU: <span className="variant-sku">{currentSku.id}</span>
@@ -572,7 +448,8 @@ const Product = (props) => {
                   {productData.desc}
                 </div>
                 <div id="quantity_message">
-                <span className="items">{currentSku.stock}</span> left in stock.
+                  <span className="items">{currentSku.stock}</span> left in
+                  stock.
                 </div>
                 <form
                   method="post"
@@ -588,9 +465,15 @@ const Product = (props) => {
                   >
                     <div className="product-form__item">
                       <label className="header">
-                        Color: <span className="slVariant">{selectedColor}</span>
+                        Color:{" "}
+                        <span className="slVariant">{selectedColor}</span>
                       </label>
-                      <ColorItems data={productData} selectedColor={selectedColor} change={colorChangeHandler} currentSku={currentSku} />                     
+                      <ColorItems
+                        data={productData}
+                        selectedColor={selectedColor}
+                        change={colorChangeHandler}
+                        currentSku={currentSku}
+                      />
                     </div>
                   </div>
                   <div
@@ -601,7 +484,11 @@ const Product = (props) => {
                       <label className="header">
                         Size: <span className="slVariant">{selectedSize}</span>
                       </label>
-                      <SizeItems data={productData} selectedSize={selectedSize} change={sizeChangeHandler} />                     
+                      <SizeItems
+                        data={productData}
+                        selectedSize={selectedSize}
+                        change={sizeChangeHandler}
+                      />
                     </div>
                   </div>
                   {actionHtml}
@@ -848,9 +735,17 @@ const Product = (props) => {
           </div>
           {/*End Product Tabs*/}
 
-          <ProductSlider slider="relatedSlider" title="Related Products" subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin." />
+          <ProductSlider
+            slider="relatedSlider"
+            title="Related Products"
+            subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin."
+          />
 
-          <ProductSlider slider="recentlySlider" title="Recently Viewed Product" subtitle="You can manage this section from store admin as describe in above section" />
+          <ProductSlider
+            slider="recentlySlider"
+            title="Recently Viewed Product"
+            subtitle="You can manage this section from store admin as describe in above section"
+          />
         </div>
         {/*#ProductSection-product-template*/}
       </div>
