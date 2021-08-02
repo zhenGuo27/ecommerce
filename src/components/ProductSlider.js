@@ -4,146 +4,9 @@ import slick from "slick-carousel";
 import QuickViewPopup from "./QuickViewPopup";
 import { getProducts } from "./product-action";
 
-import product4 from "../images/product-images/product-image4.jpg";
-import product4_1 from "../images/product-images/product-image4-1.jpg";
-import product5 from "../images/product-images/product-image5.jpg";
-import product5_1 from "../images/product-images/product-image5-1.jpg";
-import product7 from "../images/product-images/product-image7.jpg";
-import product7_1 from "../images/product-images/product-image7-1.jpg";
-import product24 from "../images/product-images/product-image24.jpg";
-import product24_1 from "../images/product-images/product-image24-1.jpg";
-import product33 from "../images/product-images/product-image33.jpg";
-import product33_1 from "../images/product-images/product-image33-1.jpg";
-
-// const products = [
-//   {
-//     id: "clothing-1",
-//     title: "Clothing-2 product",
-//     desc: "Product desc",
-//     tagId: 1,
-//     startDate: "2021-07-14",
-//     rate: 1,
-//   },
-//   {
-//     id: "clothing-2",
-//     title: "Clothing-2 product",
-//     desc: "Product desc",
-//     tagId: 2,
-//     startDate: "2021-07-12",
-//     rate: 2,
-//   },
-//   {
-//     id: "clothing-3",
-//     title: "Clothing-3 product",
-//     desc: "Product desc",
-//     tagId: 1,
-//     startDate: "2021-07-14",
-//     rate: 3,
-//   },
-//   {
-//     id: "clothing-4",
-//     title: "Clothing-4 product",
-//     desc: "Product desc",
-//     tagId: 2,
-//     startDate: "2021-07-11",
-//     rate: 4,
-//   },
-//   {
-//     id: "clothing-5",
-//     title: "Clothing-5 product",
-//     desc: "Product desc",
-//     tagId: 2,
-//     startDate: "2021-07-11",
-//     rate: 5,
-//   },
-// ];
-
-// const productImgs = [
-//   {
-//     productId: "clothing-1",
-//     largeImg: [
-//       {
-//         src: product7,
-//         homeSlider: true,
-//         homeSliderHover: false,
-//       },
-//       {
-//         src: product7_1,
-//         homeSlider: true,
-//         homeSliderHover: true,
-//       },
-//     ],
-//     smallImg: [],
-//   },
-//   {
-//     productId: "clothing-2",
-//     largeImg: [
-//       {
-//         src: product24,
-//         homeSlider: true,
-//         homeSliderHover: false,
-//       },
-//       {
-//         src: product24_1,
-//         homeSlider: true,
-//         homeSliderHover: true,
-//       },
-//     ],
-//     smallImg: [],
-//   },
-//   {
-//     productId: "clothing-3",
-//     largeImg: [
-//       {
-//         src: product33,
-//         homeSlider: true,
-//         homeSliderHover: false,
-//       },
-//       {
-//         src: product33_1,
-//         homeSlider: true,
-//         homeSliderHover: true,
-//       },
-//     ],
-//     smallImg: [],
-//   },
-//   {
-//     productId: "clothing-4",
-//     largeImg: [
-//       {
-//         src: product4,
-//         homeSlider: true,
-//         homeSliderHover: false,
-//       },
-//       {
-//         src: product4_1,
-//         homeSlider: true,
-//         homeSliderHover: true,
-//       },
-//     ],
-//     smallImg: [],
-//   },
-//   {
-//     productId: "clothing-5",
-//     largeImg: [
-//       {
-//         src: product5,
-//         homeSlider: true,
-//         homeSliderHover: false,
-//       },
-//       {
-//         src: product5_1,
-//         homeSlider: true,
-//         homeSliderHover: true,
-//       },
-//     ],
-//     smallImg: [],
-//   },
-// ];
-
 let popupInit = true;
 
-const HomeProductSlider = () => {
+const ProductSlider = (props) => {
   const [productData, setProductData] = useState([]);
   const [popupProductId, setPopupProductId] = useState("");
 
@@ -151,7 +14,6 @@ const HomeProductSlider = () => {
     getProducts(1, "").then((items) => {
       if (items && items.products.length !== 0) {
         setProductData(items.products);
-        console.log("items", items.products);
       } else {
         setProductData([]);
       }
@@ -184,7 +46,7 @@ const HomeProductSlider = () => {
   const inputOnChangeHandler = () => {};
 
   const setSlider = () => {
-    $(".productSlider").slick({
+    $("." + props.slider).slick({
       dots: false,
       infinite: true,
       slidesToShow: 4,
@@ -249,10 +111,10 @@ const HomeProductSlider = () => {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-12 col-lg-12">
               <div className="section-header text-center">
-                <h2 className="h2">Shop these looks</h2>
-                <p>Shop from hundreds of collections for a fashionable look.</p>
+                <h2 className="h2">{props.title}</h2>
+                <p>{props.subtitle}</p>
               </div>
-              <div className="productSlider grid-products grid-products-hover-gry">
+              <div className={`${props.slider} productSlider grid-products grid-products-hover-gry`}>
                 {productData.map((item) => {
                   return (
                     <div className="col-12 item" key={item.id}>
@@ -323,4 +185,4 @@ const HomeProductSlider = () => {
   );
 };
 
-export default HomeProductSlider;
+export default ProductSlider;

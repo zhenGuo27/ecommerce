@@ -3,7 +3,7 @@ import { Fragment, useEffect } from "react";
 import HomeSlider from "../components/HomeSlider";
 import FeatureContent_ImgLeft from "../components/FeatureContent_ImgLeft";
 import FeatureContent_ImgRight from "../components/FeatureContent_ImgRight";
-import HomeProductSlider from "../components/HomeProductSlider";
+import ProductSlider from "./ProductSlider";
 import ThreeColumnProducts from "../components/ThreeColumnProducts";
 
 import bnr1 from "../images/collection/home12-category-bnr1.jpg";
@@ -31,7 +31,7 @@ const Home = (props) => {
         subTitle="Shoes we can't stop wearing!"
         btnText="Shop Now"
       />
-      <HomeProductSlider />
+      <ProductSlider title="Shop these looks" subtitle="Shop from hundreds of collections for a fashionable look."/>
 
       <FeatureContent_ImgLeft
         img={bnr3}

@@ -19,7 +19,7 @@ const pageSize = 6;
 const pageRange = 5;
 
 const GridProducts = (props) => {
-  const [productData, setProducts] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [popupProductId, setPopupProductId] = useState("");
   const [page, setPage] = useState(intitPagination);
   const [noItems, setNoItems] = useState(false);
@@ -47,9 +47,9 @@ const GridProducts = (props) => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
       if (items && items.products.length !== 0) {
         setNoItems(false);
-        setProducts(items.products);
+        setProductData(items.products);
       } else {
-        setProducts([]);
+        setProductData([]);
         setNoItems(true);
       }
     });
@@ -87,7 +87,7 @@ const GridProducts = (props) => {
     const sort = parseInt(event.target.value, 10);
     getProducts(sort).then((items) => {
       if (items && items.products.length != 0) {
-        setProducts(items.products);
+        setProductData(items.products);
       }
     });
   };
