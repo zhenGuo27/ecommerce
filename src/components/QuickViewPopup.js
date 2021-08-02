@@ -12,6 +12,7 @@ const QuickViewPopup = (props) => {
   const [orderQuantity, setOrderQuantity] = useState(1);
 
   useState(() => {
+    console.log("props.id", props.id)
     getProductById(props.id).then((item) => {
       setProduct(item);
       setCurrentSku(item.sku[0]);

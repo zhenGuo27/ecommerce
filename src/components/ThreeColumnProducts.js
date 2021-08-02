@@ -52,8 +52,8 @@ const ThreeColumnProducts = (props) => {
       })
       .slice(0, 3);
 
-    return filterData.map((item) => (
-      <div className="grid__item">
+    return filterData.map((item, index) => (
+      <div className="grid__item" key={`threeColumn${index}`}>
         <div className="mini-list-item">
           <div className="mini-view_image">
             <a className="grid-view-item__link" href="#">

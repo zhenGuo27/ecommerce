@@ -41,7 +41,7 @@ const HomeSlider = () => {
     <div className="slideshow slideshow-wrapper pb-section">
       <div className="home-slideshow">
         {sliderData.map((item) => (
-          <div className="slide slideshow--medium">
+          <div className="slide slideshow--medium" key={item.title}>
             <div>
               <img
                 data-src={item.img}

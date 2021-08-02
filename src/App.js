@@ -26,9 +26,9 @@ function App() {
       <MobileMenu />
 
       <div id="page-content">
-         {/* <Home /> */}
+         <Home />
          {/* <Product id="clothing-1"/> */}
-        <ProductList />
+        {/* <ProductList /> */}
         {/* <ForgetPassword /> */}
       </div>
 
