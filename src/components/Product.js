@@ -345,9 +345,9 @@ const Product = (props) => {
                     <div className="zoompro-span">
                       <img
                         className="blur-up lazyload zoompro"
-                        data-zoom-image="assets/images/product-detail-page/camelia-reversible-big1.jpg"
-                        alt=""
-                        src="assets/images/product-detail-page/camelia-reversible-big1.jpg"
+                        data-zoom-image={Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:""}
+                        alt={productData.title}
+                        src={Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:""}
                       />
                     </div>
                     <div className="product-labels">
@@ -362,52 +362,6 @@ const Product = (props) => {
                         ></i>
                       </a>
                     </div>
-                  </div>
-                  <div className="lightboximages">
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big1.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big2.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big3.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible7-big.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big4.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big5.jpg"
-                      data-size="1462x2048"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big6.jpg"
-                      data-size="731x1024"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big7.jpg"
-                      data-size="731x1024"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big8.jpg"
-                      data-size="731x1024"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big9.jpg"
-                      data-size="731x1024"
-                    ></a>
-                    <a
-                      href="assets/images/product-detail-page/camelia-reversible-big10.jpg"
-                      data-size="731x1024"
-                    ></a>
                   </div>
                 </div>
               </div>
