@@ -9,6 +9,7 @@ import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
+import parse from 'html-react-parser';
 
 window.jQuery = window.$ = $;
 require("ez-plus");
@@ -19,6 +20,7 @@ const Product = (props) => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [orderQuantity, setOrderQuantity] = useState(1);
+  const [detail , setDetail] = useState(parse(""));
 
   useEffect(() => {
     document.body.classList.add("template-product");
@@ -37,6 +39,7 @@ const Product = (props) => {
     if (Object.keys(productData).length !== 0) {
       setSelectedColor(productData.sku[0].color);
       setSelectedSize(productData.sku[0].size);
+      setDetail(parse(productData.detail));
     }
   }, [productData]);
 
@@ -312,6 +315,8 @@ const Product = (props) => {
     );
   };
 
+  //const detail = parse(productData.detail);
+
   return (
     <Fragment>
       <div id="MainContent" className="main-content" role="main">
@@ -449,8 +454,7 @@ const Product = (props) => {
                 </form>
                 <div className="userViewMsg" data-user="20" data-time="11000">
                   <i className="fa fa-users" aria-hidden="true"></i>{" "}
-                  <strong className="uersView">14</strong> PEOPLE ARE LOOKING
-                  FOR THIS PRODUCT
+                  <strong className="uersView">{productData.viewed}</strong><span>PEOPLE ARE LOOKING FOR THIS PRODUCT</span>
                 </div>
               </div>
             </div>
@@ -472,90 +476,7 @@ const Product = (props) => {
             <div className="tab-container">
               <div id="tab1" className="tab-content">
                 <div className="product-description rte">
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged.
-                  </p>
-                  <ul>
-                    <li>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </li>
-                    <li>Sed ut perspiciatis unde omnis iste natus error sit</li>
-                    <li>
-                      Neque porro quisquam est qui dolorem ipsum quia dolor
-                    </li>
-                    <li>Lorem Ipsum is not simply random text.</li>
-                    <li>Free theme updates</li>
-                  </ul>
-                  <h3>
-                    Sed ut perspiciatis unde omnis iste natus error sit
-                    voluptatem
-                  </h3>
-                  <p>
-                    You can change the position of any sections such as slider,
-                    banner, products, collection and so on by just dragging and
-                    dropping.&nbsp;
-                  </p>
-                  <h3>Lorem Ipsum is not simply random text.</h3>
-                  <p>
-                    But I must explain to you how all this mistaken idea of
-                    denouncing pleasure and praising pain was born and I will
-                    give you a complete account of the system, and expound the
-                    actual teachings of the great explorer of the truth, the
-                    master-builder of human happiness.
-                  </p>
-                  <p>
-                    Change colors, fonts, banners, megamenus and more. Preview
-                    changes are live before saving them.
-                  </p>
-                  <h3>1914 translation by H. Rackham</h3>
-                  <p>
-                    But I must explain to you how all this mistaken idea of
-                    denouncing pleasure and praising pain was born and I will
-                    give you a complete account of the system, and expound the
-                    actual teachings of the great explorer of the truth, the
-                    master-builder of human happiness.
-                  </p>
-                  <h3>
-                    Section 1.10.33 of "de Finibus Bonorum et Malorum", written
-                    by Cicero in 45 BC
-                  </h3>
-                  <p>
-                    At vero eos et accusamus et iusto odio dignissimos ducimus
-                    qui blanditiis praesentium voluptatum deleniti atque
-                    corrupti quos dolores et quas molestias excepturi sint
-                    occaecati cupiditate non provident, similique sunt in culpa
-                    qui officia deserunt mollitia animi, id est laborum et
-                    dolorum fuga.
-                  </p>
-                  <h3>
-                    The standard Lorem Ipsum passage, used since the 1500s
-                  </h3>
-                  <p>
-                    You can use variant style from colors, images or variant
-                    images. Also available differnt type of design styles and
-                    size.
-                  </p>
-                  <h3>Lorem Ipsum is not simply random text.</h3>
-                  <p>
-                    But I must explain to you how all this mistaken idea of
-                    denouncing pleasure and praising pain was born and I will
-                    give you a complete account of the system, and expound the
-                    actual teachings of the great explorer of the truth, the
-                    master-builder of human happiness.
-                  </p>
-                  <h3>Proin ut lacus eget elit molestie posuere.</h3>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled.
-                  </p>
+                  {detail}              
                 </div>
               </div>
 
