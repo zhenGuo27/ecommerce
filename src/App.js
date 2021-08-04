@@ -11,8 +11,8 @@ import ProductList from "./components/ProductList";
 import Product from "./components/Product";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
 import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
@@ -27,9 +27,10 @@ function App() {
 
       <div id="page-content">
          {/* <Home /> */}
-         <Product id="clothing-1"/>
+         {/* <Product id="clothing-1"/> */}
         {/* <ProductList /> */}
         {/* <ForgetPassword /> */}
+        <Register />
       </div>
 
       <Footer />
