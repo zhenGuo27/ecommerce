@@ -30,7 +30,7 @@ function App() {
          {/* <Product id="clothing-1"/> */}
         {/* <ProductList /> */}
         {/* <ForgetPassword /> */}
-        <Register />
+        <Login />
       </div>
 
       <Footer />

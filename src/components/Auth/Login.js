@@ -1,63 +1,108 @@
-import { Fragment } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import AuthContext from "../../store/auth-context";
 
 const Login = (props) => {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [submitMsg, setSubmitMsg] = useState("");
+  const authCtx = useContext(AuthContext);
+
+  useEffect(()=> {
+    console.log("isLogin", authCtx.isLoggedIn);
+  }, []);
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+
+    const response = await fetch("https://localhost:44396/Api/values/SignIn", {
+      method: "POST",
+      body: JSON.stringify({
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("post response", response);
+  
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+  
+    const data = await response.json();
+    if (data.returnCode == -1) {
+      setSubmitMsg(data.content);
+    } else {
+      const responseData = JSON.parse(data.content);
+      const expirationTime = new Date(
+        new Date().getTime() + responseData.expiresIn * 1000
+      );
+      authCtx.login(responseData.token, expirationTime);
+      setSubmitMsg("Successfully !!!");
+    }
+  };
+
   return (
     <Fragment>
       {/*Page Title*/}
-      <div class="page section-header text-center">
-        <div class="page-title">
-          <div class="wrapper">
-            <h1 class="page-width">Login</h1>
+      <div className="page section-header text-center">
+        <div className="page-title">
+          <div className="wrapper">
+            <h1 className="page-width">Login</h1>
           </div>
         </div>
       </div>
       {/*End Page Title*/}
 
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
-            <div class="mb-4">
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
+            <div className="mb-4">
               <form
                 method="post"
                 action="#"
                 id="CustomerLoginForm"
-                accept-charset="UTF-8"
-                class="contact-form"
+                acceptCharset="UTF-8"
+                className="contact-form"
+                onSubmit={submitHandler}
               >
-                <div class="row">
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="form-group">
-                      <label for="CustomerEmail">Email</label>
+                <div className="row">
+                  <div className="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div className="form-group">
+                      <label htmlFor="CustomerEmail">Email</label>
                       <input
                         type="email"
                         name="customer[email]"
                         placeholder=""
                         id="CustomerEmail"
-                        class=""
-                        autocorrect="off"
-                        autocapitalize="off"
-                        autofocus=""
+                        className=""
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        autoFocus=""
+                        ref={emailRef}
                       />
                     </div>
                   </div>
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="form-group">
-                      <label for="CustomerPassword">Password</label>
+                  <div className="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div className="form-group">
+                      <label htmlFor="CustomerPassword">Password</label>
                       <input
                         type="password"
-                        value=""
                         name="customer[password]"
                         placeholder=""
                         id="CustomerPassword"
-                        class=""
+                        ref={passwordRef}
                       />
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="text-center col-12 col-sm-12 col-md-12 col-lg-12">
-                    <input type="submit" class="btn mb-3" value="Sign In" />
-                    <p class="mb-4">
+                {submitMsg && <p className="text-danger">{submitMsg}</p>}
+                <div className="row">
+                  <div className="text-center col-12 col-sm-12 col-md-12 col-lg-12">
+                    <input type="submit" className="btn mb-3" value="Sign In" />
+                    <p className="mb-4">
                       <a href="#" id="RecoverPassword">
                         Forgot your password?
                       </a>{" "}

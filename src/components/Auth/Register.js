@@ -32,8 +32,6 @@ const Register = (props) => {
     } else {
       setSubmitMsg("Successfully !!!");
     }
-
-    console.log("post data", data);
   };
 
   return (
