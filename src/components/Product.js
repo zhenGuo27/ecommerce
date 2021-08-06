@@ -10,11 +10,16 @@ import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
 import parse from 'html-react-parser';
+import { useParams } from "react-router-dom";
 
 window.jQuery = window.$ = $;
 require("ez-plus");
 
 const Product = (props) => {
+  const params = useParams();
+  //const id = "clothing-1";
+  const { id } = params;
+
   const [productData, setProduct] = useState({});
   const [currentSku, setCurrentSku] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -25,15 +30,18 @@ const Product = (props) => {
   useEffect(() => {
     document.body.classList.add("template-product");
 
-    getProductById(props.id).then((item) => {
-      setProduct(item);
-      setCurrentSku(item.sku[0]);
-    });
-
     product_slider_ppage();
     setTabs();
     imgPopup();
   }, []);
+
+  useEffect(()=> {
+    getProductById(id).then((item) => {
+      setProduct(item);
+      setCurrentSku(item.sku[0]);
+      console.log("item", item);
+    });
+  }, [id, getProductById]);
 
   useEffect(() => {
     if (Object.keys(productData).length !== 0) {
@@ -92,7 +100,7 @@ const Product = (props) => {
 
     $.each(items, function (index, value) {
       image[index] = new Image();
-      image[index].src = value["src"];
+      image[index].src = "../" + value["src"];
     });
     $(".prlightbox").on("click", function (event) {
       event.preventDefault();
@@ -297,15 +305,15 @@ const Product = (props) => {
         {imgs.map((item, index) => {
           return (
             <a
-            data-image={item}
-            data-zoom-image={item}
+            data-image={require("../" + item).default}
+            data-zoom-image={require("../" + item).default}
             aria-hidden="true"
             tabIndex="-1"
             key={`gallery_${index}`}
           >
             <img
-              data-src={item}
-              src={item}
+              data-src={require("../" + item).default}
+              src={require("../" + item).default}
               alt={productData.title}
             />
           </a>
@@ -315,11 +323,12 @@ const Product = (props) => {
     );
   };
 
-  //const detail = parse(productData.detail);
+  let initImg = Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:"";
+  initImg = (initImg) ? require("../" + initImg).default : "";
 
   return (
     <Fragment>
-      <div id="MainContent" className="main-content" role="main">
+      {Object.keys(productData).length !== 0 && <div id="MainContent" className="main-content" role="main">
         {/*Breadcrumb*/}
         <div className="bredcrumbWrap">
           <div className="container breadcrumbs">
@@ -350,9 +359,9 @@ const Product = (props) => {
                     <div className="zoompro-span">
                       <img
                         className="blur-up lazyload zoompro"
-                        data-zoom-image={Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:""}
+                        data-zoom-image={initImg}
                         alt={productData.title}
-                        src={Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:""}
+                        src={initImg}
                       />
                     </div>
                     <div className="product-labels">
@@ -576,7 +585,7 @@ const Product = (props) => {
                   </tbody>
                 </table>
                 <div className="text-center">
-                  <img src="assets/images/size.jpg" alt="" />
+                  <img src={require('../images/size.jpg')} alt="" />
                 </div>
               </div>
 
@@ -623,7 +632,7 @@ const Product = (props) => {
           />
         </div>
         {/*#ProductSection-product-template*/}
-      </div>
+      </div>}
 
       <div className="hide">
         <div id="sizechart">
@@ -722,7 +731,7 @@ const Product = (props) => {
             </tbody>
           </table>
           <div style={{ paddingLeft: "30px" }}>
-            <img src="assets/images/size.jpg" alt="" />
+            <img src={require("../images/size.jpg")} alt="" />
           </div>
         </div>
       </div>

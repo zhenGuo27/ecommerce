@@ -1,4 +1,10 @@
-const TopHeader = () => {
+import { useContext } from "react";
+import { useHistory, Link } from "react-router-dom";
+import AuthContext from "../store/auth-context";
+
+const TopHeader = () => {  
+  const authCtx = useContext(AuthContext);
+
   return (
     <div className="top-header">
       <div className="container-fluid">
@@ -11,7 +17,6 @@ const TopHeader = () => {
           <div className="col-sm-4 col-md-4 col-lg-4 d-none d-lg-none d-md-block d-lg-block">
             <div className="text-center">
               <p className="top-header_middle-text">
-                {" "}
                 Worldwide Express Shipping
               </p>
             </div>
@@ -22,14 +27,16 @@ const TopHeader = () => {
             </span>
             <ul className="customer-links list-inline">
               <li>
-                <a href="login.html">Login</a>
+                {!authCtx.isLoggedIn && <Link to="/Login">Login</Link>}
+                {authCtx.isLoggedIn && <a onClick={authCtx.logout}>LogOut</a>}                
               </li>
               <li>
-                <a href="register.html">Create Account</a>
+                {!authCtx.isLoggedIn && <Link to="/Register">Create Account</Link>}               
               </li>
-              <li>
+              <Link to="/Product/clothing-1">Product clothing-1</Link>
+              {/* <li>
                 <a href="wishlist.html">Wishlist</a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

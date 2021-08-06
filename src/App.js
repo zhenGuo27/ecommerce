@@ -14,6 +14,8 @@ import Checkout from "./components/Checkout";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import ForgetPassword from "./components/ForgetPassword";
+import Switch from "react-bootstrap/esm/Switch";
+import { Route } from "react-router-dom";
 
 function App() {
   const headerType = "ProductList";
@@ -22,15 +24,26 @@ function App() {
     <div className="pageWrapper">
       <SearchFormDrawer />
       <TopHeader />
-      <Header type={headerType}/>
+      <Header type={headerType} />
       <MobileMenu />
 
       <div id="page-content">
-         {/* <Home /> */}
-         {/* <Product id="clothing-1"/> */}
-        {/* <ProductList /> */}
-        {/* <ForgetPassword /> */}
-        <Login />
+      {/* <Product id="clothing-1"/> */}
+
+        <Switch>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="/Login">
+            <Login />
+          </Route>
+          <Route path="/Register">
+            <Register />
+          </Route>
+          <Route path="/Product/:id">
+            <Product id="clothing-1" />
+          </Route>
+        </Switch>
       </div>
 
       <Footer />

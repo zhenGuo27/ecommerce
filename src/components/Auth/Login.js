@@ -1,15 +1,17 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 const Login = (props) => {
+  const history = useHistory();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [submitMsg, setSubmitMsg] = useState("");
   const authCtx = useContext(AuthContext);
 
-  useEffect(()=> {
-    console.log("isLogin", authCtx.isLoggedIn);
-  }, []);
+  // useEffect(()=> {
+  //   console.log("isLogin", authCtx.isLoggedIn);
+  // }, []);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -36,11 +38,14 @@ const Login = (props) => {
       setSubmitMsg(data.content);
     } else {
       const responseData = JSON.parse(data.content);
+      console.log("responseData", responseData);
+
       const expirationTime = new Date(
-        new Date().getTime() + responseData.expiresIn * 1000
+        new Date().getTime() + responseData.expiration * 1000
       );
       authCtx.login(responseData.token, expirationTime);
       setSubmitMsg("Successfully !!!");
+      history.replace("/");
     }
   };
 
