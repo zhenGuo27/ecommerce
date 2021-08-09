@@ -1,6 +1,6 @@
 import $ from "jquery";
-import * as PhotoSwipe from 'photoswipe';
-import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default';
+import * as PhotoSwipe from "photoswipe";
+import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 import "photoswipe/dist/photoswipe.css";
 import "photoswipe/dist/default-skin/default-skin.css";
 import { Fragment, useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 
 window.jQuery = window.$ = $;
@@ -17,7 +17,6 @@ require("ez-plus");
 
 const Product = (props) => {
   const params = useParams();
-  //const id = "clothing-1";
   const { id } = params;
 
   const [productData, setProduct] = useState({});
@@ -25,21 +24,21 @@ const Product = (props) => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [orderQuantity, setOrderQuantity] = useState(1);
-  const [detail , setDetail] = useState(parse(""));
+  const [detail, setDetail] = useState(parse(""));
 
   useEffect(() => {
     document.body.classList.add("template-product");
-
-    product_slider_ppage();
-    setTabs();
-    imgPopup();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     getProductById(id).then((item) => {
       setProduct(item);
       setCurrentSku(item.sku[0]);
       console.log("item", item);
+
+      product_slider_ppage();
+      setTabs();
+      imgPopup();
     });
   }, [id, getProductById]);
 
@@ -61,13 +60,14 @@ const Product = (props) => {
 
   const increaseQuantity = () => {
     let updatedQuantiy = orderQuantity;
-    updatedQuantiy = (currentSku.stock > updatedQuantiy) ? updatedQuantiy + 1 : updatedQuantiy;
+    updatedQuantiy =
+      currentSku.stock > updatedQuantiy ? updatedQuantiy + 1 : updatedQuantiy;
     setOrderQuantity(updatedQuantiy);
   };
 
   const decreaseQuantity = () => {
     let updatedQuantiy = orderQuantity;
-    updatedQuantiy = (updatedQuantiy !== 1) ? updatedQuantiy - 1 : updatedQuantiy;
+    updatedQuantiy = updatedQuantiy !== 1 ? updatedQuantiy - 1 : updatedQuantiy;
     setOrderQuantity(updatedQuantiy);
   };
 
@@ -100,7 +100,7 @@ const Product = (props) => {
 
     $.each(items, function (index, value) {
       image[index] = new Image();
-      image[index].src = "../" + value["src"];
+      image[index].src = value["src"];
     });
     $(".prlightbox").on("click", function (event) {
       event.preventDefault();
@@ -113,7 +113,7 @@ const Product = (props) => {
         index: $index,
         bgOpacity: 0.9,
         showHideOpacity: true,
-        shareEl: false
+        shareEl: false,
       };
       var lightBox = new PhotoSwipe(
         $pswp,
@@ -295,344 +295,360 @@ const Product = (props) => {
     }, [imgs]);
 
     const getDistinctImgs = () => {
-      const filterImgs = props.data.filter((item)=> item.detail === true); 
+      const filterImgs = props.data.filter((item) => item.detail === true);
       const distinctImgs = [...new Set(filterImgs.map((item) => item.src))];
       setImgs(distinctImgs);
     };
 
     return (
-      <div  id="gallery" className="product-dec-slider-2 product-tab-left">
+      <div id="gallery" className="product-dec-slider-2 product-tab-left">
         {imgs.map((item, index) => {
           return (
             <a
-            data-image={require("../" + item).default}
-            data-zoom-image={require("../" + item).default}
-            aria-hidden="true"
-            tabIndex="-1"
-            key={`gallery_${index}`}
-          >
-            <img
-              data-src={require("../" + item).default}
-              src={require("../" + item).default}
-              alt={productData.title}
-            />
-          </a>
+              data-image={require("../" + item).default}
+              data-zoom-image={require("../" + item).default}
+              aria-hidden="true"
+              tabIndex="-1"
+              key={`gallery_${index}`}
+            >
+              <img
+                data-src={require("../" + item).default}
+                src={require("../" + item).default}
+                alt={productData.title}
+              />
+            </a>
           );
         })}
       </div>
     );
   };
 
-  let initImg = Object.keys(productData).length !== 0 ? productData.largeImgs.filter((item)=> item.detail === true)[0].src:"";
-  initImg = (initImg) ? require("../" + initImg).default : "";
+  let initImg =
+    Object.keys(productData).length !== 0
+      ? productData.largeImgs.filter((item) => item.detail === true)[0].src
+      : "";
+  initImg = initImg ? require("../" + initImg).default : "";
 
   return (
     <Fragment>
-      {Object.keys(productData).length !== 0 && <div id="MainContent" className="main-content" role="main">
-        {/*Breadcrumb*/}
-        <div className="bredcrumbWrap">
-          <div className="container breadcrumbs">
-            <a href="index.html" title="Back to the home page">
-              Home
-            </a>
-            <span aria-hidden="true">›</span>
-            <span>{productData.title}</span>
+      {Object.keys(productData).length !== 0 && (
+        <div id="MainContent" className="main-content" role="main">
+          {/*Breadcrumb*/}
+          <div className="bredcrumbWrap">
+            <div className="container breadcrumbs">
+              <a href="index.html" title="Back to the home page">
+                Home
+              </a>
+              <span aria-hidden="true">›</span>
+              <span>{productData.title}</span>
+            </div>
           </div>
-        </div>
-        {/*End Breadcrumb*/}
+          {/*End Breadcrumb*/}
 
-        <div
-          id="ProductSection-product-template"
-          className="product-template__container prstyle1 container"
-        >
-          {/*product-single*/}
-          <div className="product-single">
-            <div className="row">
-              <div className="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div className="product-details-img">
-                  <div className="product-thumb">
-                    {Object.keys(productData).length !== 0 && (
-                      <ImgGallery data={productData.largeImgs} />
-                    )}             
-                  </div>
-                  <div className="zoompro-wrap product-zoom-right pl-20">
-                    <div className="zoompro-span">
-                      <img
-                        className="blur-up lazyload zoompro"
-                        data-zoom-image={initImg}
-                        alt={productData.title}
-                        src={initImg}
-                      />
+          <div
+            id="ProductSection-product-template"
+            className="product-template__container prstyle1 container"
+          >
+            {/*product-single*/}
+            <div className="product-single">
+              <div className="row">
+                <div className="col-lg-6 col-md-6 col-sm-12 col-12">
+                  <div className="product-details-img">
+                    <div className="product-thumb">
+                      {Object.keys(productData).length !== 0 && (
+                        <ImgGallery data={productData.largeImgs} />
+                      )}
                     </div>
-                    <div className="product-labels">
-                      <span className="lbl on-sale">Sale</span>
-                      <span className="lbl pr-label1">new</span>
+                    <div className="zoompro-wrap product-zoom-right pl-20">
+                      <div className="zoompro-span">
+                        <img
+                          className="blur-up lazyload zoompro"
+                          data-zoom-image={initImg}
+                          alt={productData.title}
+                          src={initImg}
+                        />
+                      </div>
+                      <div className="product-labels">
+                        <span className="lbl on-sale">Sale</span>
+                        <span className="lbl pr-label1">new</span>
+                      </div>
+                      <div className="product-buttons">
+                        <a className="btn prlightbox" title="Zoom">
+                          <i
+                            className="icon anm anm-expand-l-arrows"
+                            aria-hidden="true"
+                          ></i>
+                        </a>
+                      </div>
                     </div>
-                    <div className="product-buttons">
-                      <a className="btn prlightbox" title="Zoom">
-                        <i
-                          className="icon anm anm-expand-l-arrows"
-                          aria-hidden="true"
-                        ></i>
-                      </a>
+                    <div class="lightboximages">
+                       {
+                         productData.largeImgs.map((item)=> <a href={"../../assets/"+ item.src} data-size="1071x1500"></a>)
+                       }                                   
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div className="product-single__meta">
-                  <h1 className="product-single__title">{productData.title}</h1>
-                  <div className="prInfoRow">
-                    <div className="product-stock">
-                      {currentSku.stock !== 0 && (
-                        <span className="instock ">In Stock</span>
-                      )}
-                      {currentSku.stock === 0 && (
-                        <span className="outstock">Unavailable</span>
-                      )}
+                <div className="col-lg-6 col-md-6 col-sm-12 col-12">
+                  <div className="product-single__meta">
+                    <h1 className="product-single__title">
+                      {productData.title}
+                    </h1>
+                    <div className="prInfoRow">
+                      <div className="product-stock">
+                        {currentSku.stock !== 0 && (
+                          <span className="instock ">In Stock</span>
+                        )}
+                        {currentSku.stock === 0 && (
+                          <span className="outstock">Unavailable</span>
+                        )}
+                      </div>
+                      <div className="product-sku">
+                        SKU:
+                        <span className="variant-sku">{currentSku.id}</span>
+                      </div>
+                      <div className="product-review">
+                        <a className="reviewLink">
+                          <ProductRate rate={productData.rate} />
+                        </a>
+                      </div>
                     </div>
-                    <div className="product-sku">
-                      SKU: <span className="variant-sku">{currentSku.id}</span>
-                    </div>
-                    <div className="product-review">
-                      <a className="reviewLink">
-                        <ProductRate rate={productData.rate} />
-                      </a>
-                    </div>
-                  </div>
-                  <p className="product-single__price product-single__price-product-template">
-                    <span className="visually-hidden">Regular price</span>
-                    <s id="ComparePrice-product-template">
-                      <span className="money">${currentSku.originalPrice}</span>
-                    </s>
-                    <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
-                      <span id="ProductPrice-product-template">
-                        <span className="money">${currentSku.price}</span>
+                    <p className="product-single__price product-single__price-product-template">
+                      <span className="visually-hidden">Regular price</span>
+                      <s id="ComparePrice-product-template">
+                        <span className="money">
+                          ${currentSku.originalPrice}
+                        </span>
+                      </s>
+                      <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
+                        <span id="ProductPrice-product-template">
+                          <span className="money">${currentSku.price}</span>
+                        </span>
                       </span>
-                    </span>
+                    </p>
+                  </div>
+                  <div className="product-single__description rte">
+                    {productData.desc}
+                  </div>
+                  <div id="quantity_message">
+                    <span className="items">{currentSku.stock}</span> left in
+                    stock.
+                  </div>
+                  <form
+                    method="post"
+                    action="http://annimexweb.com/cart/add"
+                    id="product_form_10508262282"
+                    acceptCharset="UTF-8"
+                    className="product-form product-form-product-template hidedropdown"
+                    encType="multipart/form-data"
+                  >
+                    <div
+                      className="swatch clearfix swatch-0 option1"
+                      data-option-index="0"
+                    >
+                      <div className="product-form__item">
+                        <label className="header">
+                          Color:{" "}
+                          <span className="slVariant">{selectedColor}</span>
+                        </label>
+                        <ColorItems
+                          data={productData}
+                          selectedColor={selectedColor}
+                          change={colorChangeHandler}
+                          currentSku={currentSku}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="swatch clearfix swatch-1 option2"
+                      data-option-index="1"
+                    >
+                      <div className="product-form__item">
+                        <label className="header">
+                          Size:{" "}
+                          <span className="slVariant">{selectedSize}</span>
+                        </label>
+                        <SizeItems
+                          data={productData}
+                          selectedSize={selectedSize}
+                          change={sizeChangeHandler}
+                        />
+                      </div>
+                    </div>
+                    {actionHtml}
+                  </form>
+                  <div className="userViewMsg" data-user="20" data-time="11000">
+                    <i className="fa fa-users" aria-hidden="true"></i>{" "}
+                    <strong className="uersView">{productData.viewed}</strong>
+                    <span>PEOPLE ARE LOOKING FOR THIS PRODUCT</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/*End-product-single*/}
+            {/*Product Tabs*/}
+            <div className="tabs-listing">
+              <ul className="product-tabs">
+                <li rel="tab1">
+                  <a className="tablink">Product Details</a>
+                </li>
+                <li rel="tab3">
+                  <a className="tablink">Size Chart</a>
+                </li>
+                <li rel="tab4">
+                  <a className="tablink">Shipping &amp; Returns</a>
+                </li>
+              </ul>
+              <div className="tab-container">
+                <div id="tab1" className="tab-content">
+                  <div className="product-description rte">{detail}</div>
+                </div>
+
+                <div id="tab3" className="tab-content">
+                  <h3>WOMEN'S BODY SIZING CHART</h3>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Size</th>
+                        <th>XS</th>
+                        <th>S</th>
+                        <th>M</th>
+                        <th>L</th>
+                        <th>XL</th>
+                      </tr>
+                      <tr>
+                        <td>Chest</td>
+                        <td>31" - 33"</td>
+                        <td>33" - 35"</td>
+                        <td>35" - 37"</td>
+                        <td>37" - 39"</td>
+                        <td>39" - 42"</td>
+                      </tr>
+                      <tr>
+                        <td>Waist</td>
+                        <td>24" - 26"</td>
+                        <td>26" - 28"</td>
+                        <td>28" - 30"</td>
+                        <td>30" - 32"</td>
+                        <td>32" - 35"</td>
+                      </tr>
+                      <tr>
+                        <td>Hip</td>
+                        <td>34" - 36"</td>
+                        <td>36" - 38"</td>
+                        <td>38" - 40"</td>
+                        <td>40" - 42"</td>
+                        <td>42" - 44"</td>
+                      </tr>
+                      <tr>
+                        <td>Regular inseam</td>
+                        <td>30"</td>
+                        <td>30½"</td>
+                        <td>31"</td>
+                        <td>31½"</td>
+                        <td>32"</td>
+                      </tr>
+                      <tr>
+                        <td>Long (Tall) Inseam</td>
+                        <td>31½"</td>
+                        <td>32"</td>
+                        <td>32½"</td>
+                        <td>33"</td>
+                        <td>33½"</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <h3>MEN'S BODY SIZING CHART</h3>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Size</th>
+                        <th>XS</th>
+                        <th>S</th>
+                        <th>M</th>
+                        <th>L</th>
+                        <th>XL</th>
+                        <th>XXL</th>
+                      </tr>
+                      <tr>
+                        <td>Chest</td>
+                        <td>33" - 36"</td>
+                        <td>36" - 39"</td>
+                        <td>39" - 41"</td>
+                        <td>41" - 43"</td>
+                        <td>43" - 46"</td>
+                        <td>46" - 49"</td>
+                      </tr>
+                      <tr>
+                        <td>Waist</td>
+                        <td>27" - 30"</td>
+                        <td>30" - 33"</td>
+                        <td>33" - 35"</td>
+                        <td>36" - 38"</td>
+                        <td>38" - 42"</td>
+                        <td>42" - 45"</td>
+                      </tr>
+                      <tr>
+                        <td>Hip</td>
+                        <td>33" - 36"</td>
+                        <td>36" - 39"</td>
+                        <td>39" - 41"</td>
+                        <td>41" - 43"</td>
+                        <td>43" - 46"</td>
+                        <td>46" - 49"</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className="text-center">
+                    <img src={require("../images/size.jpg")} alt="" />
+                  </div>
+                </div>
+
+                <div id="tab4" className="tab-content">
+                  <h4>Returns Policy</h4>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Fusce eros justo, accumsan non dui sit amet. Phasellus
+                    semper volutpat mi sed imperdiet. Ut odio lectus, vulputate
+                    non ex non, mattis sollicitudin purus. Mauris consequat
+                    justo a enim interdum, in consequat dolor accumsan. Nulla
+                    iaculis diam purus, ut vehicula leo efficitur at.
+                  </p>
+                  <p>
+                    Interdum et malesuada fames ac ante ipsum primis in
+                    faucibus. In blandit nunc enim, sit amet pharetra erat
+                    aliquet ac.
+                  </p>
+                  <h4>Shipping</h4>
+                  <p>
+                    Pellentesque ultrices ut sem sit amet lacinia. Sed nisi dui,
+                    ultrices ut turpis pulvinar. Sed fringilla ex eget lorem
+                    consectetur, consectetur blandit lacus varius. Duis vel
+                    scelerisque elit, et vestibulum metus. Integer sit amet
+                    tincidunt tortor. Ut lacinia ullamcorper massa, a fermentum
+                    arcu vehicula ut. Ut efficitur faucibus dui Nullam tristique
+                    dolor eget turpis consequat varius. Quisque a interdum
+                    augue. Nam ut nibh mauris.
                   </p>
                 </div>
-                <div className="product-single__description rte">
-                  {productData.desc}
-                </div>
-                <div id="quantity_message">
-                  <span className="items">{currentSku.stock}</span> left in
-                  stock.
-                </div>
-                <form
-                  method="post"
-                  action="http://annimexweb.com/cart/add"
-                  id="product_form_10508262282"
-                  acceptCharset="UTF-8"
-                  className="product-form product-form-product-template hidedropdown"
-                  encType="multipart/form-data"
-                >
-                  <div
-                    className="swatch clearfix swatch-0 option1"
-                    data-option-index="0"
-                  >
-                    <div className="product-form__item">
-                      <label className="header">
-                        Color:{" "}
-                        <span className="slVariant">{selectedColor}</span>
-                      </label>
-                      <ColorItems
-                        data={productData}
-                        selectedColor={selectedColor}
-                        change={colorChangeHandler}
-                        currentSku={currentSku}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    className="swatch clearfix swatch-1 option2"
-                    data-option-index="1"
-                  >
-                    <div className="product-form__item">
-                      <label className="header">
-                        Size: <span className="slVariant">{selectedSize}</span>
-                      </label>
-                      <SizeItems
-                        data={productData}
-                        selectedSize={selectedSize}
-                        change={sizeChangeHandler}
-                      />
-                    </div>
-                  </div>
-                  {actionHtml}
-                </form>
-                <div className="userViewMsg" data-user="20" data-time="11000">
-                  <i className="fa fa-users" aria-hidden="true"></i>{" "}
-                  <strong className="uersView">{productData.viewed}</strong><span>PEOPLE ARE LOOKING FOR THIS PRODUCT</span>
-                </div>
               </div>
             </div>
+            {/*End Product Tabs*/}
+
+            <ProductSlider
+              slider="relatedSlider"
+              title="Related Products"
+              subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin."
+            />
+
+            <ProductSlider
+              slider="recentlySlider"
+              title="Recently Viewed Product"
+              subtitle="You can manage this section from store admin as describe in above section"
+            />
           </div>
-          {/*End-product-single*/}
-          {/*Product Tabs*/}
-          <div className="tabs-listing">
-            <ul className="product-tabs">
-              <li rel="tab1">
-                <a className="tablink">Product Details</a>
-              </li>
-              <li rel="tab3">
-                <a className="tablink">Size Chart</a>
-              </li>
-              <li rel="tab4">
-                <a className="tablink">Shipping &amp; Returns</a>
-              </li>
-            </ul>
-            <div className="tab-container">
-              <div id="tab1" className="tab-content">
-                <div className="product-description rte">
-                  {detail}              
-                </div>
-              </div>
-
-              <div id="tab3" className="tab-content">
-                <h3>WOMEN'S BODY SIZING CHART</h3>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>Size</th>
-                      <th>XS</th>
-                      <th>S</th>
-                      <th>M</th>
-                      <th>L</th>
-                      <th>XL</th>
-                    </tr>
-                    <tr>
-                      <td>Chest</td>
-                      <td>31" - 33"</td>
-                      <td>33" - 35"</td>
-                      <td>35" - 37"</td>
-                      <td>37" - 39"</td>
-                      <td>39" - 42"</td>
-                    </tr>
-                    <tr>
-                      <td>Waist</td>
-                      <td>24" - 26"</td>
-                      <td>26" - 28"</td>
-                      <td>28" - 30"</td>
-                      <td>30" - 32"</td>
-                      <td>32" - 35"</td>
-                    </tr>
-                    <tr>
-                      <td>Hip</td>
-                      <td>34" - 36"</td>
-                      <td>36" - 38"</td>
-                      <td>38" - 40"</td>
-                      <td>40" - 42"</td>
-                      <td>42" - 44"</td>
-                    </tr>
-                    <tr>
-                      <td>Regular inseam</td>
-                      <td>30"</td>
-                      <td>30½"</td>
-                      <td>31"</td>
-                      <td>31½"</td>
-                      <td>32"</td>
-                    </tr>
-                    <tr>
-                      <td>Long (Tall) Inseam</td>
-                      <td>31½"</td>
-                      <td>32"</td>
-                      <td>32½"</td>
-                      <td>33"</td>
-                      <td>33½"</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <h3>MEN'S BODY SIZING CHART</h3>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>Size</th>
-                      <th>XS</th>
-                      <th>S</th>
-                      <th>M</th>
-                      <th>L</th>
-                      <th>XL</th>
-                      <th>XXL</th>
-                    </tr>
-                    <tr>
-                      <td>Chest</td>
-                      <td>33" - 36"</td>
-                      <td>36" - 39"</td>
-                      <td>39" - 41"</td>
-                      <td>41" - 43"</td>
-                      <td>43" - 46"</td>
-                      <td>46" - 49"</td>
-                    </tr>
-                    <tr>
-                      <td>Waist</td>
-                      <td>27" - 30"</td>
-                      <td>30" - 33"</td>
-                      <td>33" - 35"</td>
-                      <td>36" - 38"</td>
-                      <td>38" - 42"</td>
-                      <td>42" - 45"</td>
-                    </tr>
-                    <tr>
-                      <td>Hip</td>
-                      <td>33" - 36"</td>
-                      <td>36" - 39"</td>
-                      <td>39" - 41"</td>
-                      <td>41" - 43"</td>
-                      <td>43" - 46"</td>
-                      <td>46" - 49"</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div className="text-center">
-                  <img src={require('../images/size.jpg')} alt="" />
-                </div>
-              </div>
-
-              <div id="tab4" className="tab-content">
-                <h4>Returns Policy</h4>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-                  eros justo, accumsan non dui sit amet. Phasellus semper
-                  volutpat mi sed imperdiet. Ut odio lectus, vulputate non ex
-                  non, mattis sollicitudin purus. Mauris consequat justo a enim
-                  interdum, in consequat dolor accumsan. Nulla iaculis diam
-                  purus, ut vehicula leo efficitur at.
-                </p>
-                <p>
-                  Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                  In blandit nunc enim, sit amet pharetra erat aliquet ac.
-                </p>
-                <h4>Shipping</h4>
-                <p>
-                  Pellentesque ultrices ut sem sit amet lacinia. Sed nisi dui,
-                  ultrices ut turpis pulvinar. Sed fringilla ex eget lorem
-                  consectetur, consectetur blandit lacus varius. Duis vel
-                  scelerisque elit, et vestibulum metus. Integer sit amet
-                  tincidunt tortor. Ut lacinia ullamcorper massa, a fermentum
-                  arcu vehicula ut. Ut efficitur faucibus dui Nullam tristique
-                  dolor eget turpis consequat varius. Quisque a interdum augue.
-                  Nam ut nibh mauris.
-                </p>
-              </div>
-            </div>
-          </div>
-          {/*End Product Tabs*/}
-
-          <ProductSlider
-            slider="relatedSlider"
-            title="Related Products"
-            subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin."
-          />
-
-          <ProductSlider
-            slider="recentlySlider"
-            title="Recently Viewed Product"
-            subtitle="You can manage this section from store admin as describe in above section"
-          />
+          {/*#ProductSection-product-template*/}
         </div>
-        {/*#ProductSection-product-template*/}
-      </div>}
+      )}
 
       <div className="hide">
         <div id="sizechart">

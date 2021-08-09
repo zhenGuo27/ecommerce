@@ -6,7 +6,7 @@ const ColorItem = (props) => {
     .toString()
     .toLowerCase()} ${available}`;
   const sku = props.skus.filter((item) => item.color === props.value);
-  const img = props.smallImgs.filter((item) => item.skuId === sku[0].id)[0].src;
+  const img = "../../assets/" + props.smallImgs.filter((item) => item.skuId === sku[0].id)[0].src;
   const checked = props.value === props.selectedColor;
 
   return (

@@ -82,13 +82,13 @@ const ProductSlider = (props) => {
     const imgs = productData.find((item) => item.id == props.id);
     const classes = props.hover ? "hover" : "primary";
 
-    let imgSrc = "";
+    let imgSrc = "../../assets/";
     if (props.hover) {
-      imgSrc = imgs.largeImgs.find(
+      imgSrc += imgs.largeImgs.find(
         (item) => item.homeSlider && item.homeSliderHover
       ).src;
     } else {
-      imgSrc = imgs.largeImgs.find(
+      imgSrc += imgs.largeImgs.find(
         (item) => item.homeSlider && !item.homeSliderHover
       ).src;
     }
