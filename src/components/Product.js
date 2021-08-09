@@ -11,6 +11,7 @@ import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 window.jQuery = window.$ = $;
 require("ez-plus");
@@ -25,9 +26,11 @@ const Product = (props) => {
   const [selectedSize, setSelectedSize] = useState("");
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [detail, setDetail] = useState(parse(""));
+  const [cookies, setCookie, removeCookie] = useCookies(['cart']);
 
   useEffect(() => {
     document.body.classList.add("template-product");
+    console.log("cookies", cookies.Name);
   }, []);
 
   useEffect(() => {
@@ -49,6 +52,24 @@ const Product = (props) => {
       setDetail(parse(productData.detail));
     }
   }, [productData]);
+
+  const addToCart = () => {
+    const cartItem = {
+      id: id,
+      sku: currentSku,
+      quantity: orderQuantity,
+      subtotal: currentSku.price * orderQuantity,
+    };
+
+    if (!cookies.cart) {
+      setCookie("cart", JSON.stringify([cartItem]), { path: "/" });
+    } else {
+      let updatedCart = [...cookies.cart];
+      //if id exist, only update quantity else add new obj
+      updatedCart.push(cartItem);
+      setCookie("cart", JSON.stringify(updatedCart), { path: "/" });
+    }
+  };
 
   const orderQuantityChangeHandler = (event) => {
     const quantity =
@@ -264,6 +285,7 @@ const Product = (props) => {
             type="button"
             name="add"
             className="btn product-form__cart-submit"
+            onClick={addToCart}
           >
             <span>Add to cart</span>
           </button>
@@ -383,7 +405,7 @@ const Product = (props) => {
                     </div>
                     <div class="lightboximages">
                        {
-                         productData.largeImgs.map((item)=> <a href={"../../assets/"+ item.src} data-size="1071x1500"></a>)
+                         productData.largeImgs.map((item, index)=> <a href={"../../assets/"+ item.src} data-size="1071x1500" key={`lightboxImg_${index}`}></a>)
                        }                                   
                     </div>
                   </div>
