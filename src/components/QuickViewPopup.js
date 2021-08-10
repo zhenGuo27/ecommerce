@@ -1,6 +1,6 @@
 import "bootstrap";
 import { Fragment, useEffect, useState } from "react";
-import { getProductById } from "./product-action";
+import { getProductById } from "../actions/product-action";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 

@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { Fragment, useEffect, useState } from "react";
 import Pagination from "./Pagination";
-import { getProducts } from "./product-action";
+import { getProducts } from "../actions/product-action";
 import QuickViewPopup from "./QuickViewPopup";
 import ProductRate from "./ProductRate";
 

@@ -43,7 +43,7 @@ const Login = (props) => {
       const expirationTime = new Date(
         new Date().getTime() + responseData.expiration * 1000
       );
-      authCtx.login(responseData.token, expirationTime);
+      authCtx.login(responseData.uid, responseData.token, expirationTime);
       setSubmitMsg("Successfully !!!");
       history.replace("/");
     }

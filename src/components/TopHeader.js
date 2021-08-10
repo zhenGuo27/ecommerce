@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 
 const TopHeader = () => {  
   const authCtx = useContext(AuthContext);
-
+  
   return (
     <div className="top-header">
       <div className="container-fluid">

@@ -4,7 +4,7 @@ import "jquery-ui-bundle/jquery-ui.min.css";
 import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
-import { getProducts } from "./product-action";
+import { getProducts } from "../actions/product-action";
 import SizeSwatches from "./SizeSwatches";
 import SidebarProducts from "./SidebarProducts";
 import SidebarCategories from "./SidebarCategories";

@@ -2,7 +2,7 @@ import $ from "jquery";
 import { useEffect, useState, Fragment } from "react";
 import slick from "slick-carousel";
 import QuickViewPopup from "./QuickViewPopup";
-import { getProducts } from "./product-action";
+import { getProducts } from "../actions/product-action";
 
 let popupInit = true;
 

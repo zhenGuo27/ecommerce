@@ -3,8 +3,9 @@ import * as PhotoSwipe from "photoswipe";
 import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 import "photoswipe/dist/photoswipe.css";
 import "photoswipe/dist/default-skin/default-skin.css";
-import { Fragment, useEffect, useState } from "react";
-import { getProductById } from "./product-action";
+import { Fragment, useContext, useEffect, useState } from "react";
+import { getProductById } from "../actions/product-action";
+import { getUserCartByUid, updateUserCart } from "../actions/user-action";
 import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
@@ -12,14 +13,17 @@ import ProductSlider from "./ProductSlider";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import AuthContext from "../store/auth-context";
 
 window.jQuery = window.$ = $;
 require("ez-plus");
 
 const Product = (props) => {
+  const authCtx = useContext(AuthContext);
   const params = useParams();
   const { id } = params;
 
+  const [userCart, setUserCart] = useState({});
   const [productData, setProduct] = useState({});
   const [currentSku, setCurrentSku] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -30,8 +34,13 @@ const Product = (props) => {
 
   useEffect(() => {
     document.body.classList.add("template-product");
-    console.log("cookies", cookies.Name);
   }, []);
+
+  useEffect(()=> {
+    if(authCtx.isLoggedIn){
+      getUserCartData();
+    }
+  }, [authCtx.isLoggedIn]);
 
   useEffect(() => {
     getProductById(id).then((item) => {
@@ -53,21 +62,55 @@ const Product = (props) => {
     }
   }, [productData]);
 
+  const getUserCartData = () => {
+    getUserCartByUid(authCtx.uid).then((item) => {
+      setUserCart(item);
+    });
+  };
+
+  const updateCartData = (cartItem, originalData) => {
+    let updatedData = originalData ? [...originalData] : [];
+    const exist = updatedData.some((item) => item.productId === cartItem.productId);
+    if (exist) {
+      let currentItem = updatedData.find(
+        (item) => item.id === cartItem.productId
+      );
+      currentItem.quantity = orderQuantity;
+    } else {
+      updatedData.push(cartItem);
+    }
+
+    return updatedData;
+  };
+
   const addToCart = () => {
     const cartItem = {
-      id: id,
+      productId: id,
       sku: currentSku,
       quantity: orderQuantity,
-      subtotal: currentSku.price * orderQuantity,
+      subtotal: (currentSku.price * orderQuantity).toFixed(2),
     };
 
-    if (!cookies.cart) {
-      setCookie("cart", JSON.stringify([cartItem]), { path: "/" });
+    if (authCtx.isLoggedIn) {
+      //get original cart data from backend
+      //if product item exist and sku is same as current selected , update quntity else add new item 
+      //post updated cart data to backend     
+      const cartData = (userCart) ? userCart.cartItems : null;
+      const updatedData = updateCartData(cartItem, cartData);
+      const updatedUserCart = {
+        uid: authCtx.uid,
+        token: authCtx.token,
+        cartItems: updatedData
+      };
+
+      updateUserCart(updatedUserCart);
     } else {
-      let updatedCart = [...cookies.cart];
-      //if id exist, only update quantity else add new obj
-      updatedCart.push(cartItem);
-      setCookie("cart", JSON.stringify(updatedCart), { path: "/" });
+      if (!cookies.cart) {
+        setCookie("cart", JSON.stringify([cartItem]), { path: "/" });
+      } else {
+        const updatedData = updateCartData(cartItem, cookies.cart);
+        setCookie("cart", JSON.stringify(updatedData), { path: "/" });
+      }
     }
   };
 
@@ -403,7 +446,7 @@ const Product = (props) => {
                         </a>
                       </div>
                     </div>
-                    <div class="lightboximages">
+                    <div className="lightboximages">
                        {
                          productData.largeImgs.map((item, index)=> <a href={"../../assets/"+ item.src} data-size="1071x1500" key={`lightboxImg_${index}`}></a>)
                        }                                   
