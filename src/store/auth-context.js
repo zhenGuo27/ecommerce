@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useCookies } from 'react-cookie';
+import { getUserCartByUid, updateUserCart } from "../actions/user-action";
 
 let logoutTimer;
 
@@ -50,7 +52,7 @@ export const AuthContextProvider = (props) => {
 
   const [uid, setUid] = useState(initUid);
   const [token, setToken] = useState(initalToken);
-  //const userIsLoggedIn = !!token;
+  const [cookies, setCookie, removeCookie] = useCookies(['cart']);
 
   const logoutHandler = () => {
     setToken(null);
@@ -72,7 +74,37 @@ export const AuthContextProvider = (props) => {
 
     const remainingTime = calculateRemainingTime(expirationTime);
     logoutTimer = setTimeout(logoutHandler, remainingTime);
+    checkCartCookie(uid, token);
+  };
 
+  const checkCartCookie = (userUid, userToken) => {
+    if (cookies.cart) {
+      getUserCartByUid(userUid).then((item) => {
+        const newCartItem = [...item.cartItems];
+
+        if (item) {
+          cookies.cart.forEach((element) => {
+            const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
+            if (!exist) {
+              newCartItem.push(element);
+            } else {
+              const eIndex = newCartItem.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
+              newCartItem[eIndex].unitPrice = element.unitPrice;
+              newCartItem[eIndex].quantity = element.quantity;
+              newCartItem[eIndex].subtotal = element.quantity * element.unitPrice;
+            }
+          });
+
+          const updatedUserCart = {
+            uid: userUid,
+            token: userToken,
+            cartItems: newCartItem,
+          };
+          updateUserCart(updatedUserCart);
+          removeCookie("cart");
+        }
+      });
+    }
   };
 
   useEffect(() => {

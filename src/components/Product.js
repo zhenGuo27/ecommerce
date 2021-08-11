@@ -70,10 +70,10 @@ const Product = (props) => {
 
   const updateCartData = (cartItem, originalData) => {
     let updatedData = originalData ? [...originalData] : [];
-    const exist = updatedData.some((item) => item.productId === cartItem.productId);
+    const exist = updatedData.some((item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id);
     if (exist) {
       let currentItem = updatedData.find(
-        (item) => item.id === cartItem.productId
+        (item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id
       );
       currentItem.quantity = orderQuantity;
     } else {
@@ -87,6 +87,7 @@ const Product = (props) => {
     const cartItem = {
       productId: id,
       sku: currentSku,
+      unitPrice: currentSku.price,
       quantity: orderQuantity,
       subtotal: (currentSku.price * orderQuantity).toFixed(2),
     };
