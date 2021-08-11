@@ -52,3 +52,10 @@ export const updateUserCart = async (cart) => {
 
   console.log("updateUserCart", data);  
 };
+
+
+export const getUserCartItemNum=()=> {
+    //取得購物車項目總數
+    //if login get num from backend 
+    //else get num from cookie
+};

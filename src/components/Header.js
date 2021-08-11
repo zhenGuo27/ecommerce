@@ -1,14 +1,17 @@
 import $ from "jquery";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import logo from "../images/logo.svg";
 import megamenuBg1 from "../images/megamenu-bg1.jpg";
 import megamenuBg2 from "../images/megamenu-bg2.jpg";
-import capeDress1 from "../images/product-images/cape-dress-1.jpg";
-import capeDress2 from "../images/product-images/cape-dress-2.jpg";
+// import capeDress1 from "../images/product-images/cape-dress-1.jpg";
+// import capeDress2 from "../images/product-images/cape-dress-2.jpg";
 
 const Header = (props) => {
+  const history = useHistory();
+
   useEffect(() => {
-    minicart_dropdown();
+    //minicart_dropdown();
 
     $(window).scroll(function () {
       stickyHeader();
@@ -39,7 +42,9 @@ const Header = (props) => {
     });
   };
 
-  const inputOnChangeHandler = () => {};
+  const toCartDetail = () => {
+    history.replace("/Cart");
+  };
 
   const headerType = (props.type === "Home") ? "classicHeader" : "";
   const classes = `header-wrap ${headerType} animated d-flex`;
@@ -884,7 +889,7 @@ const Header = (props) => {
           {/*Mobile Logo*/}
           <div className="col-4 col-sm-3 col-md-3 col-lg-2">
             <div className="site-cart">
-              <a href="#;" className="site-header__cart" title="Cart">
+              <a className="site-header__cart" title="Cart" onClick={toCartDetail}>
                 <i className="icon anm anm-bag-l"></i>
                 <span
                   id="CartCount"
@@ -895,7 +900,7 @@ const Header = (props) => {
                 </span>
               </a>
               {/*Minicart Popup*/}
-              <div id="header-cart" className="block block-cart">
+              {/* <div id="header-cart" className="block block-cart">
                 <ul className="mini-products-list">
                   <li className="item">
                     <a className="product-image" href="#">
@@ -1023,6 +1028,7 @@ const Header = (props) => {
                   </div>
                 </div>
               </div>
+               */}
               {/*End Minicart Popup*/}
             </div>
             <div className="site-header__search">

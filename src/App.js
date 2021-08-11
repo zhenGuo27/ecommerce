@@ -43,6 +43,9 @@ function App() {
           <Route path="/Product/:id">
             <Product id="clothing-1" />
           </Route>
+          <Route path="/Cart">
+             <Cart />
+          </Route>
         </Switch>
       </div>
 
