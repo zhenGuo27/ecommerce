@@ -106,12 +106,17 @@ const Product = (props) => {
 
       updateUserCart(updatedUserCart);
     } else {
+      let newUserCartData = {
+        uid: authCtx.uid,
+        token: authCtx.token,
+        cartItems: null
+      };
       if (!cookies.cart) {
-        setCookie("cart", JSON.stringify([cartItem]), { path: "/" });
+        newUserCartData.cartItems = [cartItem];
       } else {
-        const updatedData = updateCartData(cartItem, cookies.cart);
-        setCookie("cart", JSON.stringify(updatedData), { path: "/" });
+        newUserCartData.cartItems = updateCartData(cartItem, cookies.cart);
       }
+      setCookie("cart", JSON.stringify(newUserCartData), { path: "/" });
     }
   };
 

@@ -1,6 +1,9 @@
 import $ from "jquery";
-import { useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { getUserCartItems } from "../actions/user-action";
+import AuthContext from "../store/auth-context";
+import { useCookies } from 'react-cookie';
 import logo from "../images/logo.svg";
 import megamenuBg1 from "../images/megamenu-bg1.jpg";
 import megamenuBg2 from "../images/megamenu-bg2.jpg";
@@ -9,6 +12,9 @@ import megamenuBg2 from "../images/megamenu-bg2.jpg";
 
 const Header = (props) => {
   const history = useHistory();
+  const authCtx = useContext(AuthContext);
+  const [cookies, setCookie, removeCookie] = useCookies(['cart']);
+  const [userCartItems, setUserCartItems] = useState([]);
 
   useEffect(() => {
     //minicart_dropdown();
@@ -16,7 +22,12 @@ const Header = (props) => {
     $(window).scroll(function () {
       stickyHeader();
     });
+
+    getUserCartItems(authCtx.uid, cookies.cart).then((items) => {
+      setUserCartItems(items);
+    }, []);
   }, []);
+
 
   const stickyHeader = () => {
     if ($(window).width() > 1199) {
@@ -896,7 +907,7 @@ const Header = (props) => {
                   className="site-header__cart-count"
                   data-cart-render="item_count"
                 >
-                  2
+                  {userCartItems.length}
                 </span>
               </a>
               {/*Minicart Popup*/}

@@ -23,13 +23,6 @@ export const getUserCartByUid = async (uid) => {
     console.log("getUserCartByUid", reqItems);
     return reqItems;
   }
-
-
-
-//   const reqItems = JSON.parse(data.content);
-//   console.log("getUserCartByUid", reqItems);
-
-  //return reqItems;
 };
 
 export const updateUserCart = async (cart) => {
@@ -53,9 +46,20 @@ export const updateUserCart = async (cart) => {
   console.log("updateUserCart", data);  
 };
 
+export const getUserCartItems = async (userUid, cookies) => {
+  let result = [];
 
-export const getUserCartItemNum=()=> {
-    //取得購物車項目總數
-    //if login get num from backend 
-    //else get num from cookie
+  if (userUid) {
+    await getUserCartByUid(userUid).then((item) => {
+      const userCart = { ...item };
+      if (userCart) {
+        result = [...userCart.cartItems];
+      }
+    });
+  } else {
+    if (cookies && cookies.cart) {
+      result = [...cookies.cart.cartItems];
+    }
+  }
+  return result;
 };
