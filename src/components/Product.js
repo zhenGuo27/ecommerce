@@ -86,10 +86,12 @@ const Product = (props) => {
   const addToCart = () => {
     const cartItem = {
       productId: id,
+      title: productData.title,
       sku: currentSku,
       unitPrice: currentSku.price,
       quantity: orderQuantity,
       subtotal: (currentSku.price * orderQuantity).toFixed(2),
+      img: productData.largeImgs[0].src
     };
 
     if (authCtx.isLoggedIn) {

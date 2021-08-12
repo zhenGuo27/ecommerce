@@ -1,240 +1,175 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState, useContext, useCallback, useRef } from "react";
+import AuthContext from "../store/auth-context";
+import { useCookies } from 'react-cookie';
+import { getUserCartItems } from "../actions/user-action";
+import { Link, NavLink } from "react-router-dom";
 
 const Cart = (props) => {
+  const authCtx = useContext(AuthContext);
+  const [cookies, setCookie, removeCookie] = useCookies(['cart']);
+  const [userCartItems, setUserCartItems] = useState([]);
+  const [subtotalPrice, setsubtotalPrice] = useState();
+  const noteRef = useRef();
+
+  useEffect(()=> {
+    getUserCartItems(authCtx.uid, cookies.cart).then((items) => {
+      setUserCartItems(items);
+      subtotalPriceHandler(items);
+      console.log("Cart", items);
+    });
+  }, []);
+
+  const subtotalPriceHandler = (items) => {
+    let subtotal = 0;
+    items.forEach((element) => {
+      subtotal += element.subtotal;
+    });
+    setsubtotalPrice(subtotal);
+  };
+
+  const submitHandler = () => {
+    //event.preventDefault();
+    const cartData = {
+      uid: authCtx.uid,
+      token: authCtx.token,
+      cartItems: userCartItems,
+      note: noteRef.current.value
+    };
+    
+    console.log("submit cart data", cartData);
+  };
+
+  const testHandler = () => {};
+
   return (
     <Fragment>
       {/*Page Title*/}
-      <div class="page section-header text-center">
-        <div class="page-title">
-          <div class="wrapper">
-            <h1 class="page-width">Your cart</h1>
+      <div className="page section-header text-center">
+        <div className="page-title">
+          <div className="wrapper">
+            <h1 className="page-width">Your cart</h1>
           </div>
         </div>
       </div>
       {/*End Page Title*/}
 
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
-            <form action="#" method="post" class="cart style2">
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
+            <form action="#" method="post" className="cart style2">
               <table>
-                <thead class="cart__row cart__header">
+                <thead className="cart__row cart__header">
                   <tr>
-                    <th colspan="2" class="text-center">
+                    <th colSpan="2" className="text-center">
                       Product
                     </th>
-                    <th class="text-center">Price</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-right">Total</th>
-                    <th class="action">&nbsp;</th>
+                    <th className="text-center">Price</th>
+                    <th className="text-center">Quantity</th>
+                    <th className="text-right">Total</th>
+                    <th className="action">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="cart__row border-bottom line1 cart-flex border-top">
-                    <td class="cart__image-wrapper cart-flex-item">
-                      <a href="#">
-                        <img
-                          class="cart__image"
-                          src="assets/images/product-images/product-image1.jpg"
-                          alt="Elastic Waist Dress - Navy / Small"
-                        />
-                      </a>
-                    </td>
-                    <td class="cart__meta small--text-left cart-flex-item">
-                      <div class="list-view-item__title">
-                        <a href="#">Elastic Waist Dress </a>
-                      </div>
+                  {userCartItems.map((item) => {
+                    return (
+                      <tr className="cart__row border-bottom line1 cart-flex border-top" key={`cartItem_${item.productId}_${item.sku.id}`}>
+                        <td className="cart__image-wrapper cart-flex-item">
+                          <a href="#">
+                            <img
+                              className="cart__image"
+                              src={require("../" + item.img).default}
+                              alt={item.title}
+                            />
+                          </a>
+                        </td>
+                        <td className="cart__meta small--text-left cart-flex-item">
+                          <div className="list-view-item__title">
+                            <a href="#">{item.title}</a>
+                          </div>
 
-                      <div class="cart__meta-text">
-                        Color: Navy
-                        <br />
-                        Size: Small
-                        <br />
-                      </div>
-                    </td>
-                    <td class="cart__price-wrapper cart-flex-item">
-                      <span class="money">$735.00</span>
-                    </td>
-                    <td class="cart__update-wrapper cart-flex-item text-right">
-                      <div class="cart__qty text-center">
-                        <div class="qtyField">
-                          <a class="qtyBtn minus" href="javascript:void(0);">
-                            <i class="icon icon-minus"></i>
+                          <div className="cart__meta-text">
+                            Color: {item.sku.color}
+                            <br />
+                            Size: {item.sku.size}
+                            <br />
+                          </div>
+                        </td>
+                        <td className="cart__price-wrapper cart-flex-item">
+                          <span className="money">${item.unitPrice}</span>
+                        </td>
+                        <td className="cart__update-wrapper cart-flex-item text-right">
+                          <div className="cart__qty text-center">
+                            <div className="qtyField">
+                              <a className="qtyBtn minus">
+                                <i className="icon icon-minus"></i>
+                              </a>
+                              <input
+                                className="cart__qty-input qty"
+                                type="text"
+                                name="updates[]"
+                                id="qty"
+                                value={item.quantity}
+                                onChange={testHandler}
+                                pattern="[0-9]*"
+                              />
+                              <a className="qtyBtn plus">
+                                <i className="icon icon-plus"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-right small--hide cart-price">
+                          <div>
+                            <span className="money">${item.subtotal}</span>
+                          </div>
+                        </td>
+                        <td className="text-center small--hide">
+                          <a
+                            href="#"
+                            className="btn btn--secondary cart__remove"
+                            title="Remove tem"
+                          >
+                            <i className="icon icon anm anm-times-l"></i>
                           </a>
-                          <input
-                            class="cart__qty-input qty"
-                            type="text"
-                            name="updates[]"
-                            id="qty"
-                            value="1"
-                            pattern="[0-9]*"
-                          />
-                          <a class="qtyBtn plus" href="javascript:void(0);">
-                            <i class="icon icon-plus"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right small--hide cart-price">
-                      <div>
-                        <span class="money">$735.00</span>
-                      </div>
-                    </td>
-                    <td class="text-center small--hide">
-                      <a
-                        href="#"
-                        class="btn btn--secondary cart__remove"
-                        title="Remove tem"
-                      >
-                        <i class="icon icon anm anm-times-l"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr class="cart__row border-bottom line1 cart-flex border-top">
-                    <td class="cart__image-wrapper cart-flex-item">
-                      <a href="#">
-                        <img
-                          class="cart__image"
-                          src="assets/images/product-images/product-image3.jpg"
-                          alt="3/4 Sleeve Kimono Dress"
-                        />
-                      </a>
-                    </td>
-                    <td class="cart__meta small--text-left cart-flex-item">
-                      <div class="list-view-item__title">
-                        <a href="#">3/4 Sleeve Kimono Dress</a>
-                      </div>
-                    </td>
-                    <td class="cart__price-wrapper cart-flex-item">
-                      <span class="money">$735.00</span>
-                    </td>
-                    <td class="cart__update-wrapper cart-flex-item text-right">
-                      <div class="cart__qty text-center">
-                        <div class="qtyField">
-                          <a class="qtyBtn minus" href="javascript:void(0);">
-                            <i class="icon icon-minus"></i>
-                          </a>
-                          <input
-                            class="cart__qty-input qty"
-                            type="text"
-                            name="updates[]"
-                            id="qty"
-                            value="1"
-                            pattern="[0-9]*"
-                          />
-                          <a class="qtyBtn plus" href="javascript:void(0);">
-                            <i class="icon icon-plus"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right small--hide cart-price">
-                      <div>
-                        <span class="money">$735.00</span>
-                      </div>
-                    </td>
-                    <td class="text-center small--hide">
-                      <a
-                        href="#"
-                        class="btn btn--secondary cart__remove"
-                        title="Remove tem"
-                      >
-                        <i class="icon icon anm anm-times-l"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr class="cart__row border-bottom line1 cart-flex border-top">
-                    <td class="cart__image-wrapper cart-flex-item">
-                      <a href="#">
-                        <img
-                          class="cart__image"
-                          src="assets/images/product-images/product-image6.jpg"
-                          alt="Minerva Dress black"
-                        />
-                      </a>
-                    </td>
-                    <td class="cart__meta small--text-left cart-flex-item">
-                      <div class="list-view-item__title">
-                        <a href="#">Minerva Dress black</a>
-                      </div>
-                    </td>
-                    <td class="cart__price-wrapper cart-flex-item">
-                      <span class="money">$526.00</span>
-                    </td>
-                    <td class="cart__update-wrapper cart-flex-item text-right">
-                      <div class="cart__qty text-center">
-                        <div class="qtyField">
-                          <a class="qtyBtn minus" href="javascript:void(0);">
-                            <i class="icon icon-minus"></i>
-                          </a>
-                          <input
-                            class="cart__qty-input qty"
-                            type="text"
-                            name="updates[]"
-                            id="qty"
-                            value="1"
-                            pattern="[0-9]*"
-                          />
-                          <a class="qtyBtn plus" href="javascript:void(0);">
-                            <i class="icon icon-plus"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right small--hide cart-price">
-                      <div>
-                        <span class="money">$735.00</span>
-                      </div>
-                    </td>
-                    <td class="text-center small--hide">
-                      <a
-                        href="#"
-                        class="btn btn--secondary cart__remove"
-                        title="Remove tem"
-                      >
-                        <i class="icon icon anm anm-times-l"></i>
-                      </a>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                    );
+                  })}               
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="3" class="text-left">
-                      <a
-                        href="http://annimexweb.com/"
-                        class="btn--link cart-continue"
-                      >
-                        <i class="icon icon-arrow-circle-left"></i> Continue
-                        shopping
-                      </a>
+                    <td colSpan="3" className="text-left">
+                      <NavLink to="/" className="btn--link cart-continue">
+                        <i className="icon icon-arrow-circle-left"></i> Continue shopping
+                      </NavLink>
                     </td>
-                    <td colspan="3" class="text-right">
+                    <td colSpan="3" className="text-right">
                       <button
                         type="submit"
                         name="update"
-                        class="btn--link cart-update"
+                        className="btn--link cart-update"
                       >
-                        <i class="fa fa-refresh"></i> Update
+                        <i className="fa fa-refresh"></i> Update
                       </button>
                     </td>
                   </tr>
                 </tfoot>
               </table>
 
-              <div class="currencymsg">
+              <div className="currencymsg">
                 We processes all orders in USD. While the content of your cart
                 is currently displayed in USD, the checkout will use USD at the
                 most current exchange rate.
               </div>
             </form>
           </div>
-          <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
-            <div class="cart-note">
-              <div class="solid-border">
+          <div className="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
+            <div className="cart-note">
+              <div className="solid-border">
                 <h5>
                   <label
-                    for="CartSpecialInstructions"
-                    class="cart-note__label small--text-center"
+                    htmlFor="CartSpecialInstructions"
+                    className="cart-note__label small--text-center"
                   >
                     Add a note to your order
                   </label>
@@ -242,44 +177,46 @@ const Cart = (props) => {
                 <textarea
                   name="note"
                   id="CartSpecialInstructions"
-                  class="cart-note__input"
+                  className="cart-note__input"
+                  ref={noteRef}
                 ></textarea>
               </div>
             </div>
-            <div class="solid-border">
-              <div class="row">
-                <span class="col-12 col-sm-6 cart__subtotal-title">
+            <div className="solid-border">
+              <div className="row">
+                <span className="col-12 col-sm-6 cart__subtotal-title">
                   <strong>Subtotal</strong>
                 </span>
-                <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right">
-                  <span class="money">$735.00</span>
+                <span className="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right">
+                  <span className="money">${subtotalPrice}</span>
                 </span>
               </div>
-              <div class="cart__shipping">
+              <div className="cart__shipping">
                 Shipping &amp; taxes calculated at checkout
               </div>
-              <p class="cart_tearm">
+              <p className="cart_tearm">
                 <label>
                   <input
                     type="checkbox"
                     name="tearm"
                     id="cartTearm"
-                    class="checkbox"
+                    className="checkbox"
                     value="tearm"
+                    onChange={testHandler}
                     required=""
                   />
                   I agree with the terms and conditions
                 </label>
               </p>
               <input
-                type="submit"
+                type="button"
                 name="checkout"
                 id="cartCheckout"
-                class="btn btn--small-wide checkout"
+                className="btn btn--small-wide checkout"
                 value="Checkout"
-                disabled="disabled"
+                onClick={submitHandler}               
               />
-              <div class="paymnet-img">
+              <div className="paymnet-img">
                 <img src="assets/images/payment-img.jpg" alt="Payment" />
               </div>
             </div>

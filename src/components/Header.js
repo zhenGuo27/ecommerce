@@ -7,8 +7,6 @@ import { useCookies } from 'react-cookie';
 import logo from "../images/logo.svg";
 import megamenuBg1 from "../images/megamenu-bg1.jpg";
 import megamenuBg2 from "../images/megamenu-bg2.jpg";
-// import capeDress1 from "../images/product-images/cape-dress-1.jpg";
-// import capeDress2 from "../images/product-images/cape-dress-2.jpg";
 
 const Header = (props) => {
   const history = useHistory();
@@ -17,17 +15,16 @@ const Header = (props) => {
   const [userCartItems, setUserCartItems] = useState([]);
 
   useEffect(() => {
-    //minicart_dropdown();
-
     $(window).scroll(function () {
       stickyHeader();
     });
+  }, []);
 
+  useEffect(() => {
     getUserCartItems(authCtx.uid, cookies.cart).then((items) => {
       setUserCartItems(items);
     }, []);
-  }, []);
-
+  }, [authCtx.uid, cookies.cart, getUserCartItems]);
 
   const stickyHeader = () => {
     if ($(window).width() > 1199) {
@@ -37,20 +34,6 @@ const Header = (props) => {
         $(".header-wrap").removeClass("stickyNav fadeInDown");
       }
     }
-  };
-
-  const minicart_dropdown = () => {
-    $(".site-header__cart").on("click", function (i) {
-      i.preventDefault();
-      $("#header-cart").slideToggle();
-    });
-    // Hide Cart on document click
-    $("body").on("click", function (event) {
-      var $target = $(event.target);
-      if (!$target.parents().is(".site-cart") && !$target.is(".site-cart")) {
-        $("body").find("#header-cart").slideUp();
-      }
-    });
   };
 
   const toCartDetail = () => {

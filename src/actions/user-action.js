@@ -10,17 +10,12 @@ export const getUserCartByUid = async (uid) => {
     throw new Error("Something went wrong!");
   }
 
-  console.log("getUserCartByUid response", response);
-
   const data = await response.json();
-  console.log("data", data);
 
   if (data.returnCode === -1) {
-    console.log("getUserCartByUid", data.content);
     return null;
   } else {
     const reqItems = JSON.parse(data.content);
-    console.log("getUserCartByUid", reqItems);
     return reqItems;
   }
 };
@@ -52,7 +47,7 @@ export const getUserCartItems = async (userUid, cookies) => {
   if (userUid) {
     await getUserCartByUid(userUid).then((item) => {
       const userCart = { ...item };
-      if (userCart) {
+      if (Object.keys(userCart).length !== 0) {
         result = [...userCart.cartItems];
       }
     });

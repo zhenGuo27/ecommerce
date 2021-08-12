@@ -55,6 +55,7 @@ export const AuthContextProvider = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(['cart']);
 
   const logoutHandler = () => {
+    setUid("");
     setToken(null);
     localStorage.removeItem("uid");
     localStorage.removeItem("token");
