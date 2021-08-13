@@ -38,7 +38,7 @@ export const updateUserCart = async (cart) => {
 
   const data = await response.json();
 
-  console.log("updateUserCart", data);  
+  return data;
 };
 
 export const getUserCartItems = async (userUid, cookies) => {

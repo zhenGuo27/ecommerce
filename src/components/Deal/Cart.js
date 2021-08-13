@@ -1,45 +1,111 @@
-import { Fragment, useEffect, useState, useContext, useCallback, useRef } from "react";
-import AuthContext from "../store/auth-context";
-import { useCookies } from 'react-cookie';
-import { getUserCartItems } from "../actions/user-action";
-import { Link, NavLink } from "react-router-dom";
+import { Fragment, useEffect, useState, useContext, useRef } from "react";
+import AuthContext from "../../store/auth-context";
+import { getUserCartItems, updateUserCart } from "../../actions/user-action";
+import { NavLink, useHistory } from "react-router-dom";
+import { getProductByMutipleId } from "../../actions/product-action";
 
 const Cart = (props) => {
   const authCtx = useContext(AuthContext);
-  const [cookies, setCookie, removeCookie] = useCookies(['cart']);
+  const history = useHistory();
   const [userCartItems, setUserCartItems] = useState([]);
   const [subtotalPrice, setsubtotalPrice] = useState();
   const noteRef = useRef();
+  const agreeRef = useRef();
+  const [products, setProducts] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(()=> {
-    getUserCartItems(authCtx.uid, cookies.cart).then((items) => {
+  useEffect(() => {
+    if (!authCtx.isLoggedIn) {
+      history.replace("/");
+      return;
+    }
+
+    getUserCartItems(authCtx.uid, null).then((items) => {
       setUserCartItems(items);
       subtotalPriceHandler(items);
-      console.log("Cart", items);
+      if (items.length !== 0) {
+        getProductsHandler(items);
+      }
     });
   }, []);
+
+  const getProductsHandler = (cartItems) => {
+    const ids = [...new Set(cartItems.map((item) => item.productId))];
+    getProductByMutipleId(ids.join("_")).then((items) => {
+      setProducts(items);
+    });
+  };
 
   const subtotalPriceHandler = (items) => {
     let subtotal = 0;
     items.forEach((element) => {
       subtotal += element.subtotal;
     });
-    setsubtotalPrice(subtotal);
+    setsubtotalPrice(subtotal.toFixed(2));
   };
 
   const submitHandler = () => {
-    //event.preventDefault();
     const cartData = {
       uid: authCtx.uid,
       token: authCtx.token,
       cartItems: userCartItems,
-      note: noteRef.current.value
+      note: noteRef.current.value,
     };
-    
-    console.log("submit cart data", cartData);
+
+    if (agreeRef.current.checked && userCartItems.length !== 0) {
+      updateUserCart(cartData).then((data) => {
+        if (data.returnCode !== -1) {
+          history.replace("/Checkout");
+        }
+      });
+    }
   };
 
-  const testHandler = () => {};
+  const increaseQuantity = (id, skuId, index) => {
+    const pData = products.find((x) => x.id === id);
+    const stock = pData.sku.find((x) => x.id === skuId).stock;
+    const cData = [...userCartItems];
+    if (cData[index].quantity < stock) {
+      cData[index].quantity = cData[index].quantity + 1;
+      cData[index].subtotal = cData[index].quantity * cData[index].unitPrice;
+    }
+
+    setUserCartItems(cData);
+    subtotalPriceHandler(cData);
+  };
+
+  const decreaseQuantity = (id, skuId, index) => {
+    const pData = products.find((x) => x.id === id);
+    const stock = pData.sku.find((x) => x.id === skuId).stock;
+    const cData = [...userCartItems];
+    if (cData[index].quantity > 0 && stock > 0) {
+      cData[index].quantity = cData[index].quantity - 1;
+      cData[index].subtotal = cData[index].quantity * cData[index].unitPrice;
+    }
+
+    setUserCartItems(cData);
+    subtotalPriceHandler(cData);
+  };
+
+  const checkAgreeCondition = (event) => {
+    console.log("checkbox", event.target.checked);
+    if (!event.target.checked) {
+      setErrorMsg("please check condition.");
+    } else {
+      setErrorMsg("");
+    }
+  };
+
+  const removeItem = (productId, skuId) => {
+    const cData = [...userCartItems];
+    const targetIndex = cData.findIndex(
+      (x) => x.productId === productId && x.sku.id === skuId
+    );
+
+    cData.splice(targetIndex, 1);
+    setUserCartItems(cData);
+    subtotalPriceHandler(cData);
+  };
 
   return (
     <Fragment>
@@ -70,14 +136,17 @@ const Cart = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {userCartItems.map((item) => {
+                  {userCartItems.map((item, index) => {
                     return (
-                      <tr className="cart__row border-bottom line1 cart-flex border-top" key={`cartItem_${item.productId}_${item.sku.id}`}>
+                      <tr
+                        className="cart__row border-bottom line1 cart-flex border-top"
+                        key={`cartItem_${item.productId}_${item.sku.id}`}
+                      >
                         <td className="cart__image-wrapper cart-flex-item">
                           <a href="#">
                             <img
                               className="cart__image"
-                              src={require("../" + item.img).default}
+                              src={require("../../" + item.img).default}
                               alt={item.title}
                             />
                           </a>
@@ -100,7 +169,15 @@ const Cart = (props) => {
                         <td className="cart__update-wrapper cart-flex-item text-right">
                           <div className="cart__qty text-center">
                             <div className="qtyField">
-                              <a className="qtyBtn minus">
+                              <a
+                                className="qtyBtn minus"
+                                onClick={decreaseQuantity.bind(
+                                  null,
+                                  item.productId,
+                                  item.sku.id,
+                                  index
+                                )}
+                              >
                                 <i className="icon icon-minus"></i>
                               </a>
                               <input
@@ -109,10 +186,18 @@ const Cart = (props) => {
                                 name="updates[]"
                                 id="qty"
                                 value={item.quantity}
-                                onChange={testHandler}
+                                readOnly={true}
                                 pattern="[0-9]*"
                               />
-                              <a className="qtyBtn plus">
+                              <a
+                                className="qtyBtn plus"
+                                onClick={increaseQuantity.bind(
+                                  null,
+                                  item.productId,
+                                  item.sku.id,
+                                  index
+                                )}
+                              >
                                 <i className="icon icon-plus"></i>
                               </a>
                             </div>
@@ -120,27 +205,34 @@ const Cart = (props) => {
                         </td>
                         <td className="text-right small--hide cart-price">
                           <div>
-                            <span className="money">${item.subtotal}</span>
+                            <span className="money">
+                              ${item.subtotal.toFixed(2)}
+                            </span>
                           </div>
                         </td>
                         <td className="text-center small--hide">
                           <a
                             href="#"
                             className="btn btn--secondary cart__remove"
-                            title="Remove tem"
+                            title="Remove Item"
+                            onClick={removeItem.bind(
+                              item.productId,
+                              item.sku.id
+                            )}
                           >
                             <i className="icon icon anm anm-times-l"></i>
                           </a>
                         </td>
                       </tr>
                     );
-                  })}               
+                  })}
                 </tbody>
                 <tfoot>
                   <tr>
                     <td colSpan="3" className="text-left">
                       <NavLink to="/" className="btn--link cart-continue">
-                        <i className="icon icon-arrow-circle-left"></i> Continue shopping
+                        <i className="icon icon-arrow-circle-left"></i> Continue
+                        shopping
                       </NavLink>
                     </td>
                     <td colSpan="3" className="text-right">
@@ -201,12 +293,12 @@ const Cart = (props) => {
                     name="tearm"
                     id="cartTearm"
                     className="checkbox"
-                    value="tearm"
-                    onChange={testHandler}
-                    required=""
+                    ref={agreeRef}
+                    onChange={checkAgreeCondition}
                   />
                   I agree with the terms and conditions
                 </label>
+                {errorMsg && <div className="text-danger">{errorMsg}</div>}
               </p>
               <input
                 type="button"
@@ -214,7 +306,7 @@ const Cart = (props) => {
                 id="cartCheckout"
                 className="btn btn--small-wide checkout"
                 value="Checkout"
-                onClick={submitHandler}               
+                onClick={submitHandler}
               />
               <div className="paymnet-img">
                 <img src="assets/images/payment-img.jpg" alt="Payment" />

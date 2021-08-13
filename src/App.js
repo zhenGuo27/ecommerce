@@ -9,8 +9,8 @@ import NewsletterPopup from "./components/NewsletterPopup";
 import Home from "./components/Home";
 import ProductList from "./components/ProductList";
 import Product from "./components/Product";
-import Cart from "./components/Cart";
-import Checkout from "./components/Checkout";
+import Cart from "./components/Deal/Cart";
+import Checkout from "./components/Deal/Checkout";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import ForgetPassword from "./components/ForgetPassword";
@@ -28,7 +28,7 @@ function App() {
       <MobileMenu />
 
       <div id="page-content">
-      {/* <Product id="clothing-1"/> */}
+        {/* <Product id="clothing-1"/> */}
 
         <Switch>
           <Route path="/" exact>
@@ -44,7 +44,10 @@ function App() {
             <Product id="clothing-1" />
           </Route>
           <Route path="/Cart">
-             <Cart />
+            <Cart />
+          </Route>
+          <Route path="/Checkout">
+            <Checkout />
           </Route>
         </Switch>
       </div>
