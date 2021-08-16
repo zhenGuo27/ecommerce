@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
+import { useHistory } from "react-router-dom";
 import { getUserCartByUid, updateUserCart } from "../actions/user-action";
 
 let logoutTimer;
@@ -42,6 +43,7 @@ const retrieveStoreToken = () => {
 
 export const AuthContextProvider = (props) => {
   const tokenData = retrieveStoreToken();
+  const history = useHistory();
 
   let initalToken;
   let initUid;
@@ -64,6 +66,7 @@ export const AuthContextProvider = (props) => {
     if (logoutTimer) {
       clearTimeout(logoutTimer);
     }
+    history.replace("/");
   };
 
   const loginHandler = (uid, token, expirationTime) => {
@@ -84,7 +87,7 @@ export const AuthContextProvider = (props) => {
         const newCartItem = [...item.cartItems];
 
         if (item) {
-          cookies.cart.forEach((element) => {
+          cookies.cart.cartItems.forEach((element) => {
             const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
             if (!exist) {
               newCartItem.push(element);

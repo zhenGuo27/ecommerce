@@ -8,13 +8,13 @@ import { CookiesProvider } from "react-cookie";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <AuthContextProvider>
-    <CookiesProvider>
-      <BrowserRouter>
+  <BrowserRouter>
+    <AuthContextProvider>
+      <CookiesProvider>
         <App />
-      </BrowserRouter>
-    </CookiesProvider>
-  </AuthContextProvider>,
+      </CookiesProvider>
+    </AuthContextProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

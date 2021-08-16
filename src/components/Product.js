@@ -90,7 +90,7 @@ const Product = (props) => {
       sku: currentSku,
       unitPrice: currentSku.price,
       quantity: orderQuantity,
-      subtotal: (currentSku.price * orderQuantity).toFixed(2),
+      subtotal: (currentSku.price * orderQuantity),
       img: productData.largeImgs[0].src
     };
 
@@ -145,10 +145,16 @@ const Product = (props) => {
 
   const colorChangeHandler = (color) => {
     setSelectedColor(color);
+
+    const newSku = productData.sku.find(x=> x.color === color && x.size === selectedSize);
+    setCurrentSku(newSku);
   };
 
   const sizeChangeHandler = (size) => {
     setSelectedSize(size);
+
+    const newSku = productData.sku.find(x=> x.size === size && x.color === selectedColor);
+    setCurrentSku(newSku);
   };
 
   const imgPopup = () => {
