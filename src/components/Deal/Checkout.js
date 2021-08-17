@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { Fragment, useState, useContext, useRef, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
 import {
@@ -6,12 +7,14 @@ import {
   isNumeric,
   insertBill
 } from "../../actions/user-action";
+import { useHistory } from "react-router-dom";
 
 const initBillDetail =  Array(7).join(".").split(".");
 const shippingFee = 50;
 
 const Checkout = (props) => {
   const authCtx = useContext(AuthContext);
+  const history = useHistory();
   const [userCartItems, setUserCartItems] = useState([]);
   const [subtotalPrice, setsubtotalPrice] = useState();
   const detailRef = useRef(initBillDetail);
@@ -69,10 +72,19 @@ const Checkout = (props) => {
       setMsg(errorMsg);
     } else {
       setMsg("");
-      insertBill(submitData);
-      //show modal submit is sucessful
-      console.log("submitData", submitData);
+      insertBill(submitData).then((data)=> {
+        if (data.returnCode === 0) {
+          $("#submitModal").modal("show");
+        } else {
+          setMsg(data.content);
+        }
+      });
     }
+  };
+
+  const submitBtnHandler = () => {
+    $("#submitModal").modal("hide");
+    history.replace("/");
   };
 
   return (
@@ -103,14 +115,19 @@ const Checkout = (props) => {
                         name="firstname"
                         id="input-firstname"
                         type="text"
-                        ref={el => detailRef.current[0] = el} 
+                        ref={(el) => (detailRef.current[0] = el)}
                       />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-lastname">
                         Last Name <span className="required-f">*</span>
                       </label>
-                      <input name="lastname" id="input-lastname" type="text" ref={el => detailRef.current[1] = el} />
+                      <input
+                        name="lastname"
+                        id="input-lastname"
+                        type="text"
+                        ref={(el) => (detailRef.current[1] = el)}
+                      />
                     </div>
                   </div>
                   <div className="row">
@@ -118,13 +135,23 @@ const Checkout = (props) => {
                       <label htmlFor="input-email">
                         E-Mail <span className="required-f">*</span>
                       </label>
-                      <input name="email" id="input-email" type="email" ref={el => detailRef.current[2] = el} />
+                      <input
+                        name="email"
+                        id="input-email"
+                        type="email"
+                        ref={(el) => (detailRef.current[2] = el)}
+                      />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-telephone">
                         Telephone <span className="required-f">*</span>
                       </label>
-                      <input name="telephone" id="input-telephone" type="tel" ref={el => detailRef.current[3] = el} />
+                      <input
+                        name="telephone"
+                        id="input-telephone"
+                        type="tel"
+                        ref={(el) => (detailRef.current[3] = el)}
+                      />
                     </div>
                   </div>
                 </fieldset>
@@ -133,7 +160,12 @@ const Checkout = (props) => {
                   <div className="row">
                     <div className="form-group col-md-6 col-lg-6 col-xl-6">
                       <label htmlFor="input-company">Company</label>
-                      <input name="company" id="input-company" type="text" ref={el => detailRef.current[4] = el} />
+                      <input
+                        name="company"
+                        id="input-company"
+                        type="text"
+                        ref={(el) => (detailRef.current[4] = el)}
+                      />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-address-1">
@@ -143,7 +175,7 @@ const Checkout = (props) => {
                         name="address_1"
                         id="input-address-1"
                         type="text"
-                        ref={el => detailRef.current[5] = el} 
+                        ref={(el) => (detailRef.current[5] = el)}
                       />
                     </div>
                   </div>
@@ -158,7 +190,8 @@ const Checkout = (props) => {
                       <textarea
                         className="form-control resize-both"
                         rows="3"
-                        ref={el => detailRef.current[6] = el} 
+                        ref={(el) => (detailRef.current[6] = el)}
+                        value={userCartItems.note}
                       ></textarea>
                     </div>
                   </div>
@@ -196,7 +229,7 @@ const Checkout = (props) => {
                             <td>${item.subtotal.toFixed(2)}</td>
                           </tr>
                         );
-                      })}                  
+                      })}
                     </tbody>
                     <tfoot className="font-weight-600">
                       <tr>
@@ -361,7 +394,7 @@ const Checkout = (props) => {
                                 </div>
                                 <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                                   <label htmlFor="input-cvv">
-                                    CVV Code{" "}
+                                    CVV Code
                                     <span className="required-f">*</span>
                                   </label>
                                   <input
@@ -402,12 +435,35 @@ const Checkout = (props) => {
                   </div>
                   {msg && <p className="text-danger">{msg}</p>}
                   <div className="order-button-payment">
-                    <button className="btn" value="Place order" type="button" onClick={submitHandler}>
+                    <button
+                      className="btn"
+                      value="Place order"
+                      type="button"
+                      onClick={submitHandler}
+                    >
                       Place order
                     </button>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="submitModal" className="modal" tabIndex="-1" role="dialog" data-backdrop="static">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Submit</h5>
+            </div>
+            <div className="modal-body">
+              <p>Submit sucessfully !!!</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" onClick={submitBtnHandler}>
+                OK
+              </button>
             </div>
           </div>
         </div>
