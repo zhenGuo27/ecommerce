@@ -1,36 +1,28 @@
 import { Fragment, useState, useContext, useRef, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
-import { getUserCartItems } from "../../actions/user-action";
+import {
+  getUserCartItems,
+  checkEmail,
+  isNumeric,
+  insertBill
+} from "../../actions/user-action";
 
-const initBillDetail = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  tel: '',
-  company: '',
-  address: '',
-  note: ''
-};
+const initBillDetail =  Array(7).join(".").split(".");
+const shippingFee = 50;
 
 const Checkout = (props) => {
   const authCtx = useContext(AuthContext);
   const [userCartItems, setUserCartItems] = useState([]);
   const [subtotalPrice, setsubtotalPrice] = useState();
-  const detailRef = useRef([]);
-
+  const detailRef = useRef(initBillDetail);
+  const [msg, setMsg] = useState("");
 
   useEffect(()=> {
-    //detailRef.current = Array(arrLength).fill().map((_, i) => elRefs.current[i] || createRef());
-
-    //set detailRef with array 
-    //reference: https://stackoverflow.com/questions/54633690/how-can-i-use-multiple-refs-for-an-array-of-elements-with-hooks 
+    getUserCartItems(authCtx.uid, null).then((items) => {
+      setUserCartItems(items);
+      subtotalPriceHandler(items);
+    });
   }, []);
-
-
-  getUserCartItems(authCtx.uid, null).then((items) => {
-    setUserCartItems(items);
-    subtotalPriceHandler(items);
-  });
 
   const subtotalPriceHandler = (items) => {
     let subtotal = 0;
@@ -38,6 +30,49 @@ const Checkout = (props) => {
       subtotal += element.subtotal;
     });
     setsubtotalPrice(subtotal);
+  };
+
+  const checkDataHandler = (data)=> {
+    if(!checkEmail(data.email)) {
+      return "email is not valid."
+    }
+
+    if(!isNumeric(data.tel)){
+      return "tel must be number.";
+    }
+
+    if(data.tel.length !==10){
+      return "tel length must be 10.";
+    }
+
+    return "";
+  }
+
+  const submitHandler = () => {
+    let submitData = {
+      uid: authCtx.uid,
+      subtotalFee: subtotalPrice,
+      shippingFee: shippingFee,
+      totalFee: (subtotalPrice + shippingFee),
+      firstName: detailRef.current[0].value,
+      lastName: detailRef.current[1].value,
+      email: detailRef.current[2].value,
+      tel: detailRef.current[3].value,
+      company: detailRef.current[4].value,
+      address: detailRef.current[5].value,
+      note: detailRef.current[6].value,
+      products: JSON.stringify(userCartItems)
+    };
+
+    const errorMsg = checkDataHandler(submitData);
+    if (errorMsg !== "") {
+      setMsg(errorMsg);
+    } else {
+      setMsg("");
+      insertBill(submitData);
+      //show modal submit is sucessful
+      console.log("submitData", submitData);
+    }
   };
 
   return (
@@ -68,14 +103,14 @@ const Checkout = (props) => {
                         name="firstname"
                         id="input-firstname"
                         type="text"
-                        ref={detailRef.current.firstName}
+                        ref={el => detailRef.current[0] = el} 
                       />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-lastname">
                         Last Name <span className="required-f">*</span>
                       </label>
-                      <input name="lastname" id="input-lastname" type="text" ref={detailRef.current.lastName}/>
+                      <input name="lastname" id="input-lastname" type="text" ref={el => detailRef.current[1] = el} />
                     </div>
                   </div>
                   <div className="row">
@@ -83,13 +118,13 @@ const Checkout = (props) => {
                       <label htmlFor="input-email">
                         E-Mail <span className="required-f">*</span>
                       </label>
-                      <input name="email" id="input-email" type="email" ref={detailRef.current.email}/>
+                      <input name="email" id="input-email" type="email" ref={el => detailRef.current[2] = el} />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-telephone">
                         Telephone <span className="required-f">*</span>
                       </label>
-                      <input name="telephone" id="input-telephone" type="tel" ref={detailRef.current.tel}/>
+                      <input name="telephone" id="input-telephone" type="tel" ref={el => detailRef.current[3] = el} />
                     </div>
                   </div>
                 </fieldset>
@@ -98,7 +133,7 @@ const Checkout = (props) => {
                   <div className="row">
                     <div className="form-group col-md-6 col-lg-6 col-xl-6">
                       <label htmlFor="input-company">Company</label>
-                      <input name="company" id="input-company" type="text" ref={detailRef.current.company}/>
+                      <input name="company" id="input-company" type="text" ref={el => detailRef.current[4] = el} />
                     </div>
                     <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
                       <label htmlFor="input-address-1">
@@ -108,7 +143,7 @@ const Checkout = (props) => {
                         name="address_1"
                         id="input-address-1"
                         type="text"
-                        ref={detailRef.current.address}
+                        ref={el => detailRef.current[5] = el} 
                       />
                     </div>
                   </div>
@@ -123,7 +158,7 @@ const Checkout = (props) => {
                       <textarea
                         className="form-control resize-both"
                         rows="3"
-                        ref={detailRef.current.note}
+                        ref={el => detailRef.current[6] = el} 
                       ></textarea>
                     </div>
                   </div>
@@ -168,13 +203,13 @@ const Checkout = (props) => {
                         <td colSpan="5" className="text-right">
                           Shipping
                         </td>
-                        <td>$50.00</td>
+                        <td>${shippingFee.toFixed(2)}</td>
                       </tr>
                       <tr>
                         <td colSpan="5" className="text-right">
                           Total
                         </td>
-                        <td>${(subtotalPrice + 50).toFixed(2)}</td>
+                        <td>${(subtotalPrice + shippingFee).toFixed(2)}</td>
                       </tr>
                     </tfoot>
                   </table>
@@ -365,9 +400,9 @@ const Checkout = (props) => {
                       </div>
                     </div>
                   </div>
-
+                  {msg && <p className="text-danger">{msg}</p>}
                   <div className="order-button-payment">
-                    <button className="btn" value="Place order" type="submit">
+                    <button className="btn" value="Place order" type="button" onClick={submitHandler}>
                       Place order
                     </button>
                   </div>

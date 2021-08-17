@@ -58,3 +58,39 @@ export const getUserCartItems = async (userUid, cookies) => {
   }
   return result;
 };
+
+export const checkEmail = (email)=> {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+export const isNumeric = (str) => {
+  if (typeof str != "string") return false; // we only process strings!
+  return (
+    !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str))// ...and ensure strings of whitespace fail
+  ); 
+};
+
+export const insertBill = async (bill) => {
+  const response = await fetch(
+    "https://localhost:44396/Api/values/InsertBill",
+    {
+      method: "POST",
+      body: JSON.stringify(bill),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Something went wrong!");
+  }
+
+  const data = await response.json();
+
+  console.log("insertBill", data);
+
+  return data;
+};
