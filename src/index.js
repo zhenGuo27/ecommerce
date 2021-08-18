@@ -9,11 +9,11 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <BrowserRouter>
-    <AuthContextProvider>
-      <CookiesProvider>
+    <CookiesProvider>
+      <AuthContextProvider>
         <App />
-      </CookiesProvider>
-    </AuthContextProvider>
+      </AuthContextProvider>
+    </CookiesProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );

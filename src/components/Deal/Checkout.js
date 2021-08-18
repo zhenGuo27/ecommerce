@@ -2,7 +2,6 @@ import $ from "jquery";
 import { Fragment, useState, useContext, useRef, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
 import {
-  getUserCartItems,
   checkEmail,
   isNumeric,
   insertBill
@@ -20,11 +19,15 @@ const Checkout = (props) => {
   const detailRef = useRef(initBillDetail);
   const [msg, setMsg] = useState("");
 
+  // useEffect(()=> {
+  //   getUserCart(authCtx.uid, null).then((items) => {
+  //     setUserCartItems(items);
+  //     subtotalPriceHandler(items);
+  //   });
+  // }, []);
+
   useEffect(()=> {
-    getUserCartItems(authCtx.uid, null).then((items) => {
-      setUserCartItems(items);
-      subtotalPriceHandler(items);
-    });
+     setUserCartItems(authCtx.cart.cartItems);
   }, []);
 
   const subtotalPriceHandler = (items) => {

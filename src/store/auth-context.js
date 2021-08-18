@@ -4,6 +4,11 @@ import { useHistory } from "react-router-dom";
 import { getUserCartByUid, updateUserCart } from "../actions/user-action";
 
 let logoutTimer;
+const emptyUserCart = {
+  uid: "",
+  token: "",
+  cartItems: []
+};
 
 const AuthContext = React.createContext({
   uid: "",
@@ -11,6 +16,8 @@ const AuthContext = React.createContext({
   isLoggedIn: false,
   login: (token) => {},
   logout: () => {},
+  updateCartData: ()=> {},
+  cart: emptyUserCart
 });
 
 const calculateRemainingTime = (expirationTime) => {
@@ -24,6 +31,8 @@ const retrieveStoreToken = () => {
   const storedUid = localStorage.getItem("uid");
   const storedToken = localStorage.getItem("token");
   const storedExpireationDate = localStorage.getItem("expirationTime");
+  let storedUserCart = localStorage.getItem("userCart");
+  storedUserCart = storedUserCart ? JSON.parse(storedUserCart) : null;
 
   const remainingTime = calculateRemainingTime(storedExpireationDate);
 
@@ -31,6 +40,7 @@ const retrieveStoreToken = () => {
     localStorage.removeItem("uid");
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
+    localStorage.removeItem("userCart");
     return null;
   }
 
@@ -38,6 +48,7 @@ const retrieveStoreToken = () => {
     uid: storedUid,
     token: storedToken,
     duration: remainingTime,
+    cart: storedUserCart
   };
 };
 
@@ -47,21 +58,26 @@ export const AuthContextProvider = (props) => {
 
   let initalToken;
   let initUid;
+  let intitCart = emptyUserCart;
   if (tokenData) {
     initUid = tokenData.uid;
     initalToken = tokenData.token;
+    intitCart = tokenData.cart;
   }
 
   const [uid, setUid] = useState(initUid);
   const [token, setToken] = useState(initalToken);
   const [cookies, setCookie, removeCookie] = useCookies(['cart']);
+  const [userCart, setUserCart] = useState(intitCart); 
 
   const logoutHandler = () => {
     setUid("");
     setToken(null);
+    setUserCart(emptyUserCart);
     localStorage.removeItem("uid");
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
+    localStorage.removeItem("userCart");
 
     if (logoutTimer) {
       clearTimeout(logoutTimer);
@@ -72,43 +88,72 @@ export const AuthContextProvider = (props) => {
   const loginHandler = (uid, token, expirationTime) => {
     setUid(uid);
     setToken(token);
+
     localStorage.setItem("uid", uid);
     localStorage.setItem("token", token);
     localStorage.setItem("expirationTime", expirationTime);
 
     const remainingTime = calculateRemainingTime(expirationTime);
     logoutTimer = setTimeout(logoutHandler, remainingTime);
-    checkCartCookie(uid, token);
+    checkUserCart(uid, token);
   };
 
-  const checkCartCookie = (userUid, userToken) => {
-    if (cookies.cart) {
-      getUserCartByUid(userUid).then((item) => {
-        const newCartItem = [...item.cartItems];
-
-        if (item) {
-          cookies.cart.cartItems.forEach((element) => {
-            const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
-            if (!exist) {
-              newCartItem.push(element);
-            } else {
-              const eIndex = newCartItem.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
-              newCartItem[eIndex].unitPrice = element.unitPrice;
-              newCartItem[eIndex].quantity = element.quantity;
-              newCartItem[eIndex].subtotal = element.quantity * element.unitPrice;
-            }
-          });
-
-          const updatedUserCart = {
-            uid: userUid,
-            token: userToken,
-            cartItems: newCartItem,
-          };
-          updateUserCart(updatedUserCart);
-          removeCookie("cart");
-        }
-      });
+  const updateCartDataHandler = (newItem) => {
+    if(!!token){
+      //login 
+      //update backend user cart 
+    }else{
+     //not login
+     //update cookie user cart
     }
+  };
+
+  const checkUserCart = (userUid, userToken) => {
+    const newCartItem = [];
+    if (cookies.cart) {
+      cookies.cart.cartItems.forEach((element) => {
+        newCartItem.push(element);
+      });
+      removeCookie("cart");
+    }
+
+    if (!userToken) {
+      const updatedUserCart = {
+        uid: "",
+        token: "",
+        cartItems: newCartItem,
+      };
+      setUserCart(updatedUserCart);
+      localStorage.setItem("userCart", updateUserCart);
+      return;
+    }
+
+    getUserCartByUid(userUid).then((item) => {
+      if (item) {
+        newCartItem.forEach((element) => {
+          const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
+          if (!exist) {
+            newCartItem.push(element);
+          } else {
+            const nIndex = newCartItem.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
+            const cIndex = item.cartItems.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
+
+            newCartItem[nIndex].unitPrice = item.cartItems[cIndex].unitPrice;
+            newCartItem[nIndex].quantity = item.cartItems[cIndex].quantity;
+            newCartItem[nIndex].subtotal = item.cartItems[cIndex].quantity * item.cartItems[cIndex].unitPrice;
+          }
+        });
+      }
+
+      const updatedUserCart = {
+        uid: userUid,
+        token: userToken,
+        cartItems: newCartItem,
+      };
+      updateUserCart(updatedUserCart);
+      setUserCart(updatedUserCart);
+      localStorage.setItem("userCart", JSON.stringify(updatedUserCart));
+    });
   };
 
   useEffect(() => {
@@ -123,6 +168,8 @@ export const AuthContextProvider = (props) => {
     isLoggedIn: !!token,
     login: loginHandler,
     logout: logoutHandler,
+    updateCartData: updateCartDataHandler,
+    cart: userCart
   };
 
   return (

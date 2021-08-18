@@ -41,23 +41,23 @@ export const updateUserCart = async (cart) => {
   return data;
 };
 
-export const getUserCartItems = async (userUid, cookies) => {
-  let result = [];
+// export const getUserCart = async (userUid, cookies) => {
+//   let result;
 
-  if (userUid) {
-    await getUserCartByUid(userUid).then((item) => {
-      const userCart = { ...item };
-      if (Object.keys(userCart).length !== 0) {
-        result = [...userCart.cartItems];
-      }
-    });
-  } else {
-    if (cookies && cookies.cart) {
-      result = [...cookies.cart.cartItems];
-    }
-  }
-  return result;
-};
+//   if (userUid) {
+//     await getUserCartByUid(userUid).then((item) => {
+//       const userCart = { ...item };
+//       if (Object.keys(userCart).length !== 0) {
+//         result = userCart;
+//       }
+//     });
+//   } else {
+//     if (cookies && cookies.cart) {
+//       result = cookies.cart;
+//     }
+//   }
+//   return result;
+// };
 
 export const checkEmail = (email)=> {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

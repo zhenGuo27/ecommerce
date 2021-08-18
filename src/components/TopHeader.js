@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 
 const TopHeader = () => {  

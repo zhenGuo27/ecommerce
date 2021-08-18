@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../../store/auth-context";
-import { getUserCartItems, updateUserCart } from "../../actions/user-action";
+import { getUserCart, getUserCartByUid, updateUserCart } from "../../actions/user-action";
 import { NavLink, useHistory } from "react-router-dom";
 import { getProductByMutipleId } from "../../actions/product-action";
 
@@ -19,14 +19,22 @@ const Cart = (props) => {
       history.replace("/");
       return;
     }
+    
+    setUserCartItems(authCtx.cart.cartItems);
+    subtotalPriceHandler(authCtx.cart.cartItems);
+    if (authCtx.cart.cartItems.length !== 0) {
+      getProductsHandler(authCtx.cart.cartItems);
+    }
 
-    getUserCartItems(authCtx.uid, null).then((items) => {
-      setUserCartItems(items);
-      subtotalPriceHandler(items);
-      if (items.length !== 0) {
-        getProductsHandler(items);
-      }
-    });
+
+
+    // getUserCartByUid(authCtx.uid, null).then((items) => {
+    //   setUserCartItems(items);
+    //   subtotalPriceHandler(items);
+    //   if (items.length !== 0) {
+    //     getProductsHandler(items);
+    //   }
+    // });
   }, []);
 
   const getProductsHandler = (cartItems) => {

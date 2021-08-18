@@ -116,9 +116,11 @@ const Product = (props) => {
       if (!cookies.cart) {
         newUserCartData.cartItems = [cartItem];
       } else {
-        newUserCartData.cartItems = updateCartData(cartItem, cookies.cart);
+        newUserCartData.cartItems = updateCartData(cartItem, cookies.cart.cartItems);
       }
-      setCookie("cart", JSON.stringify(newUserCartData), { path: "/" });
+      var expiredDate = new Date();
+      expiredDate.setDate(new Date().getDate()+7);
+      setCookie("cart", JSON.stringify(newUserCartData), { path: "/" ,expires: expiredDate});
     }
   };
 
