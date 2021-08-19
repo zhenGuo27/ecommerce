@@ -9,6 +9,7 @@ import {
 import { useHistory } from "react-router-dom";
 
 const initBillDetail =  Array(7).join(".").split(".");
+const initCreditCard = Array(3).join(".").split(".");
 const shippingFee = 50;
 
 const Checkout = (props) => {
@@ -17,7 +18,9 @@ const Checkout = (props) => {
   const [userCartItems, setUserCartItems] = useState([]);
   const [subtotalPrice, setsubtotalPrice] = useState();
   const detailRef = useRef(initBillDetail);
+  const creditCardRef = useRef(initCreditCard);
   const [msg, setMsg] = useState("");
+  const [selectedPaymentMethod, setselectedPaymentMethod] = useState("1");
 
   useEffect(()=> {
      setUserCartItems(authCtx.cart.cartItems);
@@ -40,7 +43,7 @@ const Checkout = (props) => {
       data.tel.trim().length === 0 ||
       data.address.trim().length === 0
     ) {
-      return "please check your data";
+      return "please check your bill detail";
     }
 
     if(!checkEmail(data.email)) {
@@ -53,6 +56,29 @@ const Checkout = (props) => {
 
     if(data.tel.length !==10){
       return "tel length must be 10.";
+    }
+
+    if (selectedPaymentMethod === "2") {
+      if (
+        creditCardRef.current[0].value === "" ||
+        creditCardRef.current[1].value === "" ||
+        creditCardRef.current[2].value === ""
+      ) {
+        return "please check your credit card info";
+      }
+      const cardExpiredDate = new Date(creditCardRef.current[2].value);
+      const today = new Date();
+      if (today.getTime() > cardExpiredDate.getTime()) {
+        return "Card is expired";
+      }
+
+      if(creditCardRef.current[0].value.trim().length!=16){
+        return "please check your credit card number";
+      }
+
+      if(creditCardRef.current[1].value.trim().length !=3){
+        return "please check your CVV code";
+      }
     }
 
     return "";
@@ -71,7 +97,8 @@ const Checkout = (props) => {
       company: detailRef.current[4].value,
       address: detailRef.current[5].value,
       note: detailRef.current[6].value,
-      products: JSON.stringify(userCartItems)
+      products: JSON.stringify(userCartItems),
+      paymentMethod: selectedPaymentMethod
     };
 
     const errorMsg = checkDataHandler(submitData);
@@ -98,6 +125,74 @@ const Checkout = (props) => {
     $("#submitModal").modal("hide");
     history.replace("/");
   };
+
+  const paymentMethodChangeHandler = (event) => {
+     setselectedPaymentMethod(event.target.value);
+  };
+
+  const bankTransferText = (
+    <div className="bankTransferText card mb-2">
+      <div>
+        <div className="card-body">
+          <p className="no-margin font-15">
+            Make your payment directly into our bank account. Please use your
+            Order ID as the payment reference. Your order won't be shipped until
+            the funds have cleared in our account.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+const creditCardText = (
+  <div className="creditCardText card mb-2">
+    <div>
+      <div className="card-body">
+        <fieldset>
+          <div className="row">
+            <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
+              <label htmlFor="input-cardno">
+                Credit Card Number
+                <span className="required-f">*</span>
+              </label>
+              <input
+                name="cardno"
+                placeholder="Credit Card Number"
+                id="input-cardno"
+                className="form-control"
+                type="text"
+                ref={(el) => (creditCardRef.current[0] = el)}
+                />
+            </div>
+            <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
+              <label htmlFor="input-cvv">
+                CVV Code
+                <span className="required-f">*</span>
+              </label>
+              <input
+                name="cvv"
+                placeholder="Card Verification Number"
+                id="input-cvv"
+                className="form-control"
+                type="text"
+                ref={(el) => (creditCardRef.current[1] = el)}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
+              <label>
+                Expiration Date
+                <span className="required-f">*</span>
+              </label>
+              <input type="date" name="exdate" className="form-control" ref={(el) => (creditCardRef.current[2] = el)}/>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+);
 
   return (
     <Fragment>
@@ -265,184 +360,21 @@ const Checkout = (props) => {
 
               <div className="your-payment">
                 <h2 className="payment-title mb-3">payment method</h2>
+                <div className="form-group">
+                  <select
+                    name="paymentMethod"
+                    className="form-control"
+                    onChange={paymentMethodChangeHandler}
+                  >
+                  <option value="1">Direct bank transfer</option>
+                  <option value="2">Credit Card</option>               
+                  </select>
+                </div>
                 <div className="payment-method">
                   <div className="payment-accordion">
-                    <div id="accordion" className="payment-section">
-                      <div className="card mb-2">
-                        <div className="card-header">
-                          <a
-                            className="card-link"
-                            data-toggle="collapse"
-                            href="#collapseOne"
-                          >
-                            Direct Bank Transfer
-                          </a>
-                        </div>
-                        <div
-                          id="collapseOne"
-                          className="collapse"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            <p className="no-margin font-15">
-                              Make your payment directly into our bank account.
-                              Please use your Order ID as the payment reference.
-                              Your order won't be shipped until the funds have
-                              cleared in our account.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card mb-2">
-                        <div className="card-header">
-                          <a
-                            className="collapsed card-link"
-                            data-toggle="collapse"
-                            href="#collapseTwo"
-                          >
-                            Cheque Payment
-                          </a>
-                        </div>
-                        <div
-                          id="collapseTwo"
-                          className="collapse"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            <p className="no-margin font-15">
-                              Please send your cheque to Store Name, Store
-                              Street, Store Town, Store State / County, Store
-                              Postcode.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card margin-15px-bottom border-radius-none">
-                        <div className="card-header">
-                          <a
-                            className="collapsed card-link"
-                            data-toggle="collapse"
-                            href="#collapseThree"
-                          >
-                            PayPal
-                          </a>
-                        </div>
-                        <div
-                          id="collapseThree"
-                          className="collapse"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            <p className="no-margin font-15">
-                              Pay via PayPal; you can pay with your credit card
-                              if you don't have a PayPal account.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card mb-2">
-                        <div className="card-header">
-                          <a
-                            className="collapsed card-link"
-                            data-toggle="collapse"
-                            href="#collapseFour"
-                          >
-                            Payment Information
-                          </a>
-                        </div>
-                        <div
-                          id="collapseFour"
-                          className="collapse"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            <fieldset>
-                              <div className="row">
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <label htmlFor="input-cardname">
-                                    Name on Card
-                                    <span className="required-f">*</span>
-                                  </label>
-                                  <input
-                                    name="cardname"
-                                    placeholder="Card Name"
-                                    id="input-cardname"
-                                    className="form-control"
-                                    type="text"
-                                  />
-                                </div>
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <label htmlFor="input-country">
-                                    Credit Card Type
-                                    <span className="required-f">*</span>
-                                  </label>
-                                  <select
-                                    name="country_id"
-                                    className="form-control"
-                                  >
-                                    <option value="">
-                                      --- Please Select ---
-                                    </option>
-                                    <option value="1">American Express</option>
-                                    <option value="2">Visa Card</option>
-                                    <option value="3">Master Card</option>
-                                    <option value="4">Discover Card</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <label htmlFor="input-cardno">
-                                    Credit Card Number
-                                    <span className="required-f">*</span>
-                                  </label>
-                                  <input
-                                    name="cardno"
-                                    placeholder="Credit Card Number"
-                                    id="input-cardno"
-                                    className="form-control"
-                                    type="text"
-                                  />
-                                </div>
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <label htmlFor="input-cvv">
-                                    CVV Code
-                                    <span className="required-f">*</span>
-                                  </label>
-                                  <input
-                                    name="cvv"
-                                    placeholder="Card Verification Number"
-                                    id="input-cvv"
-                                    className="form-control"
-                                    type="text"
-                                  />
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <label>
-                                    Expiration Date
-                                    <span className="required-f">*</span>
-                                  </label>
-                                  <input
-                                    type="date"
-                                    name="exdate"
-                                    className="form-control"
-                                  />
-                                </div>
-                                <div className="form-group col-md-6 col-lg-6 col-xl-6 required">
-                                  <img
-                                    className="padding-25px-top xs-padding-5px-top"
-                                    src="assets/images/payment-img.jpg"
-                                    alt="card"
-                                    title="card"
-                                  />
-                                </div>
-                              </div>
-                            </fieldset>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="payment-section">
+                      {selectedPaymentMethod === "1" && bankTransferText}
+                      {selectedPaymentMethod === "2" && creditCardText}
                     </div>
                   </div>
                   {msg && <p className="text-danger">{msg}</p>}

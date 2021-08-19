@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { Fragment, useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../../store/auth-context";
 import { getUserCart, getUserCartByUid, updateUserCart } from "../../actions/user-action";
@@ -16,7 +17,8 @@ const Cart = (props) => {
 
   useEffect(() => {
     if (!authCtx.isLoggedIn) {
-      history.replace("/");
+      history.replace("/Login");
+      $("#loginModal").modal("show");
       return;
     }
     

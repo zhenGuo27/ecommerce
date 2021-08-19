@@ -16,6 +16,7 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import ForgetPassword from "./components/ForgetPassword";
 import CartModal from "./components/Deal/CartModal";
+import LoginModal from "./components/Deal/LoginModal";
 
 function App() {
   const headerType = "ProductList";
@@ -54,6 +55,7 @@ function App() {
       <ScrollTop />
       <NewsletterPopup />
       <CartModal />
+      <LoginModal />
     </div>
   );
 }

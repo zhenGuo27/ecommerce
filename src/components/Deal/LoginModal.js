@@ -1,13 +1,13 @@
 import $ from "jquery";
 
-const CartModal = () => {
+const LoginModal = () => {
   const modalHandler = () => {
-    $("#cartModal").modal("hide");
+    $("#loginModal").modal("hide");
   };
 
   return (
     <div
-      id="cartModal"
+      id="loginModal"
       className="modal"
       tabIndex="-1"
       role="dialog"
@@ -16,10 +16,10 @@ const CartModal = () => {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Cart</h5>
+            <h5 className="modal-title">Login</h5>
           </div>
           <div className="modal-body">
-            <p>Add the item sucessfully !!!</p>
+            <p>Please log in</p>
           </div>
           <div className="modal-footer">
             <button
@@ -36,4 +36,4 @@ const CartModal = () => {
   );
 };
 
-export default CartModal;
+export default LoginModal;
