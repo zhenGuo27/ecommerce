@@ -99,10 +99,12 @@ export const AuthContextProvider = (props) => {
     checkUserCart(uid, token);
   };
 
-  const updateCartDataHandler = (updatedUserCart) => {
+  const updateCartDataHandler = (updatedUserCart, showModal) => {
     setUserCart(updatedUserCart);
     localStorage.setItem("userCart", JSON.stringify(updatedUserCart));
-    $("#cartModal").modal("show");
+    if (showModal) {
+      $("#cartModal").modal("show");
+    }
   };
 
   const checkUserCart = (userUid, userToken) => {
@@ -115,13 +117,13 @@ export const AuthContextProvider = (props) => {
     }
 
     if (!userToken) {
-      const updatedUserCart = {
+      const newUserCartData = {
         uid: "",
         token: "",
         cartItems: newCartItem,
       };
-      setUserCart(updatedUserCart);
-      localStorage.setItem("userCart", updateUserCart);
+      setUserCart(newUserCartData);
+      localStorage.setItem("userCart", newUserCartData);
       return;
     }
 
@@ -146,14 +148,14 @@ export const AuthContextProvider = (props) => {
         });
       }
 
-      const updatedUserCart = {
+      const newUserCartData = {
         uid: userUid,
         token: userToken,
         cartItems: newCartItem,
       };
-      updateUserCart(updatedUserCart);
-      setUserCart(updatedUserCart);
-      localStorage.setItem("userCart", JSON.stringify(updatedUserCart));
+      updateUserCart(newUserCartData);
+      setUserCart(newUserCartData);
+      localStorage.setItem("userCart", JSON.stringify(newUserCartData));
     });
   };
 

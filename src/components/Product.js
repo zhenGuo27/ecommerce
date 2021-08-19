@@ -5,7 +5,7 @@ import "photoswipe/dist/photoswipe.css";
 import "photoswipe/dist/default-skin/default-skin.css";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { getProductById } from "../actions/product-action";
-import { getUserCartByUid, updateUserCart, updateCartItems } from "../actions/user-action";
+import { updateUserCart, updateCartItems } from "../actions/user-action";
 import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
@@ -23,7 +23,6 @@ const Product = (props) => {
   const params = useParams();
   const { id } = params;
 
-  const [userCart, setUserCart] = useState({});
   const [productData, setProduct] = useState({});
   const [currentSku, setCurrentSku] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -35,12 +34,6 @@ const Product = (props) => {
   useEffect(() => {
     document.body.classList.add("template-product");
   }, []);
-
-  useEffect(()=> {
-    if(authCtx.isLoggedIn){
-      getUserCartData();
-    }
-  }, [authCtx.isLoggedIn]);
 
   useEffect(() => {
     getProductById(id).then((item) => {
@@ -62,12 +55,6 @@ const Product = (props) => {
     }
   }, [productData]);
 
-  const getUserCartData = () => {
-    getUserCartByUid(authCtx.uid).then((item) => {
-      setUserCart(item);
-    });
-  };
-
   const addToCart = () => {
     const cartItem = {
       productId: id,
@@ -79,38 +66,32 @@ const Product = (props) => {
       img: productData.largeImgs[0].src
     };
 
-    if (authCtx.isLoggedIn) {
-      //get original cart data from backend
-      //if product item exist and sku is same as current selected , update quntity else add new item 
-      //post updated cart data to backend     
-      const cartData = (userCart) ? userCart.cartItems : null;
+    if (authCtx.isLoggedIn) {    
+      const cartData = [...authCtx.cart.cartItems];
       const updatedData = updateCartItems(cartItem, cartData, orderQuantity);
-      const updatedUserCart = {
+      const newUserCartData = {
         uid: authCtx.uid,
         token: authCtx.token,
         cartItems: updatedData
       };
 
-      updateUserCart(updatedUserCart).then((data) => {
+      updateUserCart(newUserCartData).then((data) => {
         if (data.returnCode !== -1) {
-          authCtx.updateCartData(updatedUserCart);
+          authCtx.updateCartData(newUserCartData, true);
         }
       });
     } else {
-      let newUserCartData = {
+      const newUserCartData = {
         uid: authCtx.uid,
         token: authCtx.token,
-        cartItems: null
+        cartItems: !cookies.cart
+          ? [cartItem]
+          : updateCartItems(cartItem, cookies.cart.cartItems, orderQuantity),
       };
-      if (!cookies.cart) {
-        newUserCartData.cartItems = [cartItem];
-      } else {
-        newUserCartData.cartItems = updateCartItems(cartItem, cookies.cart.cartItems, orderQuantity);
-      }
       var expiredDate = new Date();
       expiredDate.setDate(new Date().getDate()+7);
       setCookie("cart", JSON.stringify(newUserCartData), { path: "/" ,expires: expiredDate});
-      authCtx.updateCartData(newUserCartData);
+      authCtx.updateCartData(newUserCartData, true);
     }
   };
 

@@ -41,24 +41,6 @@ export const updateUserCart = async (cart) => {
   return data;
 };
 
-// export const getUserCart = async (userUid, cookies) => {
-//   let result;
-
-//   if (userUid) {
-//     await getUserCartByUid(userUid).then((item) => {
-//       const userCart = { ...item };
-//       if (Object.keys(userCart).length !== 0) {
-//         result = userCart;
-//       }
-//     });
-//   } else {
-//     if (cookies && cookies.cart) {
-//       result = cookies.cart;
-//     }
-//   }
-//   return result;
-// };
-
 export const checkEmail = (email)=> {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -72,7 +54,7 @@ export const isNumeric = (str) => {
   ); 
 };
 
-export const insertBill = async (bill) => {
+export const insertBill = async (bill, updateCartFn, updatedUserCart) => {
   const response = await fetch(
     "https://localhost:44396/Api/values/InsertBill",
     {
@@ -89,6 +71,10 @@ export const insertBill = async (bill) => {
   }
 
   const data = await response.json();
+  
+  if (data.returnCode !== -1) {
+    updateCartFn(updatedUserCart, false);
+  }
 
   console.log("insertBill", data);
 

@@ -19,15 +19,9 @@ const Checkout = (props) => {
   const detailRef = useRef(initBillDetail);
   const [msg, setMsg] = useState("");
 
-  // useEffect(()=> {
-  //   getUserCart(authCtx.uid, null).then((items) => {
-  //     setUserCartItems(items);
-  //     subtotalPriceHandler(items);
-  //   });
-  // }, []);
-
   useEffect(()=> {
      setUserCartItems(authCtx.cart.cartItems);
+     subtotalPriceHandler(authCtx.cart.cartItems);
   }, []);
 
   const subtotalPriceHandler = (items) => {
@@ -39,6 +33,16 @@ const Checkout = (props) => {
   };
 
   const checkDataHandler = (data)=> {
+    if (
+      data.firstName.trim().length === 0 ||
+      data.lastName.trim().length === 0 ||
+      data.email.trim().length === 0 ||
+      data.tel.trim().length === 0 ||
+      data.address.trim().length === 0
+    ) {
+      return "please check your data";
+    }
+
     if(!checkEmail(data.email)) {
       return "email is not valid."
     }
@@ -75,7 +79,12 @@ const Checkout = (props) => {
       setMsg(errorMsg);
     } else {
       setMsg("");
-      insertBill(submitData).then((data)=> {
+      const updatedUserCart = {
+        uid: authCtx.uid,
+        token: authCtx.token,
+        cartItems: []
+      };
+      insertBill(submitData, authCtx.updateCartData, updatedUserCart).then((data)=> {
         if (data.returnCode === 0) {
           $("#submitModal").modal("show");
         } else {
@@ -188,7 +197,7 @@ const Checkout = (props) => {
                   <div className="row">
                     <div className="form-group col-md-12 col-lg-12 col-xl-12">
                       <label htmlFor="input-company">
-                        Order Notes <span className="required-f">*</span>
+                        Order Notes
                       </label>
                       <textarea
                         className="form-control resize-both"

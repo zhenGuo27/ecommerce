@@ -26,15 +26,11 @@ const Cart = (props) => {
       getProductsHandler(authCtx.cart.cartItems);
     }
 
-
-
-    // getUserCartByUid(authCtx.uid, null).then((items) => {
-    //   setUserCartItems(items);
-    //   subtotalPriceHandler(items);
-    //   if (items.length !== 0) {
-    //     getProductsHandler(items);
-    //   }
-    // });
+    setUserCartItems(authCtx.cart.cartItems);
+    subtotalPriceHandler(authCtx.cart.cartItems);
+    if (authCtx.cart.cartItems.length !== 0) {
+      getProductsHandler(authCtx.cart.cartItems);
+    }
   }, []);
 
   const getProductsHandler = (cartItems) => {
@@ -66,6 +62,8 @@ const Cart = (props) => {
           history.replace("/Checkout");
         }
       });
+    } else if (!agreeRef.current.checked) {
+      setErrorMsg("please check agreement");
     }
   };
 
