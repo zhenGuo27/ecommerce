@@ -94,3 +94,18 @@ export const insertBill = async (bill) => {
 
   return data;
 };
+
+export const updateCartItems = (cartItem, originalData, orderQuantity) => {
+  let updatedData = originalData ? [...originalData] : [];
+  const exist = updatedData.some((item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id);
+  if (exist) {
+    let currentItem = updatedData.find(
+      (item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id
+    );
+    currentItem.quantity = orderQuantity;
+  } else {
+    updatedData.push(cartItem);
+  }
+
+  return updatedData;
+};

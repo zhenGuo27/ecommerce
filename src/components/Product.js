@@ -5,7 +5,7 @@ import "photoswipe/dist/photoswipe.css";
 import "photoswipe/dist/default-skin/default-skin.css";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { getProductById } from "../actions/product-action";
-import { getUserCartByUid, updateUserCart } from "../actions/user-action";
+import { getUserCartByUid, updateUserCart, updateCartItems } from "../actions/user-action";
 import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
@@ -68,21 +68,6 @@ const Product = (props) => {
     });
   };
 
-  const updateCartData = (cartItem, originalData) => {
-    let updatedData = originalData ? [...originalData] : [];
-    const exist = updatedData.some((item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id);
-    if (exist) {
-      let currentItem = updatedData.find(
-        (item) => item.productId === cartItem.productId && item.sku.id === cartItem.sku.id
-      );
-      currentItem.quantity = orderQuantity;
-    } else {
-      updatedData.push(cartItem);
-    }
-
-    return updatedData;
-  };
-
   const addToCart = () => {
     const cartItem = {
       productId: id,
@@ -99,14 +84,18 @@ const Product = (props) => {
       //if product item exist and sku is same as current selected , update quntity else add new item 
       //post updated cart data to backend     
       const cartData = (userCart) ? userCart.cartItems : null;
-      const updatedData = updateCartData(cartItem, cartData);
+      const updatedData = updateCartItems(cartItem, cartData, orderQuantity);
       const updatedUserCart = {
         uid: authCtx.uid,
         token: authCtx.token,
         cartItems: updatedData
       };
 
-      updateUserCart(updatedUserCart);
+      updateUserCart(updatedUserCart).then((data) => {
+        if (data.returnCode !== -1) {
+          authCtx.updateCartData(updatedUserCart);
+        }
+      });
     } else {
       let newUserCartData = {
         uid: authCtx.uid,
@@ -116,11 +105,12 @@ const Product = (props) => {
       if (!cookies.cart) {
         newUserCartData.cartItems = [cartItem];
       } else {
-        newUserCartData.cartItems = updateCartData(cartItem, cookies.cart.cartItems);
+        newUserCartData.cartItems = updateCartItems(cartItem, cookies.cart.cartItems, orderQuantity);
       }
       var expiredDate = new Date();
       expiredDate.setDate(new Date().getDate()+7);
       setCookie("cart", JSON.stringify(newUserCartData), { path: "/" ,expires: expiredDate});
+      authCtx.updateCartData(newUserCartData);
     }
   };
 

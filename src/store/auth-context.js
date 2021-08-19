@@ -1,3 +1,4 @@
+import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { useHistory } from "react-router-dom";
@@ -98,18 +99,14 @@ export const AuthContextProvider = (props) => {
     checkUserCart(uid, token);
   };
 
-  const updateCartDataHandler = (newItem) => {
-    if(!!token){
-      //login 
-      //update backend user cart 
-    }else{
-     //not login
-     //update cookie user cart
-    }
+  const updateCartDataHandler = (updatedUserCart) => {
+    setUserCart(updatedUserCart);
+    localStorage.setItem("userCart", JSON.stringify(updatedUserCart));
+    $("#cartModal").modal("show");
   };
 
   const checkUserCart = (userUid, userToken) => {
-    const newCartItem = [];
+    let newCartItem = [];
     if (cookies.cart) {
       cookies.cart.cartItems.forEach((element) => {
         newCartItem.push(element);
@@ -130,6 +127,10 @@ export const AuthContextProvider = (props) => {
 
     getUserCartByUid(userUid).then((item) => {
       if (item) {
+        if (newCartItem.length === 0) {
+          newCartItem = [...item.cartItems];
+        }
+
         newCartItem.forEach((element) => {
           const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
           if (!exist) {
