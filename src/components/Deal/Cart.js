@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { Fragment, useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../../store/auth-context";
-import { getUserCart, getUserCartByUid, updateUserCart } from "../../actions/user-action";
+import { updateUserCart } from "../../actions/user-action";
 import { NavLink, useHistory } from "react-router-dom";
 import { getProductByMutipleId } from "../../actions/product-action";
 
@@ -10,7 +10,6 @@ const Cart = (props) => {
   const history = useHistory();
   const [userCartItems, setUserCartItems] = useState([]);
   const [subtotalPrice, setsubtotalPrice] = useState();
-  const noteRef = useRef();
   const agreeRef = useRef();
   const [products, setProducts] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
@@ -55,7 +54,7 @@ const Cart = (props) => {
       uid: authCtx.uid,
       token: authCtx.token,
       cartItems: userCartItems,
-      note: noteRef.current.value,
+      note: ""
     };
 
     if (agreeRef.current.checked && userCartItems.length !== 0) {
@@ -237,20 +236,11 @@ const Cart = (props) => {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colSpan="3" className="text-left">
+                    <td colSpan="6" className="text-left">
                       <NavLink to="/" className="btn--link cart-continue">
                         <i className="icon icon-arrow-circle-left"></i> Continue
                         shopping
                       </NavLink>
-                    </td>
-                    <td colSpan="3" className="text-right">
-                      <button
-                        type="submit"
-                        name="update"
-                        className="btn--link cart-update"
-                      >
-                        <i className="fa fa-refresh"></i> Update
-                      </button>
                     </td>
                   </tr>
                 </tfoot>
@@ -264,24 +254,6 @@ const Cart = (props) => {
             </form>
           </div>
           <div className="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
-            <div className="cart-note">
-              <div className="solid-border">
-                <h5>
-                  <label
-                    htmlFor="CartSpecialInstructions"
-                    className="cart-note__label small--text-center"
-                  >
-                    Add a note to your order
-                  </label>
-                </h5>
-                <textarea
-                  name="note"
-                  id="CartSpecialInstructions"
-                  className="cart-note__input"
-                  ref={noteRef}
-                ></textarea>
-              </div>
-            </div>
             <div className="solid-border">
               <div className="row">
                 <span className="col-12 col-sm-6 cart__subtotal-title">
@@ -295,17 +267,17 @@ const Cart = (props) => {
                 Shipping &amp; taxes calculated at checkout
               </div>
               <p className="cart_tearm">
-                <label>
-                  <input
+              <input
                     type="checkbox"
                     name="tearm"
                     id="cartTearm"
                     className="checkbox"
                     ref={agreeRef}
                     onChange={checkAgreeCondition}
-                  />
+                  />               
+                <label>                
                   I agree with the terms and conditions
-                </label>
+                </label>           
                 {errorMsg && <div className="text-danger">{errorMsg}</div>}
               </p>
               <input
@@ -316,9 +288,6 @@ const Cart = (props) => {
                 value="Checkout"
                 onClick={submitHandler}
               />
-              <div className="paymnet-img">
-                <img src="assets/images/payment-img.jpg" alt="Payment" />
-              </div>
             </div>
           </div>
         </div>

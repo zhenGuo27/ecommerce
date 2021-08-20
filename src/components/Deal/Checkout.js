@@ -298,7 +298,6 @@ const creditCardText = (
                         className="form-control resize-both"
                         rows="3"
                         ref={(el) => (detailRef.current[6] = el)}
-                        value={userCartItems.note}
                       ></textarea>
                     </div>
                   </div>

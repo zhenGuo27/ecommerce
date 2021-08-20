@@ -884,11 +884,6 @@ const Header = (props) => {
                 </span>
               </a>          
             </div>
-            <div className="site-header__search">
-              <button type="button" className="search-trigger">
-                <i className="icon anm anm-search-l"></i>
-              </button>
-            </div>
           </div>
         </div>
       </div>
