@@ -31,6 +31,7 @@ const Product = (props) => {
   const [selectedSize, setSelectedSize] = useState("");
   const [colorHasNone, setColorHasNone] = useState(false);
   const [sizeHasNone, setSizeHasNone] = useState(false);
+  //const [initImg, setinitImg] = useState("");
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [detail, setDetail] = useState(parse(""));
   const [cookies, setCookie, removeCookie] = useCookies(['cart']);
@@ -40,6 +41,8 @@ const Product = (props) => {
   }, []);
 
   useEffect(() => {
+    $(".zoomContainer").remove();
+
     rndInt = Math.floor(Math.random() * 200) + 1;
     getProductById(id).then((item) => {
       const newItem = {...item};
@@ -59,7 +62,8 @@ const Product = (props) => {
     if (Object.keys(productData).length !== 0) {
       setSelectedColor(productData.sku[0].color);
       setSelectedSize(productData.sku[0].size);
-      setDetail(parse(productData.detail));     
+      setDetail(parse(productData.detail));
+      //setinitImg(require("../" + productData.largeImgs.filter((item) => item.detail === true)[0].src).default);    
       
       const cHasNone = productData.sku.some(x=> x.color === "None");
       const sHasNone = productData.sku.some(x=> x.size === "None");
@@ -296,6 +300,7 @@ const Product = (props) => {
       scrollZoom: false,
       zoomType: "inner",
       cursor: "crosshair",
+      attrImageZoomSrc: ""
     });
   };
 
@@ -345,6 +350,13 @@ const Product = (props) => {
     );
   }
 
+  let initImg =
+    Object.keys(productData).length !== 0
+      ? productData.largeImgs.filter((item) => item.detail === true)[0].src
+      : "";
+  initImg = require("../" + initImg).default;
+  //initImg = "../" + initImg;
+
   const ImgGallery = (props) => {
     const [imgs, setImgs] = useState([]);
 
@@ -388,13 +400,6 @@ const Product = (props) => {
     );
   };
 
-  let initImg =
-    Object.keys(productData).length !== 0
-      ? productData.largeImgs.filter((item) => item.detail === true)[0].src
-      : "";
-  // initImg = initImg ? require("../" + initImg).default : "";
-  initImg = require("../" + initImg).default;
-
   return (
     <Fragment>
       {Object.keys(productData).length !== 0 && (
@@ -428,7 +433,7 @@ const Product = (props) => {
                     <div className="zoompro-wrap product-zoom-right pl-20">
                       <div className="zoompro-span">
                         <img
-                          className="blur-up lazyload zoompro"
+                          className="zoompro"
                           data-zoom-image={initImg}
                           alt={productData.title}
                           src={initImg}
@@ -438,19 +443,25 @@ const Product = (props) => {
                         <span className="lbl on-sale">Sale</span>
                         <span className="lbl pr-label1">new</span>
                       </div>
-                      <div className="product-buttons">
-                        <a className="btn prlightbox" title="Zoom">
-                          <i
-                            className="icon anm anm-expand-l-arrows"
-                            aria-hidden="true"
-                          ></i>
-                        </a>
-                      </div>
+                      {!colorHasNone && !sizeHasNone && (
+                        <div className="product-buttons">
+                          <a className="btn prlightbox" title="Zoom">
+                            <i
+                              className="icon anm anm-expand-l-arrows"
+                              aria-hidden="true"
+                            ></i>
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div className="lightboximages">
-                       {
-                         productData.largeImgs.map((item, index)=> <a href={"../../assets/"+ item.src} data-size="1071x1500" key={`lightboxImg_${index}`}></a>)
-                       }                                   
+                      {productData.largeImgs.map((item, index) => (
+                        <a
+                          href={"../../assets/" + item.src}
+                          data-size="1071x1500"
+                          key={`lightboxImg_${index}`}
+                        ></a>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -503,39 +514,43 @@ const Product = (props) => {
                     id="product_form_10508262282"
                     className="product-form product-form-product-template hidedropdown"
                   >
-                   {!colorHasNone && <div
-                      className="swatch clearfix swatch-0 option1"
-                      data-option-index="0"
-                    >
-                      <div className="product-form__item">
-                        <label className="header">
-                          Color:
-                          <span className="slVariant">{selectedColor}</span>
-                        </label>
-                        <ColorItems
-                          data={productData}
-                          selectedColor={selectedColor}
-                          change={colorChangeHandler}
-                          currentSku={currentSku}
-                        />
+                    {!colorHasNone && (
+                      <div
+                        className="swatch clearfix swatch-0 option1"
+                        data-option-index="0"
+                      >
+                        <div className="product-form__item">
+                          <label className="header">
+                            Color:
+                            <span className="slVariant">{selectedColor}</span>
+                          </label>
+                          <ColorItems
+                            data={productData}
+                            selectedColor={selectedColor}
+                            change={colorChangeHandler}
+                            currentSku={currentSku}
+                          />
+                        </div>
                       </div>
-                    </div>}
-                    {!sizeHasNone && <div
-                      className="swatch clearfix swatch-1 option2"
-                      data-option-index="1"
-                    >
-                      <div className="product-form__item">
-                        <label className="header">
-                          Size:
-                          <span className="slVariant">{selectedSize}</span>
-                        </label>
-                        <SizeItems
-                          data={productData}
-                          selectedSize={selectedSize}
-                          change={sizeChangeHandler}
-                        />
+                    )}
+                    {!sizeHasNone && (
+                      <div
+                        className="swatch clearfix swatch-1 option2"
+                        data-option-index="1"
+                      >
+                        <div className="product-form__item">
+                          <label className="header">
+                            Size:
+                            <span className="slVariant">{selectedSize}</span>
+                          </label>
+                          <SizeItems
+                            data={productData}
+                            selectedSize={selectedSize}
+                            change={sizeChangeHandler}
+                          />
+                        </div>
                       </div>
-                    </div>}                                      
+                    )}
                     {actionHtml}
                   </form>
                   <div className="userViewMsg" data-user="20" data-time="11000">
