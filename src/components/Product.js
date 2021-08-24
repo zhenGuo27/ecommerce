@@ -18,6 +18,8 @@ import AuthContext from "../store/auth-context";
 window.jQuery = window.$ = $;
 require("ez-plus");
 
+let rndInt = 0;
+
 const Product = (props) => {
   const authCtx = useContext(AuthContext);
   const params = useParams();
@@ -27,6 +29,8 @@ const Product = (props) => {
   const [currentSku, setCurrentSku] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const [colorHasNone, setColorHasNone] = useState(false);
+  const [sizeHasNone, setSizeHasNone] = useState(false);
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [detail, setDetail] = useState(parse(""));
   const [cookies, setCookie, removeCookie] = useCookies(['cart']);
@@ -36,11 +40,15 @@ const Product = (props) => {
   }, []);
 
   useEffect(() => {
+    rndInt = Math.floor(Math.random() * 200) + 1;
     getProductById(id).then((item) => {
-      setProduct(item);
-      setCurrentSku(item.sku[0]);
-      console.log("item", item);
+      const newItem = {...item};
+      //必須先將 ColorItem 隱藏才不會被 render
+      setColorHasNone(true);
+      setSizeHasNone(true);
 
+      setProduct(newItem);
+      setCurrentSku(newItem.sku[0]);
       product_slider_ppage();
       setTabs();
       imgPopup();
@@ -51,7 +59,12 @@ const Product = (props) => {
     if (Object.keys(productData).length !== 0) {
       setSelectedColor(productData.sku[0].color);
       setSelectedSize(productData.sku[0].size);
-      setDetail(parse(productData.detail));
+      setDetail(parse(productData.detail));     
+      
+      const cHasNone = productData.sku.some(x=> x.color === "None");
+      const sHasNone = productData.sku.some(x=> x.size === "None");
+      setColorHasNone(cHasNone);
+      setSizeHasNone(sHasNone);
     }
   }, [productData]);
 
@@ -379,7 +392,8 @@ const Product = (props) => {
     Object.keys(productData).length !== 0
       ? productData.largeImgs.filter((item) => item.detail === true)[0].src
       : "";
-  initImg = initImg ? require("../" + initImg).default : "";
+  // initImg = initImg ? require("../" + initImg).default : "";
+  initImg = require("../" + initImg).default;
 
   return (
     <Fragment>
@@ -486,20 +500,16 @@ const Product = (props) => {
                     stock.
                   </div>
                   <form
-                    method="post"
-                    action="http://annimexweb.com/cart/add"
                     id="product_form_10508262282"
-                    acceptCharset="UTF-8"
                     className="product-form product-form-product-template hidedropdown"
-                    encType="multipart/form-data"
                   >
-                    <div
+                   {!colorHasNone && <div
                       className="swatch clearfix swatch-0 option1"
                       data-option-index="0"
                     >
                       <div className="product-form__item">
                         <label className="header">
-                          Color:{" "}
+                          Color:
                           <span className="slVariant">{selectedColor}</span>
                         </label>
                         <ColorItems
@@ -509,14 +519,14 @@ const Product = (props) => {
                           currentSku={currentSku}
                         />
                       </div>
-                    </div>
-                    <div
+                    </div>}
+                    {!sizeHasNone && <div
                       className="swatch clearfix swatch-1 option2"
                       data-option-index="1"
                     >
                       <div className="product-form__item">
                         <label className="header">
-                          Size:{" "}
+                          Size:
                           <span className="slVariant">{selectedSize}</span>
                         </label>
                         <SizeItems
@@ -525,12 +535,12 @@ const Product = (props) => {
                           change={sizeChangeHandler}
                         />
                       </div>
-                    </div>
+                    </div>}                                      
                     {actionHtml}
                   </form>
                   <div className="userViewMsg" data-user="20" data-time="11000">
-                    <i className="fa fa-users" aria-hidden="true"></i>{" "}
-                    <strong className="uersView">{productData.viewed}</strong>
+                    <i className="fa fa-users" aria-hidden="true"></i>
+                    <strong className="uersView">{rndInt}</strong>
                     <span>PEOPLE ARE LOOKING FOR THIS PRODUCT</span>
                   </div>
                 </div>
@@ -686,17 +696,17 @@ const Product = (props) => {
             </div>
             {/*End Product Tabs*/}
 
-            <ProductSlider
+            {/* <ProductSlider
               slider="relatedSlider"
               title="Related Products"
               subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin."
-            />
+            /> */}
 
-            <ProductSlider
+            {/* <ProductSlider
               slider="recentlySlider"
               title="Recently Viewed Product"
               subtitle="You can manage this section from store admin as describe in above section"
-            />
+            /> */}
           </div>
           {/*#ProductSection-product-template*/}
         </div>

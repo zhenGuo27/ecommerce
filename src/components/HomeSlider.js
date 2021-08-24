@@ -1,19 +1,19 @@
 import $ from "jquery";
 import { useEffect } from "react";
-import banner1 from "../images/slideshow-banners/home12-category-banner1.jpg";
-import banner2 from "../images/slideshow-banners/home12-category-banner2.jpg";
+import banner1 from "../images/homeSlider/html.jpg"
+import banner2 from "../images/homeSlider/coding.jpg"
 
 const sliderData = [
   {
-    title: "Outfit of Today",
-    subtitle: "Lookbook ss 2018",
-    btnText: "View Catelog",
+    title: "網頁前端",
+    subtitle: "React JS | HTML5 | JS | CSS3",
+    btnText: "More",
     img: banner1,
   },
   {
-    title: "Accessories",
-    subtitle: "New Collection A-W ss18",
-    btnText: "Shop now",
+    title: "網頁後端",
+    subtitle: "ASP.NET MVC5 | C#",
+    btnText: "More",
     img: banner2,
   },
 ];
@@ -59,6 +59,7 @@ const HomeSlider = () => {
                       <span className="mega-subtitle slideshow__subtitle">
                         {item.subtitle}
                       </span>
+                      {/*btn to about page */}
                       <span className="btn">{item.btnText}</span>
                     </div>
                   </div>
