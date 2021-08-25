@@ -11,7 +11,7 @@ import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
 import parse from "html-react-parser";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import AuthContext from "../store/auth-context";
 
@@ -24,6 +24,7 @@ const Product = (props) => {
   const authCtx = useContext(AuthContext);
   const params = useParams();
   const { id } = params;
+  const history = useHistory();
 
   const [productData, setProduct] = useState({});
   const [currentSku, setCurrentSku] = useState({});
@@ -31,7 +32,6 @@ const Product = (props) => {
   const [selectedSize, setSelectedSize] = useState("");
   const [colorHasNone, setColorHasNone] = useState(false);
   const [sizeHasNone, setSizeHasNone] = useState(false);
-  //const [initImg, setinitImg] = useState("");
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [detail, setDetail] = useState(parse(""));
   const [cookies, setCookie, removeCookie] = useCookies(['cart']);
@@ -63,14 +63,17 @@ const Product = (props) => {
       setSelectedColor(productData.sku[0].color);
       setSelectedSize(productData.sku[0].size);
       setDetail(parse(productData.detail));
-      //setinitImg(require("../" + productData.largeImgs.filter((item) => item.detail === true)[0].src).default);    
-      
+
       const cHasNone = productData.sku.some(x=> x.color === "None");
       const sHasNone = productData.sku.some(x=> x.size === "None");
       setColorHasNone(cHasNone);
       setSizeHasNone(sHasNone);
     }
   }, [productData]);
+
+  const toCartDetail = () => {
+    history.replace("/Cart");
+  };
 
   const addToCart = () => {
     const cartItem = {
@@ -342,6 +345,7 @@ const Product = (props) => {
           <button
             type="button"
             className="shopify-payment-button__button shopify-payment-button__button--unbranded"
+            onClick={toCartDetail}
           >
             Buy it now
           </button>
@@ -355,7 +359,6 @@ const Product = (props) => {
       ? productData.largeImgs.filter((item) => item.detail === true)[0].src
       : "";
   initImg = require("../" + initImg).default;
-  //initImg = "../" + initImg;
 
   const ImgGallery = (props) => {
     const [imgs, setImgs] = useState([]);
@@ -504,7 +507,7 @@ const Product = (props) => {
                     </p>
                   </div>
                   <div className="product-single__description rte">
-                    {productData.desc}
+                    {parse(productData.desc)}
                   </div>
                   <div id="quantity_message">
                     <span className="items">{currentSku.stock}</span> left in
