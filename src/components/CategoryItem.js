@@ -10,7 +10,7 @@ const CategoryItem = (props) => {
     props.item.tags.length !== 0 ? "cursorPointer" : "",
   ]);
 
-  const categoryClickHandler = () => {
+  const categoryClickHandler = (tag) => {
     if (props.item.tags.length != 0) {
       const updatedClass = [...itemClass];
       if (updatedClass.includes("active")) {
@@ -23,7 +23,7 @@ const CategoryItem = (props) => {
       setItemClass(updatedClass);
       $(".sublinks_" + props.index).slideToggle("slow");
     } else {
-      history.push("/?category=" + props.item.id);
+      history.push("/ProductList/?category=" + props.item.id);
     }
   };
 

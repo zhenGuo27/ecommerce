@@ -2,7 +2,7 @@ import "jquery-ui-bundle";
 import "jquery-ui-bundle/jquery-ui.min.css";
 
 import { Fragment, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
 import { getProducts } from "../actions/product-action";
 import SizeSwatches from "./SizeSwatches";
@@ -24,7 +24,7 @@ const ProductList = (props) => {
     category: category !== null ? category : initCategory,
     tag: tag !== null ? tag : initTag,
     priceRange: [priceMin, priceMax],
-    sizeRange: ["XS", "S", "M", "L", "XL"],
+    sizeRange: ["None","XS", "S", "M", "L", "XL"],
   };
 
   const [categories, setCategories] = useState([]);
@@ -48,7 +48,14 @@ const ProductList = (props) => {
   useEffect(() => {
     document.body.classList.add("template-collection");
 
-    getCategories();
+    getCategories().then((items)=> {
+      const updatedCategory = items.find(
+        (item) => item.id === parseInt(category, 10)
+      );
+      if (updatedCategory) {
+        setCurrentCategory(updatedCategory);
+      }
+    });
     getProducts(1).then((items) => {
       setProducts(items);
       getDistinctSizeAndColor(items);
@@ -118,6 +125,7 @@ const ProductList = (props) => {
     const loadedItems = reqItems.slice();
 
     setCategories(loadedItems);
+    return loadedItems;
   };
 
 

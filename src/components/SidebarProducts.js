@@ -1,4 +1,12 @@
+import { useHistory } from "react-router-dom";
+
 const SidebarProducts = (props) => {
+  const history = useHistory();
+
+  const toProduct = (id) => {
+    history.replace("/Product/" + id);
+  };
+
   return (
     <div className="sidebar_widget">
       <div className="widget-title">
@@ -10,13 +18,13 @@ const SidebarProducts = (props) => {
             {props.data &&
               props.data.map((item) => {
                 return (
-                  <div className="grid__item" key={item.id}>
+                  <div className="grid__item" key={item.id} onClick={toProduct.bind(null, item.id)}>
                     <div className="mini-list-item">
                       <div className="mini-view_image">
                         <a className="grid-view-item__link" href="#">
                           <img
                             className="grid-view-item__image"
-                            src={item.largeImgs[0].src}
+                            src={require("../" + item.largeImgs[0].src).default}
                             alt={item.title}
                           />
                         </a>

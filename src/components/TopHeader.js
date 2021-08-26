@@ -22,8 +22,6 @@ const TopHeader = () => {
                 <Link to="/Register">Create Account</Link>
               )}
             </li>
-            <Link to="/Product/clothing-1">Product clothing-1</Link> 
-            <Link to="/Product/1">Product 1</Link>
           </ul>
         </div>
       </div>

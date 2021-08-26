@@ -1,11 +1,9 @@
-import $ from "jquery";
 import { Fragment, useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import { getProducts } from "../actions/product-action";
-import QuickViewPopup from "./QuickViewPopup";
 import ProductRate from "./ProductRate";
+import { useHistory } from "react-router-dom";
 
-let popupInit = true;
 const intitPagination = {
   totalPage: 0,
   contentDataIndex: 0,
@@ -19,8 +17,8 @@ const pageSize = 6;
 const pageRange = 5;
 
 const GridProducts = (props) => {
+  const history = useHistory();
   const [productData, setProductData] = useState([]);
-  const [popupProductId, setPopupProductId] = useState("");
   const [page, setPage] = useState(intitPagination);
   const [noItems, setNoItems] = useState(false);
 
@@ -45,6 +43,8 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
+      console.log("Products", items);
+
       if (items && items.products.length !== 0) {
         setNoItems(false);
         setProductData(items.products);
@@ -54,14 +54,6 @@ const GridProducts = (props) => {
       }
     });
   }, [props.filter]);
-
-  useEffect(() => {
-    if (!popupInit) {
-      $("#content_quickview").modal("show");
-    } else {
-      popupInit = false;
-    }
-  }, [popupProductId]);
 
   const pageHandler = (size, newPage) => {
     let updatedPagination = { ...page };
@@ -78,11 +70,6 @@ const GridProducts = (props) => {
     setPage(updatedPagination);
   };
 
-  const closePopup = () => {
-    setPopupProductId("");
-    $("#content_quickview").modal("hide");
-  };
-
   const sortHandler = (event) => {
     const sort = parseInt(event.target.value, 10);
     getProducts(sort).then((items) => {
@@ -92,9 +79,8 @@ const GridProducts = (props) => {
     });
   };
 
-  const showQuickPopup = (id) => {
-    const pItem = productData.find((item) => item.id === id);
-    setPopupProductId(pItem.id);
+  const toProduct = (id) => {
+    history.replace("/Product/" + id);
   };
 
   return (
@@ -183,33 +169,17 @@ const GridProducts = (props) => {
                   return (
                     <div className={pItemClasses} key={`product${item.id}`}>
                       {/* start product image */}
-                      <div className="product-image">
+                      <div className="product-image" onClick={toProduct.bind(null, item.id)}>
                         {/* start product image */}
                         <a>
                           {/* image */}
                           <img
                             className="primary blur-up lazyload"
-                            data-src={item.largeImgs[0].src}
-                            src={item.largeImgs[0].src}
+                            data-src={require("../" + item.largeImgs[0].src).default}
+                            src={require("../" + item.largeImgs[0].src).default}
                             alt={item.title}
                             title={item.title}
                           />
-                          {/* End image */}
-                          {/* Hover image */}
-                          <img
-                            className="hover blur-up lazyload"
-                            data-src={item.largeImgs[0].src.replace(
-                              ".jpg",
-                              "-1.jpg"
-                            )}
-                            src={item.largeImgs[0].src.replace(
-                              ".jpg",
-                              "-1.jpg"
-                            )}
-                            alt="image"
-                            title="product"
-                          />
-                          {/* End hover image */}
                           {/* product label */}
                           <div className="product-labels rectangular">
                             {productDiscount}
@@ -218,23 +188,6 @@ const GridProducts = (props) => {
                           {/* End product label */}
                         </a>
                         {/* end product image */}
-
-                        {/* Start product button */}
-                        <form className="variants add" action="#" method="post">
-                          <button className="btn btn-addto-cart" type="button">
-                            Select Options
-                          </button>
-                        </form>
-                        <div className="button-set">
-                          <a
-                            title="Quick View"
-                            className="quick-view-popup quick-view"
-                            onClick={showQuickPopup.bind(null, item.id)}
-                          >
-                            <i className="icon anm anm-search-plus-r"></i>
-                          </a>
-                        </div>
-                        {/* end product button */}
                       </div>
                       {/* end product image */}
 
@@ -242,7 +195,7 @@ const GridProducts = (props) => {
                       <div className="product-details text-center">
                         {/* product name */}
                         <div className="product-name">
-                          <a>{item.title}</a>
+                          <a onClick={toProduct.bind(null, item.id)}>{item.title}</a>
                         </div>
                         {/* End product name */}
                         {/* product price */}
@@ -278,9 +231,6 @@ const GridProducts = (props) => {
         pageRange={pageRange}
         pageSize={pageSize}
       />
-      {popupProductId && (
-        <QuickViewPopup id={popupProductId} onClose={closePopup} />
-      )}
     </Fragment>
   );
 };

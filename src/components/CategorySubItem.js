@@ -4,7 +4,7 @@ const CategorySubItem = (props) => {
   const history = useHistory();
 
   const clickHandler = () => {
-    history.push("/?category=" + props.categoryId + "&tag=" + props.id);
+    history.push("/ProductList?category=" + props.categoryId + "&tag=" + props.id);
   };
 
   return (
