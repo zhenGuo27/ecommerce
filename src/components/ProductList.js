@@ -2,7 +2,7 @@ import "jquery-ui-bundle";
 import "jquery-ui-bundle/jquery-ui.min.css";
 
 import { Fragment, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PriceFilter from "./PriceFilter";
 import { getProducts } from "../actions/product-action";
 import SizeSwatches from "./SizeSwatches";

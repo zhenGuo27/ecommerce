@@ -11,7 +11,7 @@ import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
 import ProductSlider from "./ProductSlider";
 import parse from "html-react-parser";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import AuthContext from "../store/auth-context";
 
@@ -410,9 +410,9 @@ const Product = (props) => {
           {/*Breadcrumb*/}
           <div className="bredcrumbWrap">
             <div className="container breadcrumbs">
-              <a href="index.html" title="Back to the home page">
+              <Link to="/">
                 Home
-              </a>
+              </Link>
               <span aria-hidden="true">›</span>
               <span>{productData.title}</span>
             </div>

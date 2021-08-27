@@ -43,8 +43,6 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
-      console.log("Products", items);
-
       if (items && items.products.length !== 0) {
         setNoItems(false);
         setProductData(items.products);

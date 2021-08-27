@@ -31,6 +31,24 @@ export const getProductById = async (id) => {
   return reqItems;
 };
 
+export const getProductByTagId = async (categoryId , tagId, num) => {
+  const response = await fetch(
+    "https://localhost:44396/Api/values/GetProductByTag?"+ new URLSearchParams({
+      categoryId: categoryId,
+      tagId: tagId,
+      num: num })
+  );
+
+  if (!response.ok) {
+    throw new Error("Something went wrong!");
+  }
+
+  const data = await response.json();
+  const reqItems = JSON.parse(data.content);
+
+  return reqItems;
+};
+
 export const getProductByMutipleId = async (ids) => {
   const response = await fetch(
     "https://localhost:44396/Api/values/GetProductsByMutipleId?"+ new URLSearchParams({
