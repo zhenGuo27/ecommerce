@@ -6,12 +6,12 @@ import { useHistory } from "react-router-dom";
 const CategoryItem = (props) => {
   const history = useHistory();
   const [itemClass, setItemClass] = useState([
-    "site-nav",
+    `site-nav ${props.item.tags.length <= 1 ? 'noSubItems' : ''}`,
     props.item.tags.length !== 0 ? "cursorPointer" : "",
   ]);
 
   const categoryClickHandler = (tag) => {
-    if (props.item.tags.length != 0) {
+    if (props.item.tags.length > 1) {
       const updatedClass = [...itemClass];
       if (updatedClass.includes("active")) {
         const targetIndex = updatedClass.indexOf("active");
@@ -23,7 +23,7 @@ const CategoryItem = (props) => {
       setItemClass(updatedClass);
       $(".sublinks_" + props.index).slideToggle("slow");
     } else {
-      history.push("/ProductList/?category=" + props.item.id);
+      history.push("/ProductList?category=" + props.item.id + "&tag=" + 1);
     }
   };
 
@@ -48,7 +48,7 @@ const CategoryItem = (props) => {
       <a className={itemClass.join(" ")} onClick={categoryClickHandler}>
         {props.item.title}
       </a>
-      {subItems}
+      {props.item.tags.length > 1 && subItems}
     </li>
   );
 };
