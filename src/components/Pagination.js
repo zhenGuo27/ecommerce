@@ -38,7 +38,7 @@ const Pagination = (props) => {
       <ul>
         {props.page.previous && (
           <li className="previous">
-            <a href="#">
+            <a>
               <i className="fa fa-caret-left" aria-hidden="true"></i>
             </a>
           </li>
@@ -46,7 +46,7 @@ const Pagination = (props) => {
         <PageItem page={props.page} size={props.pageSize}/>
         {props.page.next && (
           <li className="next">
-            <a href="#">
+            <a>
               <i className="fa fa-caret-right" aria-hidden="true"></i>
             </a>
           </li>

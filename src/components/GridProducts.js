@@ -9,6 +9,7 @@ const intitPagination = {
   contentDataIndex: 0,
   currentPage: 1,
   currentLayer: 1,
+  totalLayer: 0,
   previous: false,
   next: false,
 };
@@ -19,6 +20,7 @@ const pageRange = 5;
 const GridProducts = (props) => {
   const history = useHistory();
   const [productData, setProductData] = useState([]);
+  const [originalProductNum, setOriginalProductNum] = useState(0);
   const [page, setPage] = useState(intitPagination);
   const [noItems, setNoItems] = useState(false);
 
@@ -28,51 +30,67 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     const updated = { ...page };
-    const dividedResult = productData.length / pageSize;
-    const modResult = productData.length % pageSize;
+    const dividedResult = Math.floor(originalProductNum / pageSize);
+    const modResult = originalProductNum % pageSize;
 
-    if (productData.length < pageSize) {
+    if (originalProductNum < pageSize) {
       updated.totalPage = 1;
     } else if (modResult !== 0) {
       updated.totalPage = dividedResult + 1;
     } else {
       updated.totalPage = dividedResult;
     }
+
+    const layerDivided = Math.floor(updated.totalPage / pageRange);
+    const layerMod = updated.totalPage % pageRange;
+    updated.totalLayer = layerMod === 0 ? layerDivided : layerDivided + 1;
+
     setPage(updated);
-  }, [productData]);
+  }, [originalProductNum]);
 
   useEffect(() => {
     getProducts(1, JSON.stringify(props.filter)).then((items) => {
       if (items && items.products.length !== 0) {
+        const newItems = getItemsByPage(items.products, page.currentPage, pageSize);
         setNoItems(false);
-        setProductData(items.products);
+        setProductData(newItems);
+        setOriginalProductNum(items.products.length);
       } else {
         setProductData([]);
         setNoItems(true);
       }
     });
-  }, [props.filter]);
+  }, [props.filter, page.currentPage]);
+
+  const getItemsByPage = (items, page, pageSize) => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const newItems = items.slice(startIndex, endIndex);
+
+    return newItems;
+  };
 
   const pageHandler = (size, newPage) => {
     let updatedPagination = { ...page };
     updatedPagination.currentIndex = (newPage - 1) * size;
     updatedPagination.currentPage = newPage;
-    updatedPagination.previous = newPage !== 1;
-    updatedPagination.next = newPage !== updatedPagination.totalPage;
 
-    const rangeDivided = newPage / pageRange;
+    const rangeDivided = Math.floor(newPage / pageRange);
     const rangeModulo = newPage % pageRange;
     updatedPagination.currentLayer =
       rangeModulo === 0 ? rangeDivided : rangeDivided + 1;
+    updatedPagination.previous = updatedPagination.currentLayer !== 1;
+    updatedPagination.next = updatedPagination.currentLayer !== updatedPagination.totalLayer;
 
     setPage(updatedPagination);
   };
 
   const sortHandler = (event) => {
     const sort = parseInt(event.target.value, 10);
-    getProducts(sort).then((items) => {
+    getProducts(sort, "").then((items) => {
       if (items && items.products.length != 0) {
-        setProductData(items.products);
+        const newItems = getItemsByPage(items.products, page.currentPage, pageSize);
+        setProductData(newItems);
       }
     });
   };
