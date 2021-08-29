@@ -1,45 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProductByTagId } from "../actions/product-action";
 
-const column1Tag = {
-  categoryId: 1,
-  tagId: 1
-};
-
-const column2Tag = {
-  categoryId: 2,
-  tagId: 1
-};
-
-const column3Tag = {
-  categoryId: 3,
-  tagId: 1
-};
+const columnTag = [
+  {
+    categoryId: 1,
+    id: 1,
+  },
+  {
+    categoryId: 2,
+    id: 1,
+  },
+  {
+    categoryId: 3,
+    id: 1,
+  }
+];
 
 const ThreeColumnProducts = (props) => {
   const history = useHistory();
+  const [columnTagInfo, setColumnTagInfo] = useState([]);
   const [column1Data, setcolumn1Data] = useState([]);
   const [column2Data, setcolumn2Data] = useState([]);
   const [column3Data, setcolumn3Data] = useState([]);
 
-  useState(()=> {
-    getProductByTagId(column1Tag.categoryId, column1Tag.tagId, 3).then((items)=> {
-      setcolumn1Data(items); 
-    });
-  }, [column1Tag]);
+  const getTags = async (reqTags) => {
+    const response = await fetch(
+      "https://localhost:44396/Api/values/GetMutipleTags?"+ new URLSearchParams({
+        tags: JSON.stringify(reqTags) })
+    );
 
-  useState(()=> {
-    getProductByTagId(column2Tag.categoryId, column2Tag.tagId, 3).then((items)=> {
-      setcolumn2Data(items); 
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+
+    const data = await response.json();
+    const reqItems = JSON.parse(data.content);
+
+    return reqItems;
+  };
+
+  useEffect(()=> {
+    getTags(columnTag).then((items) => {
+      console.log("Tags", items);
+      setColumnTagInfo(items);
     });
+  }, []);
+
+  useEffect(() => {
+    getProductByTagId(columnTag[0].categoryId, columnTag[0].id, 3).then(
+      (items) => {
+        setcolumn1Data(items);
+      }
+    );
+  }, [columnTag[0]]);
+
+  useEffect(() => {
+    getProductByTagId(columnTag[1].categoryId, columnTag[1].id, 3).then(
+      (items) => {
+        setcolumn2Data(items);
+      }
+    );
   }, [column1Data]);
 
-  useState(()=> {
-    getProductByTagId(column3Tag.categoryId, column3Tag.tagId, 3).then((items)=> {
-      setcolumn3Data(items); 
-    });
+  useEffect(() => {
+    getProductByTagId(columnTag[2].categoryId, columnTag[2].id, 3).then(
+      (items) => {
+        setcolumn3Data(items);
+      }
+    );
   }, [column2Data]);
+
 
   const toProduct = (id) => {
     history.replace("/Product/" + id);
@@ -53,7 +84,11 @@ const ThreeColumnProducts = (props) => {
       .slice(0, 3);
 
     return filterData.map((item, index) => (
-      <div className="grid__item cursorPointer" key={`threeColumn${index}`} onClick={toProduct.bind(null, item.id)}>
+      <div
+        className="grid__item cursorPointer"
+        key={`threeColumn${index}`}
+        onClick={toProduct.bind(null, item.id)}
+      >
         <div className="mini-list-item">
           <div className="mini-view_image">
             <a className="grid-view-item__link">
@@ -66,12 +101,15 @@ const ThreeColumnProducts = (props) => {
             </a>
           </div>
           <div className="details">
-            <a className="grid-view-item__title">
-              {item.title}
-            </a>
+            <a className="grid-view-item__title">{item.title}</a>
             <div className="grid-view-item__meta">
               <span className="product-price__price">
-                <span className="money">${(item.sku[0].originalPrice * item.sku[0].discount).toFixed(2)}</span>
+                <span className="money">
+                  $
+                  {(item.sku[0].originalPrice * item.sku[0].discount).toFixed(
+                    2
+                  )}
+                </span>
               </span>
             </div>
           </div>
@@ -86,7 +124,7 @@ const ThreeColumnProducts = (props) => {
         <div className="row">
           <div className="col-12 col-sm-6 col-md-4 col-lg-4">
             <div className="section-header text-left">
-              <h2 className="h2">Most Popular</h2>
+              <h2 className="h2">{columnTagInfo.length!==0 && columnTagInfo[0].title}</h2>
             </div>
             <div className="grid">
               <ProductsByIndex data={column1Data} inintIndex={0} />
@@ -94,7 +132,7 @@ const ThreeColumnProducts = (props) => {
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-4">
             <div className="section-header text-left">
-              <h2 className="h2">Weekly Top Seller</h2>
+            <h2 className="h2">{columnTagInfo.length!==0 && columnTagInfo[1].title}</h2>
             </div>
             <div className="grid">
               <ProductsByIndex data={column2Data} inintIndex={0} />
@@ -102,7 +140,7 @@ const ThreeColumnProducts = (props) => {
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-4">
             <div className="section-header text-left">
-              <h2 className="h2">Flash Sale</h2>
+            <h2 className="h2">{columnTagInfo.length!==0 && columnTagInfo[2].title}</h2>
             </div>
             <div className="grid">
               <ProductsByIndex data={column3Data} inintIndex={0} />

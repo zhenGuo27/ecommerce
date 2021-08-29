@@ -48,15 +48,7 @@ const ProductList = (props) => {
   useEffect(() => {
     document.body.classList.add("template-collection");
 
-    getCategories().then((items)=> {
-      const updatedCategory = items.find(
-        (item) => item.id === parseInt(category, 10)
-      );
-      if (updatedCategory) {
-        setCurrentCategory(updatedCategory);
-      }
-    });
-    getProducts(1).then((items) => {
+    getProducts(1, "", 1, 6).then((items) => {
       setProducts(items);
       getDistinctSizeAndColor(items);
     });
@@ -66,12 +58,16 @@ const ProductList = (props) => {
     // when url change update product data
     productFilterHandler();
 
-    const updatedCategory = categories.find(
-      (item) => item.id === parseInt(category, 10)
-    );
-    if (updatedCategory) {
-      setCurrentCategory(updatedCategory);
-    }
+    getCategories().then((items)=> {
+      const updatedCategory = items.find(
+        (item) => item.id === parseInt(category, 10)
+      );
+      if (updatedCategory) {
+        setCurrentCategory(updatedCategory);
+      }else{
+        setCurrentCategory(null);
+      }
+    });
   }, [category, tag]);
 
   useEffect(()=> {

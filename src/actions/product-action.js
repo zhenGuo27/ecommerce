@@ -1,4 +1,4 @@
-export const getProducts = async (sort, filter = "") => {
+export const getProducts = async (sort, filter = "", page=0, pageSize = -1) => {
   const response = await fetch(
     "https://localhost:44396/Api/values/GetActiveProductList?"+ new URLSearchParams({
       sort: sort,
@@ -10,9 +10,18 @@ export const getProducts = async (sort, filter = "") => {
   }
 
   const data = await response.json();
-  const reqItems = JSON.parse(data.content);
+  let reqItems = JSON.parse(data.content);
+  reqItems.products = getItemsByPage(reqItems.products, page, pageSize);
 
   return reqItems;
+};
+
+const getItemsByPage = (items, page, pageSize) => {
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = page * pageSize;
+  const newItems = items.slice(startIndex, endIndex);
+
+  return newItems;
 };
 
 export const getProductById = async (id) => {

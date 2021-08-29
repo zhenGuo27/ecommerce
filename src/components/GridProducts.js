@@ -49,11 +49,10 @@ const GridProducts = (props) => {
   }, [originalProductNum]);
 
   useEffect(() => {
-    getProducts(1, JSON.stringify(props.filter)).then((items) => {
+    getProducts(1, JSON.stringify(props.filter), page.currentPage, pageSize).then((items) => {
       if (items && items.products.length !== 0) {
-        const newItems = getItemsByPage(items.products, page.currentPage, pageSize);
         setNoItems(false);
-        setProductData(newItems);
+        setProductData(items.products);
         setOriginalProductNum(items.products.length);
       } else {
         setProductData([]);
@@ -61,14 +60,6 @@ const GridProducts = (props) => {
       }
     });
   }, [props.filter, page.currentPage]);
-
-  const getItemsByPage = (items, page, pageSize) => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = page * pageSize;
-    const newItems = items.slice(startIndex, endIndex);
-
-    return newItems;
-  };
 
   const pageHandler = (size, newPage) => {
     let updatedPagination = { ...page };
@@ -87,10 +78,9 @@ const GridProducts = (props) => {
 
   const sortHandler = (event) => {
     const sort = parseInt(event.target.value, 10);
-    getProducts(sort, "").then((items) => {
+    getProducts(sort, JSON.stringify(props.filter), page.currentPage, pageSize).then((items) => {
       if (items && items.products.length != 0) {
-        const newItems = getItemsByPage(items.products, page.currentPage, pageSize);
-        setProductData(newItems);
+        setProductData(items.products);
       }
     });
   };
