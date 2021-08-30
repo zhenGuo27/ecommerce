@@ -24,3 +24,6 @@ input.checkbox {
   margin-right: 0.3125rem;
 }
 
+.addressFooter {
+  list-style: none;
+}

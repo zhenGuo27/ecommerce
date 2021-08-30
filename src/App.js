@@ -14,9 +14,9 @@ import Cart from "./components/Deal/Cart";
 import Checkout from "./components/Deal/Checkout";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-import ForgetPassword from "./components/ForgetPassword";
 import CartModal from "./components/Deal/CartModal";
 import LoginModal from "./components/Deal/LoginModal";
+import About from "./components/About";
 
 function App() {
   const headerType = "ProductList";
@@ -50,6 +50,9 @@ function App() {
           </Route>
           <Route path="/Checkout">
             <Checkout />
+          </Route>
+          <Route path="/About">
+            <About />
           </Route>
         </Switch>
       </div>

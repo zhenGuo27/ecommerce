@@ -61,9 +61,9 @@ const Header = (props) => {
               {/* for mobile */}
               <ul id="siteNav" className="site-nav medium center hidearrow">
                 <li className="lvl1 parent megamenu">
-                  <a href="#">
-                    About <i className="anm anm-angle-down-l"></i>
-                  </a>
+                  <Link to="/About">
+                    About Me <i className="anm anm-angle-down-l"></i>
+                  </Link>
                 </li>
                 <li className="lvl1 parent megamenu">
                   <Link to="/ProductList">

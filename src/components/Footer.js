@@ -62,27 +62,21 @@ const Footer = (props) => {
      			{/*Footer Links*/}
             	<div className="footer-top">
                 	<div className="row">
-                    	<div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                    	<div className="col-12 col-sm-12 col-md-6 col-lg-6 footer-links">
                         	<h4 className="h4">Quick Shop</h4>
                             <ul>
-                            	<li><a href="#">Women</a></li>
-                                <li><a href="#">Men</a></li>
-                                <li><a href="#">Kids</a></li>
-                                <li><a href="#">Sportswear</a></li>
-                                <li><a href="#">Sale</a></li>
+                            	<li><Link to={{pathname: "/ProductList", search: "?category=1&tag=1"}}>Web Development</Link></li>
+                                <li><Link to={{pathname: "/ProductList", search: "?category=2&tag=1"}}>其他</Link></li>
+                                <li><Link to={{pathname: "/ProductList", search: "?category=3&tag=1"}}>軟技能</Link></li>
                             </ul>
                         </div>
-                        <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <div className="col-12 col-sm-12 col-md-6 col-lg-6 footer-links">
                         	<h4 className="h4">Informations</h4>
                             <ul>
-                            	<li><a href="#">About us</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Privacy policy</a></li>
-                                <li><a href="#">Terms &amp; condition</a></li>
-                                <li><a href="#">My Account</a></li>
+                            	<li><Link to="/About">About Me</Link></li>                           
                             </ul>
                         </div>
-                        <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        {/* <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                         	<h4 className="h4">Customer Services</h4>
                             <ul>
                             	<li><a href="#">Request Personal Data</a></li>
@@ -99,7 +93,7 @@ const Footer = (props) => {
                                 <li className="phone"><i className="icon anm anm-phone-s"></i><p>(440) 000 000 0000</p></li>
                                 <li className="email"><i className="icon anm anm-envelope-l"></i><p>sales@yousite.com</p></li>
                             </ul>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/*End Footer Links*/}

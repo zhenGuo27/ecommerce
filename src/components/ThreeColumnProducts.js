@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProductByTagId } from "../actions/product-action";
+import { backendUrl } from "../actions/sharedConst";
 
 const columnTag = [
   {
@@ -26,7 +27,7 @@ const ThreeColumnProducts = (props) => {
 
   const getTags = async (reqTags) => {
     const response = await fetch(
-      "https://localhost:44396/Api/values/GetMutipleTags?"+ new URLSearchParams({
+      backendUrl + "/Api/values/GetMutipleTags?"+ new URLSearchParams({
         tags: JSON.stringify(reqTags) })
     );
 

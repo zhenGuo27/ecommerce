@@ -9,6 +9,7 @@ import SizeSwatches from "./SizeSwatches";
 import SidebarProducts from "./SidebarProducts";
 import SidebarCategories from "./SidebarCategories";
 import GridProducts from "./GridProducts";
+import { backendUrl } from "../actions/sharedConst";
 
 const priceMin = 0;
 const priceMax = 600;
@@ -109,7 +110,7 @@ const ProductList = (props) => {
 
   const getCategories = async () => {
     const response = await fetch(
-      "https://localhost:44396/Api/values/GetCategories"
+     backendUrl + "/Api/values/GetCategories"
     );
 
     if (!response.ok) {
@@ -140,17 +141,10 @@ const ProductList = (props) => {
       <div className="collection-header">
         <div className="collection-hero">
           <div className="collection-hero__image">
-            <img
-              className="blur-up lazyload"
-              data-src="assets/images/cat-women2.jpg"
-              src="assets/images/cat-women2.jpg"
-              alt="Women"
-              title="Women"
-            />
           </div>
           <div className="collection-hero__title-wrapper">
             <h1 className="collection-hero__title page-width">
-              Shop Grid 3 Column
+              Product List
             </h1>
           </div>
         </div>
