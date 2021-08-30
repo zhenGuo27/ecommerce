@@ -1,6 +1,8 @@
+import { backendUrl } from "./sharedConst";
+
 export const getUserCartByUid = async (uid) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetCartByUid?" +
+    backendUrl + "/Api/values/GetCartByUid?" +
       new URLSearchParams({
         uid: uid,
       })
@@ -22,7 +24,7 @@ export const getUserCartByUid = async (uid) => {
 
 export const updateUserCart = async (cart) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/UpdateCartByUser",
+    backendUrl + "/Api/values/UpdateCartByUser",
     {
       method: "POST",
       body: JSON.stringify(cart),
@@ -56,7 +58,7 @@ export const isNumeric = (str) => {
 
 export const insertBill = async (bill, updateCartFn, updatedUserCart) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/InsertBill",
+    backendUrl + "/Api/values/InsertBill",
     {
       method: "POST",
       body: JSON.stringify(bill),

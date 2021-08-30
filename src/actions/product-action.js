@@ -1,6 +1,8 @@
+import { backendUrl } from "./sharedConst";
+
 export const getProducts = async (sort, filter = "", page=0, pageSize = -1) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetActiveProductList?"+ new URLSearchParams({
+    backendUrl + "/Api/values/GetActiveProductList?"+ new URLSearchParams({
       sort: sort,
       filter: filter })
   );
@@ -26,7 +28,7 @@ const getItemsByPage = (items, page, pageSize) => {
 
 export const getProductById = async (id) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetProductById?"+ new URLSearchParams({
+    backendUrl +"/Api/values/GetProductById?"+ new URLSearchParams({
       id: id })
   );
 
@@ -42,7 +44,7 @@ export const getProductById = async (id) => {
 
 export const getProductByTagId = async (categoryId , tagId, num) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetProductByTag?"+ new URLSearchParams({
+    backendUrl + "/Api/values/GetProductByTag?"+ new URLSearchParams({
       categoryId: categoryId,
       tagId: tagId,
       num: num })
@@ -60,7 +62,7 @@ export const getProductByTagId = async (categoryId , tagId, num) => {
 
 export const getProductByMutipleId = async (ids) => {
   const response = await fetch(
-    "https://localhost:44396/Api/values/GetProductsByMutipleId?"+ new URLSearchParams({
+    backendUrl + "/Api/values/GetProductsByMutipleId?"+ new URLSearchParams({
       idStr: ids })
   );
 

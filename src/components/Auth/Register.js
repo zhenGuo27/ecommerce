@@ -1,4 +1,5 @@
 import { Fragment, useRef, useState } from "react";
+import { backendUrl } from "../../actions/sharedConst";
 
 const Register = (props) => {
   const firstNameRef = useRef();
@@ -10,7 +11,7 @@ const Register = (props) => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("https://localhost:44396/Api/values/SignUp", {
+    const response = await fetch(backendUrl +"/Api/values/SignUp", {
       method: "POST",
       body: JSON.stringify({
         email: emailRef.current.value,

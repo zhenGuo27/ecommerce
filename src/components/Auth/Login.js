@@ -1,6 +1,7 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
+import { backendUrl } from "../../actions/sharedConst";
 
 const Login = (props) => {
   const history = useHistory();
@@ -9,14 +10,10 @@ const Login = (props) => {
   const [submitMsg, setSubmitMsg] = useState("");
   const authCtx = useContext(AuthContext);
 
-  // useEffect(()=> {
-  //   console.log("isLogin", authCtx.isLoggedIn);
-  // }, []);
-
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("https://localhost:44396/Api/values/SignIn", {
+    const response = await fetch(backendUrl + "/Api/values/SignIn", {
       method: "POST",
       body: JSON.stringify({
         email: emailRef.current.value,
