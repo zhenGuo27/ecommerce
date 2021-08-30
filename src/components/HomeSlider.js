@@ -2,6 +2,7 @@ import $ from "jquery";
 import { useEffect } from "react";
 import banner1 from "../images/homeSlider/html.jpg"
 import banner2 from "../images/homeSlider/coding.jpg"
+import { useHistory } from "react-router-dom";
 
 const sliderData = [
   {
@@ -19,6 +20,8 @@ const sliderData = [
 ];
 
 const HomeSlider = () => {
+  const history = useHistory();
+
   useEffect(() => {
     setSlider();
   }, []);
@@ -35,6 +38,10 @@ const HomeSlider = () => {
       autoplaySpeed: 4000,
       lazyLoad: "ondemand",
     });
+  };
+
+  const toAbout = () => {
+    history.replace("/About");
   };
 
   return (
@@ -60,7 +67,7 @@ const HomeSlider = () => {
                         {item.subtitle}
                       </span>
                       {/*btn to about page */}
-                      <span className="btn">{item.btnText}</span>
+                      <span className="btn" onClick={toAbout}>{item.btnText}</span>
                     </div>
                   </div>
                 </div>
