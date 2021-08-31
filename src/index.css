@@ -1,3 +1,27 @@
+
+html, body {
+  height: 100%;
+}
+
+#root{
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+.pageWrapper {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+
+/*********************/
+
 .variant-sku {
   margin-left: 0.625rem;
 }

@@ -1,6 +1,43 @@
-import { Fragment } from "react";
+import userEvent from "@testing-library/user-event";
+import { Fragment, useContext, useRef } from "react";
+import { backendUrl } from "../actions/sharedConst";
+import AuthContext from "../store/auth-context";
 
 const ForgetPassword = (props) => {
+  const authCtx = useContext(AuthContext);
+  const emailRef = useRef();
+  const newPwRef = useRef();
+  const confirmPwRef = useRef();
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+
+    if (newPwRef.current.value.trim() !== confirmPwRef.current.value.trim()) {
+      return false;
+    }
+
+    const response = await fetch(backendUrl + "/Api/values/UpdateUserInfo", {
+      method: "POST",
+      body: JSON.stringify({
+        uid: authCtx.uid,
+        //email: emailRef.current.value,
+        newPassword: newPwRef.current.value.trim(),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("post UpdateUserInfo", response);
+  
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+  
+    const data = await response.json();
+    console.log("update_data", data);
+  };
+
   return (
     <Fragment>
       {/*Page Title*/}
@@ -23,6 +60,7 @@ const ForgetPassword = (props) => {
                 id="CustomerLoginForm"
                 accept-charset="UTF-8"
                 class="contact-form"
+                onSubmit={submitHandler}
               >
                 <div class="row">
                   <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -37,6 +75,7 @@ const ForgetPassword = (props) => {
                         autocorrect="off"
                         autocapitalize="off"
                         autofocus=""
+                        ref={emailRef}
                       />
                     </div>
                   </div>
@@ -48,6 +87,7 @@ const ForgetPassword = (props) => {
                         name="customer[new_password]"
                         placeholder=""
                         id="newPassword"
+                        ref={newPwRef}
                       />
                     </div>
                   </div>
@@ -61,6 +101,7 @@ const ForgetPassword = (props) => {
                         name="customer[new_password_confirm]"
                         placeholder=""
                         id="newPasswordConfirm"
+                        ref={confirmPwRef}
                       />
                     </div>
                   </div>

@@ -46,6 +46,10 @@ const Login = (props) => {
     }
   };
 
+  const toForgetPassword=()=> {
+    history.replace(hostPath + "/ForgetPassword");
+  }
+
   return (
     <Fragment>
       {/*Page Title*/}
@@ -105,7 +109,7 @@ const Login = (props) => {
                   <div className="text-center col-12 col-sm-12 col-md-12 col-lg-12">
                     <input type="submit" className="btn mb-3" value="Sign In" />
                     <p className="mb-4">
-                      <a href="#" id="RecoverPassword">
+                      <a id="RecoverPassword" onClick={toForgetPassword}>
                         Forgot your password?
                       </a>
                       &nbsp; | &nbsp;

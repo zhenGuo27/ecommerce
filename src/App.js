@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 import { hostPath } from "./actions/sharedConst";
 import SearchFormDrawer from "./components/SearchFormDrawer";
@@ -18,52 +18,63 @@ import Register from "./components/Auth/Register";
 import CartModal from "./components/Deal/CartModal";
 import LoginModal from "./components/Deal/LoginModal";
 import About from "./components/About";
+import { Fragment } from "react";
+import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
   const headerType = "ProductList";
 
   return (
-    <div className="pageWrapper">
-      <SearchFormDrawer />
-      <TopHeader />
-      <Header type={headerType} />
-      <MobileMenu />
+    <Fragment>
+      <div className="pageWrapper">
+        <SearchFormDrawer />
+        <TopHeader />
+        <Header type={headerType} />
+        <MobileMenu />
 
-      <div id="page-content">
-        <Switch>
-          <Route path={hostPath} exact>
-            <Home />
-          </Route>
-          <Route path={hostPath + "/Login"}>
-            <Login />
-          </Route>
-          <Route path={hostPath +"/Register"}>
-            <Register />
-          </Route>
-          <Route path={hostPath + "/ProductList"}>
-             <ProductList />
-          </Route>
-          <Route path={hostPath +"/Product/:id"}>
-            <Product />
-          </Route>
-          <Route path={hostPath + "/Cart"}>
-            <Cart />
-          </Route>
-          <Route path={hostPath + "/Checkout"}>
-            <Checkout />
-          </Route>
-          <Route path={hostPath + "/About"}>
-            <About />
-          </Route>
-        </Switch>
+        <div id="page-content">
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to={hostPath} />
+            </Route>
+            <Route path={hostPath} exact>
+              <Home />
+            </Route>
+            <Route path={hostPath + "/Login"}>
+              <Login />
+            </Route>
+            <Route path={hostPath + "/ForgetPassword"}>
+              <ForgetPassword />
+            </Route>
+            <Route path={hostPath + "/Register"}>
+              <Register />
+            </Route>
+            <Route path={hostPath + "/ProductList"}>
+              <ProductList />
+            </Route>
+            <Route path={hostPath + "/Product/:id"}>
+              <Product />
+            </Route>
+            <Route path={hostPath + "/Cart"}>
+              <Cart />
+            </Route>
+            <Route path={hostPath + "/Checkout"}>
+              <Checkout />
+            </Route>
+            <Route path={hostPath + "/About"}>
+              <About />
+            </Route>
+          </Switch>
+        </div>
+
+        <ScrollTop />
+        <NewsletterPopup />
+        <CartModal />
+        <LoginModal />
       </div>
 
       <Footer />
-      <ScrollTop />
-      <NewsletterPopup />
-      <CartModal />
-      <LoginModal />
-    </div>
+    </Fragment>
   );
 }
 
