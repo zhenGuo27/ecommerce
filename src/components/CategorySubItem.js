@@ -1,10 +1,11 @@
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 
 const CategorySubItem = (props) => {
   const history = useHistory();
 
   const clickHandler = () => {
-    history.push("/ProductList?category=" + props.categoryId + "&tag=" + props.id);
+    history.push(hostPath + "/ProductList?category=" + props.categoryId + "&tag=" + props.id);
   };
 
   return (

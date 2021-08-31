@@ -1,10 +1,11 @@
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 
 const SidebarProducts = (props) => {
   const history = useHistory();
 
   const toProduct = (id) => {
-    history.replace("/Product/" + id);
+    history.replace(hostPath +"/Product/" + id);
   };
 
   return (

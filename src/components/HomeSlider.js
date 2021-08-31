@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import banner1 from "../images/homeSlider/html.jpg"
 import banner2 from "../images/homeSlider/coding.jpg"
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 
 const sliderData = [
   {
@@ -41,7 +42,7 @@ const HomeSlider = () => {
   };
 
   const toAbout = () => {
-    history.replace("/About");
+    history.replace(hostPath +"/About");
   };
 
   return (

@@ -3,6 +3,7 @@ import Pagination from "./Pagination";
 import { getProducts } from "../actions/product-action";
 import ProductRate from "./ProductRate";
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 
 const intitPagination = {
   totalPage: 0,
@@ -86,7 +87,7 @@ const GridProducts = (props) => {
   };
 
   const toProduct = (id) => {
-    history.replace("/Product/" + id);
+    history.replace(hostPath + "/Product/" + id);
   };
 
   return (

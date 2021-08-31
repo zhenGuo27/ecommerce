@@ -4,6 +4,7 @@ import AuthContext from "../../store/auth-context";
 import { updateUserCart } from "../../actions/user-action";
 import { NavLink, useHistory } from "react-router-dom";
 import { getProductByMutipleId } from "../../actions/product-action";
+import { hostPath } from "../../actions/sharedConst";
 
 const Cart = (props) => {
   const authCtx = useContext(AuthContext);
@@ -16,7 +17,7 @@ const Cart = (props) => {
 
   useEffect(() => {
     if (!authCtx.isLoggedIn) {
-      history.replace("/Login");
+      history.replace(hostPath +"/Login");
       $("#loginModal").modal("show");
       return;
     }
@@ -60,7 +61,7 @@ const Cart = (props) => {
     if (agreeRef.current.checked && userCartItems.length !== 0) {
       updateUserCart(cartData).then((data) => {
         if (data.returnCode !== -1) {
-          history.replace("/Checkout");
+          history.replace(hostPath + "/Checkout");
         }
       });
     } else if (!agreeRef.current.checked) {
@@ -237,7 +238,7 @@ const Cart = (props) => {
                 <tfoot>
                   <tr>
                     <td colSpan="6" className="text-left">
-                      <NavLink to="/" className="btn--link cart-continue">
+                      <NavLink to={hostPath} className="btn--link cart-continue">
                         <i className="icon icon-arrow-circle-left"></i> Continue
                         shopping
                       </NavLink>

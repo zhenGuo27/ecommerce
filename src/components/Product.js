@@ -14,6 +14,7 @@ import parse from "html-react-parser";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import AuthContext from "../store/auth-context";
+import { hostPath } from "../actions/sharedConst";
 
 window.jQuery = window.$ = $;
 require("ez-plus");
@@ -72,7 +73,7 @@ const Product = (props) => {
   }, [productData]);
 
   const toCartDetail = () => {
-    history.replace("/Cart");
+    history.replace(hostPath + "/Cart");
   };
 
   const addToCart = () => {
@@ -410,7 +411,7 @@ const Product = (props) => {
           {/*Breadcrumb*/}
           <div className="bredcrumbWrap">
             <div className="container breadcrumbs">
-              <Link to="/">
+              <Link to={hostPath}>
                 Home
               </Link>
               <span aria-hidden="true">›</span>

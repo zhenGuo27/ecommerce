@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 import AuthContext from "../store/auth-context";
 
 const TopHeader = () => {  
@@ -14,12 +15,12 @@ const TopHeader = () => {
           </span>
           <ul className="customer-links list-inline">
             <li>
-              {!authCtx.isLoggedIn && <Link to="/Login">Login</Link>}
+              {!authCtx.isLoggedIn && <Link to={hostPath + "/Login"}>Login</Link>}
               {authCtx.isLoggedIn && <a onClick={authCtx.logout}>LogOut</a>}
             </li>
             <li>
               {!authCtx.isLoggedIn && (
-                <Link to="/Register">Create Account</Link>
+                <Link to={hostPath + "/Register"}>Create Account</Link>
               )}
             </li>
           </ul>

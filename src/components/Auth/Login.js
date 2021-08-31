@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
-import { backendUrl } from "../../actions/sharedConst";
+import { backendUrl, hostPath } from "../../actions/sharedConst";
 
 const Login = (props) => {
   const history = useHistory();
@@ -42,7 +42,7 @@ const Login = (props) => {
       );
       authCtx.login(responseData.uid, responseData.token, expirationTime);
       setSubmitMsg("Successfully !!!");
-      history.replace("/");
+      history.replace(hostPath);
     }
   };
 
@@ -107,7 +107,7 @@ const Login = (props) => {
                     <p className="mb-4">
                       <a href="#" id="RecoverPassword">
                         Forgot your password?
-                      </a>{" "}
+                      </a>
                       &nbsp; | &nbsp;
                       <a href="register.html" id="customer_register_link">
                         Create account

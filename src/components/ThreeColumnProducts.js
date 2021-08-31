@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProductByTagId } from "../actions/product-action";
-import { backendUrl } from "../actions/sharedConst";
+import { backendUrl, hostPath } from "../actions/sharedConst";
 
 const columnTag = [
   {
@@ -74,7 +74,7 @@ const ThreeColumnProducts = (props) => {
 
 
   const toProduct = (id) => {
-    history.replace("/Product/" + id);
+    history.replace(hostPath +"/Product/" + id);
   };
 
   const ProductsByIndex = (props) => {

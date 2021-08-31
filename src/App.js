@@ -1,5 +1,6 @@
 import { Route, Switch } from "react-router-dom";
 
+import { hostPath } from "./actions/sharedConst";
 import SearchFormDrawer from "./components/SearchFormDrawer";
 import TopHeader from "./components/TopHeader";
 import Header from "./components/Header";
@@ -30,28 +31,28 @@ function App() {
 
       <div id="page-content">
         <Switch>
-          <Route path="/" exact>
+          <Route path={hostPath} exact>
             <Home />
           </Route>
-          <Route path="/Login">
+          <Route path={hostPath + "/Login"}>
             <Login />
           </Route>
-          <Route path="/Register">
+          <Route path={hostPath +"/Register"}>
             <Register />
           </Route>
-          <Route path="/ProductList">
+          <Route path={hostPath + "/ProductList"}>
              <ProductList />
           </Route>
-          <Route path="/Product/:id">
+          <Route path={hostPath +"/Product/:id"}>
             <Product />
           </Route>
-          <Route path="/Cart">
+          <Route path={hostPath + "/Cart"}>
             <Cart />
           </Route>
-          <Route path="/Checkout">
+          <Route path={hostPath + "/Checkout"}>
             <Checkout />
           </Route>
-          <Route path="/About">
+          <Route path={hostPath + "/About"}>
             <About />
           </Route>
         </Switch>

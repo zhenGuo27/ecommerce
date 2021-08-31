@@ -7,6 +7,7 @@ import {
   insertBill
 } from "../../actions/user-action";
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../../actions/sharedConst";
 
 const initBillDetail =  Array(7).join(".").split(".");
 const initCreditCard = Array(3).join(".").split(".");
@@ -123,7 +124,7 @@ const Checkout = (props) => {
 
   const submitBtnHandler = () => {
     $("#submitModal").modal("hide");
-    history.replace("/");
+    history.replace(hostPath);
   };
 
   const paymentMethodChangeHandler = (event) => {

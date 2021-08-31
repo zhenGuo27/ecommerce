@@ -2,6 +2,7 @@ import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 import { getUserCartByUid, updateUserCart } from "../actions/user-action";
 
 let logoutTimer;
@@ -83,7 +84,7 @@ export const AuthContextProvider = (props) => {
     if (logoutTimer) {
       clearTimeout(logoutTimer);
     }
-    history.replace("/");
+    history.replace(hostPath +"/");
   };
 
   const loginHandler = (uid, token, expirationTime) => {

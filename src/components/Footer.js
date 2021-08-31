@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-//import safepayment from "../images/safepayment.png";
+import { hostPath } from "../actions/sharedConst";
 
 const Footer = (props) => {
   useEffect(() => {
@@ -65,35 +65,17 @@ const Footer = (props) => {
                     	<div className="col-12 col-sm-12 col-md-6 col-lg-6 footer-links">
                         	<h4 className="h4">Quick Shop</h4>
                             <ul>
-                            	<li><Link to={{pathname: "/ProductList", search: "?category=1&tag=1"}}>Web Development</Link></li>
-                                <li><Link to={{pathname: "/ProductList", search: "?category=2&tag=1"}}>其他</Link></li>
-                                <li><Link to={{pathname: "/ProductList", search: "?category=3&tag=1"}}>軟技能</Link></li>
+                            	<li><Link to={{pathname: hostPath + "/ProductList", search: "?category=1&tag=1"}}>Web Development</Link></li>
+                                <li><Link to={{pathname: hostPath + "/ProductList", search: "?category=2&tag=1"}}>其他</Link></li>
+                                <li><Link to={{pathname: hostPath + "/ProductList", search: "?category=3&tag=1"}}>軟技能</Link></li>
                             </ul>
                         </div>
                         <div className="col-12 col-sm-12 col-md-6 col-lg-6 footer-links">
                         	<h4 className="h4">Informations</h4>
                             <ul>
-                            	<li><Link to="/About">About Me</Link></li>                           
+                            	<li><Link to={hostPath + "/About"}>About Me</Link></li>                           
                             </ul>
-                        </div>
-                        {/* <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
-                        	<h4 className="h4">Customer Services</h4>
-                            <ul>
-                            	<li><a href="#">Request Personal Data</a></li>
-                                <li><a href="#">FAQ's</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Orders and Returns</a></li>
-                                <li><a href="#">Support Center</a></li>
-                            </ul>
-                        </div>
-                        <div className="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
-                        	<h4 className="h4">Contact Us</h4>
-                            <ul className="addressFooter">
-                            	<li><i className="icon anm anm-map-marker-al"></i><p>55 Gallaxy Enque,<br />2568 steet, 23568 NY</p></li>
-                                <li className="phone"><i className="icon anm anm-phone-s"></i><p>(440) 000 000 0000</p></li>
-                                <li className="email"><i className="icon anm anm-envelope-l"></i><p>sales@yousite.com</p></li>
-                            </ul>
-                        </div> */}
+                        </div>                      
                     </div>
                 </div>
                 {/*End Footer Links*/}

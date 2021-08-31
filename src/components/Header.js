@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import logo from "../images/jhen_logo.png";
+import { hostPath } from "../actions/sharedConst";
 
 const Header = (props) => {
   const history = useHistory();
@@ -25,7 +26,7 @@ const Header = (props) => {
   };
 
   const toCartDetail = () => {
-    history.replace("/Cart");
+    history.replace(hostPath +"/Cart");
   };
 
   const headerType = (props.type === "Home") ? "classicHeader" : "";
@@ -37,7 +38,7 @@ const Header = (props) => {
         <div className="row align-items-center">
           {/*Desktop Logo*/}
           <div className="logo col-md-2 col-lg-2 d-none d-lg-block">
-            <Link to="/">
+            <Link to={hostPath}>
               <img
                 src={logo}
                 alt="Belle Multipurpose Html Template"
@@ -61,12 +62,12 @@ const Header = (props) => {
               {/* for mobile */}
               <ul id="siteNav" className="site-nav medium center hidearrow">
                 <li className="lvl1 parent megamenu">
-                  <Link to="/About">
+                  <Link to={hostPath + "/About"}>
                     About Me <i className="anm anm-angle-down-l"></i>
                   </Link>
                 </li>
                 <li className="lvl1 parent megamenu">
-                  <Link to="/ProductList">
+                  <Link to={hostPath + "/ProductList"}>
                     Product List <i className="anm anm-angle-down-l"></i>
                   </Link>
                 </li>
@@ -77,7 +78,7 @@ const Header = (props) => {
           {/*Mobile Logo*/}
           <div className="col-8 col-sm-6 col-md-6 col-lg-2 d-block d-lg-none mobile-logo">
             <div className="logo">
-              <Link to="/">
+              <Link to={hostPath}>
                 <img
                   src={logo}
                   alt="Belle Multipurpose Html Template"

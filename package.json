@@ -1,5 +1,6 @@
 {
   "name": "ecommerce",
+  "homepage": "https://zhenguo27.github.io/ecommerce/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "bootstrap": "^4.6.0",
     "ez-plus": "^1.2.1",
+    "gh-pages": "^3.2.3",
     "html-react-parser": "^1.2.7",
     "jquery": "^3.6.0",
     "jquery-ui-bundle": "^1.12.1-migrate",
@@ -22,6 +24,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

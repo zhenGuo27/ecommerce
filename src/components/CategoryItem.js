@@ -2,6 +2,7 @@ import $ from "jquery";
 import { useState } from "react";
 import CategorySubItem from "./CategorySubItem";
 import { useHistory } from "react-router-dom";
+import { hostPath } from "../actions/sharedConst";
 
 const CategoryItem = (props) => {
   const history = useHistory();
@@ -23,7 +24,7 @@ const CategoryItem = (props) => {
       setItemClass(updatedClass);
       $(".sublinks_" + props.index).slideToggle("slow");
     } else {
-      history.push("/ProductList?category=" + props.item.id + "&tag=" + 1);
+      history.push(hostPath +"/ProductList?category=" + props.item.id + "&tag=" + 1);
     }
   };
 
