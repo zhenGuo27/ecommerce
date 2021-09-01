@@ -35,9 +35,6 @@ function App() {
         <div id="page-content">
           <Switch>
             <Route path="/" exact>
-              <Redirect to={hostPath} />
-            </Route>
-            <Route path={hostPath} exact>
               <Home />
             </Route>
             <Route path={hostPath + "/Login"}>
