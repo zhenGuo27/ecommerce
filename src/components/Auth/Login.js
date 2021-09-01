@@ -46,9 +46,9 @@ const Login = (props) => {
     }
   };
 
-  const toForgetPassword=()=> {
-    history.replace(hostPath + "/ForgetPassword");
-  }
+  const toRegister = () => {
+    history.replace(hostPath + "/Register");
+  };
 
   return (
     <Fragment>
@@ -109,11 +109,7 @@ const Login = (props) => {
                   <div className="text-center col-12 col-sm-12 col-md-12 col-lg-12">
                     <input type="submit" className="btn mb-3" value="Sign In" />
                     <p className="mb-4">
-                      <a id="RecoverPassword" onClick={toForgetPassword}>
-                        Forgot your password?
-                      </a>
-                      &nbsp; | &nbsp;
-                      <a href="register.html" id="customer_register_link">
+                      <a onClick={toRegister} className="cursorPointer" id="customer_register_link">
                         Create account
                       </a>
                     </p>

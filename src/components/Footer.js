@@ -1,9 +1,13 @@
 import $ from "jquery";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { hostPath } from "../actions/sharedConst";
+import { checkEmail } from "../actions/user-action";
 
 const Footer = (props) => {
+const signUpNewsletterRef = useRef();
+const [signUpNewsletterMsg, setSignUpNewsletterMsg] = useState("");
+
   useEffect(() => {
     footer_dropdown();
   }, []);
@@ -17,7 +21,23 @@ const Footer = (props) => {
     });
   };
 
-  const inputOnChangeHandler = () => {};
+  const signUpNewsletterOnchangeHandler=(event)=> {
+    setSignUpNewsletterMsg("");
+  }
+
+  const signUpNewsletterHandler = (event) => {
+    event.preventDefault();
+
+    if (!checkEmail(signUpNewsletterRef.current.value)) {
+      setSignUpNewsletterMsg("Email is not valid");
+    } else {
+      setSignUpNewsletterMsg("Sign up Newsletter sucessfully !");
+
+      setTimeout(() => {
+        setSignUpNewsletterMsg("");
+      }, 3000);
+    }
+  };
 
   return (
     <footer id="footer">
@@ -30,18 +50,19 @@ const Footer = (props) => {
                                     <div className="section-header text-center">
                                         <label className="h2"><span>sign up for </span>newsletter</label>
                                     </div>
-                                    <form action="#" method="post">
+                                    <form method="post" onSubmit={signUpNewsletterHandler}>
                                         <div className="input-group">
-                                            <input type="email" className="input-group__field newsletter__input" name="EMAIL" value="" placeholder="Email address" required="" onChange={inputOnChangeHandler}/>
+                                            <input type="email" className="input-group__field newsletter__input" name="EMAIL" placeholder="Email address" required="" ref={signUpNewsletterRef} onChange={signUpNewsletterOnchangeHandler}/>
                                             <span className="input-group__btn">
                                                 <button type="submit" className="btn newsletter__submit" name="commit" id="Subscribe"><span className="newsletter__submit-text--large">Subscribe</span></button>
                                             </span>
+                                            {signUpNewsletterMsg.trim().length !== 0 && <p className="text-danger ml-4">{signUpNewsletterMsg}</p>}
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12 col-sm-12 col-md-12 col-lg-5 d-flex justify-content-end align-items-center">
+                        {/* <div className="col-12 col-sm-12 col-md-12 col-lg-5 d-flex justify-content-end align-items-center">
                             <div className="footer-social">
                                 <ul className="list--inline site-footer__social-icons social-icons">
                                     <li><a className="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Facebook"><i className="icon icon-facebook"></i></a></li>
@@ -53,7 +74,7 @@ const Footer = (props) => {
                                     <li><a className="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Vimeo"><i className="icon icon-vimeo-alt"></i> <span className="icon__fallback-text">Vimeo</span></a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
             </div>    
         </div>
