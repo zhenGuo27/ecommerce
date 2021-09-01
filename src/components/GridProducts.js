@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { Fragment, useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import { getProducts } from "../actions/product-action";
@@ -27,6 +28,13 @@ const GridProducts = (props) => {
 
   useEffect(() => {
     pageHandler(pageSize, 1);
+
+    $('.btn-filter').on("click", function() {
+      $(".filterbar").toggleClass("active");
+   });
+   $('.closeFilter').on("click", function() {
+     $(".filterbar").removeClass("active");
+   });
   }, []);
 
   useEffect(() => {

@@ -161,8 +161,8 @@ const ProductList = (props) => {
             <div className="sidebar_tags">
               <SidebarCategories data={categories} />
               <PriceFilter
-                priceMin={priceRange[0]}
-                priceMax={priceRange[1]}
+                priceMin={priceMin}
+                priceMax={priceMax}
                 change={priceOnchangeHandler}
               />
               <SizeSwatches
@@ -179,7 +179,7 @@ const ProductList = (props) => {
 
               {/*Banner*/}
               <div className="sidebar_widget static-banner">
-                <img src="assets/images/side-banner-2.jpg" alt="" />
+                <img src={require("../images/ProductList/fashionModel.jpg").default} alt="sidebar image" />
               </div>
               {/*Banner*/}
               {/*Information*/}
