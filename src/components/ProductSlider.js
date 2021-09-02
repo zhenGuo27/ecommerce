@@ -11,9 +11,9 @@ const ProductSlider = (props) => {
   const [popupProductId, setPopupProductId] = useState("");
 
   useEffect(() => {
-    getProducts(1, "").then((items) => {
-      if (items && items.products.length !== 0) {
-        setProductData(items.products);
+    getProducts(1, "").then((item) => {
+      if (item && item.products.length !== 0) {
+        setProductData(item.reqItems.products);
       } else {
         setProductData([]);
       }

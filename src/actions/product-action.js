@@ -12,10 +12,17 @@ export const getProducts = async (sort, filter = "", page=0, pageSize = -1) => {
   }
 
   const data = await response.json();
-  let reqItems = JSON.parse(data.content);
-  reqItems.products = getItemsByPage(reqItems.products, page, pageSize);
+  let resultData = {
+    totalNum: 0,
+    reqItems: {}
+  };
 
-  return reqItems;
+
+  resultData.reqItems = JSON.parse(data.content);
+  resultData.totalNum = resultData.reqItems.products.length;
+  resultData.reqItems.products = getItemsByPage(resultData.reqItems.products, page, pageSize);
+
+  return resultData;
 };
 
 const getItemsByPage = (items, page, pageSize) => {

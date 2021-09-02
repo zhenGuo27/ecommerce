@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Pagination from "./Pagination";
 import { getProducts } from "../actions/product-action";
 import ProductRate from "./ProductRate";
@@ -24,7 +24,9 @@ const GridProducts = (props) => {
   const [productData, setProductData] = useState([]);
   const [originalProductNum, setOriginalProductNum] = useState(0);
   const [page, setPage] = useState(intitPagination);
+  const reqNewPage = useRef(1);
   const [noItems, setNoItems] = useState(false);
+  const [sort, setSort] = useState(2);
 
   useEffect(() => {
     pageHandler(pageSize, 1);
@@ -57,12 +59,16 @@ const GridProducts = (props) => {
     setPage(updated);
   }, [originalProductNum]);
 
+  useEffect(()=> {
+      reqNewPage.current = 1;
+  }, [props.filter.category, props.filter.tag]);
+
   useEffect(() => {
-    getProducts(1, JSON.stringify(props.filter), page.currentPage, pageSize).then((items) => {
-      if (items && items.products.length !== 0) {
+    getProducts(2, JSON.stringify(props.filter), reqNewPage.current, pageSize).then((item) => {
+      if (item && item.reqItems.products.length !== 0) {
         setNoItems(false);
-        setProductData(items.products);
-        setOriginalProductNum(items.products.length);
+        setProductData(item.reqItems.products);
+        setOriginalProductNum(item.totalNum);
       } else {
         setProductData([]);
         setNoItems(true);
@@ -74,6 +80,7 @@ const GridProducts = (props) => {
     let updatedPagination = { ...page };
     updatedPagination.currentIndex = (newPage - 1) * size;
     updatedPagination.currentPage = newPage;
+    reqNewPage.current = newPage;
 
     const rangeDivided = Math.floor(newPage / pageRange);
     const rangeModulo = newPage % pageRange;
@@ -86,10 +93,11 @@ const GridProducts = (props) => {
   };
 
   const sortHandler = (event) => {
-    const sort = parseInt(event.target.value, 10);
-    getProducts(sort, JSON.stringify(props.filter), page.currentPage, pageSize).then((items) => {
-      if (items && items.products.length != 0) {
-        setProductData(items.products);
+    const newSort = parseInt(event.target.value, 10);
+    getProducts(newSort, JSON.stringify(props.filter), page.currentPage, pageSize).then((items) => {
+      if (items && items.reqItems.products.length != 0) {
+        setProductData(items.reqItems.products);
+        setSort(newSort);
       }
     });
   };
@@ -125,7 +133,7 @@ const GridProducts = (props) => {
                     name="SortBy"
                     id="SortBy"
                     className="filters-toolbar__input filters-toolbar__input--sort"
-                    value="1"
+                    value={sort}
                     onChange={sortHandler}
                   >
                     <option value="1">Price, low to high</option>

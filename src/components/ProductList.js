@@ -49,9 +49,9 @@ const ProductList = (props) => {
   useEffect(() => {
     document.body.classList.add("template-collection");
 
-    getProducts(1, "", 1, 6).then((items) => {
-      setProducts(items);
-      getDistinctSizeAndColor(items);
+    getProducts(2, "", 1, 6).then((item) => {
+      setProducts(item.reqItems);
+      getDistinctSizeAndColor(item.reqItems);
     });
   }, []);
 
@@ -140,12 +140,9 @@ const ProductList = (props) => {
       {/*Collection Banner*/}
       <div className="collection-header">
         <div className="collection-hero">
-          <div className="collection-hero__image">
-          </div>
+          <div className="collection-hero__image"></div>
           <div className="collection-hero__title-wrapper">
-            <h1 className="collection-hero__title page-width">
-              Product List
-            </h1>
+            <h1 className="collection-hero__title page-width">Product List</h1>
           </div>
         </div>
       </div>
@@ -179,7 +176,12 @@ const ProductList = (props) => {
 
               {/*Banner*/}
               <div className="sidebar_widget static-banner">
-                <img src={require("../images/ProductList/fashionModel.jpg").default} alt="sidebar image" />
+                <img
+                  src={
+                    require("../images/ProductList/fashionModel.jpg").default
+                  }
+                  alt="sidebar image"
+                />
               </div>
               {/*Banner*/}
               {/*Information*/}
@@ -189,9 +191,12 @@ const ProductList = (props) => {
                 </div>
                 <div className="widget-content">
                   <p>
-                    Use this text to share information about your brand with
-                    your customers. Describe a product, share announcements, or
-                    welcome customers to your store.
+                    this is simply dummy text, this is simply dummy text, this
+                    is simply dummy text, this is simply dummy text, this is
+                    simply dummy text, this is simply dummy text, this is simply
+                    dummy text, this is simply dummy text, this is simply dummy
+                    text, this is simply dummy text, this is simply dummy text,
+                    this is simply dummy text, this is simply dummy text.
                   </p>
                 </div>
               </div>
@@ -201,9 +206,7 @@ const ProductList = (props) => {
           {/*End Sidebar*/}
           {/*Main Content*/}
           <div className="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
-            <div className="category-description">
-              {description}
-            </div>
+            <div className="category-description">{description}</div>
             <hr />
             <GridProducts filter={productFilter} />
           </div>
