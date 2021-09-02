@@ -61,6 +61,9 @@ function App() {
             <Route path={hostPath + "/About"}>
               <About />
             </Route>
+            <Route path="*">
+              <Redirect to="/" />
+            </Route>
           </Switch>
         </div>
 
