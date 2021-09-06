@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.f7d4409a.chunk.css",
-    "main.js": "/static/js/main.1306457f.chunk.js",
-    "main.js.map": "/static/js/main.1306457f.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.1044ad40.js",
-    "runtime-main.js.map": "/static/js/runtime-main.1044ad40.js.map",
+    "main.js": "/static/js/main.60c1218f.chunk.js",
+    "main.js.map": "/static/js/main.60c1218f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.6b24e098.js",
+    "runtime-main.js.map": "/static/js/runtime-main.6b24e098.js.map",
     "static/css/2.47ffbe8d.chunk.css": "/static/css/2.47ffbe8d.chunk.css",
-    "static/js/2.cb3275eb.chunk.js": "/static/js/2.cb3275eb.chunk.js",
-    "static/js/2.cb3275eb.chunk.js.map": "/static/js/2.cb3275eb.chunk.js.map",
-    "static/js/3.1d0e5b7b.chunk.js": "/static/js/3.1d0e5b7b.chunk.js",
-    "static/js/3.1d0e5b7b.chunk.js.map": "/static/js/3.1d0e5b7b.chunk.js.map",
+    "static/js/2.388f8df7.chunk.js": "/static/js/2.388f8df7.chunk.js",
+    "static/js/2.388f8df7.chunk.js.map": "/static/js/2.388f8df7.chunk.js.map",
+    "static/js/3.6829b53f.chunk.js": "/static/js/3.6829b53f.chunk.js",
+    "static/js/3.6829b53f.chunk.js.map": "/static/js/3.6829b53f.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.47ffbe8d.chunk.css.map": "/static/css/2.47ffbe8d.chunk.css.map",
     "static/css/main.f7d4409a.chunk.css.map": "/static/css/main.f7d4409a.chunk.css.map",
-    "static/js/2.cb3275eb.chunk.js.LICENSE.txt": "/static/js/2.cb3275eb.chunk.js.LICENSE.txt",
+    "static/js/2.388f8df7.chunk.js.LICENSE.txt": "/static/js/2.388f8df7.chunk.js.LICENSE.txt",
     "static/media/about.jpg": "/static/media/about.011015b2.jpg",
     "static/media/bulletJournal.png": "/static/media/bulletJournal.b41e4697.png",
     "static/media/coding.jpg": "/static/media/coding.98c13e56.jpg",
@@ -34,13 +34,14 @@
     "static/media/productDemo_green.png": "/static/media/productDemo_green.97c47a52.png",
     "static/media/productDemo_red.png": "/static/media/productDemo_red.8dbd19e5.png",
     "static/media/reactjs.png": "/static/media/reactjs.3a5c90a6.png",
+    "static/media/sideImg.jpg": "/static/media/sideImg.11373c64.jpg",
     "static/media/tape.jpg": "/static/media/tape.53a2ac1e.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.1044ad40.js",
+    "static/js/runtime-main.6b24e098.js",
     "static/css/2.47ffbe8d.chunk.css",
-    "static/js/2.cb3275eb.chunk.js",
+    "static/js/2.388f8df7.chunk.js",
     "static/css/main.f7d4409a.chunk.css",
-    "static/js/main.1306457f.chunk.js"
+    "static/js/main.60c1218f.chunk.js"
   ]
 }
