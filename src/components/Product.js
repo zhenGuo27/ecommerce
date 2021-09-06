@@ -628,7 +628,7 @@ const Product = (props) => {
         </div>
       )}
 
-      <div className="hide">
+      {/* <div className="hide">
         <div id="sizechart">
           <h3>WOMEN'S BODY SIZING CHART</h3>
           <table>
@@ -725,10 +725,10 @@ const Product = (props) => {
             </tbody>
           </table>
           <div style={{ paddingLeft: "30px" }}>
-            <img src={require("../images/size.jpg")} alt="" />
+            <img src={require("../images/size.jpg").default} alt="" />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="hide"></div>
       <div className="pswp" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="pswp__bg"></div>

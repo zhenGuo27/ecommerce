@@ -7,7 +7,6 @@ import Header from "./components/Header";
 import MobileMenu from "./components/MobileMenu";
 import Footer from "./components/Footer.js";
 import ScrollTop from "./components/ScrollTop";
-import NewsletterPopup from "./components/NewsletterPopup";
 import Home from "./components/Home";
 import ProductList from "./components/ProductList";
 import Product from "./components/Product";
@@ -68,7 +67,6 @@ function App() {
         </div>
 
         <ScrollTop />
-        <NewsletterPopup />
         <CartModal />
         <LoginModal />
       </div>
