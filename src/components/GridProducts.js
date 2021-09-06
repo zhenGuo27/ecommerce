@@ -198,7 +198,6 @@ const GridProducts = (props) => {
                           {/* image */}
                           <img
                             className="primary blur-up lazyload"
-                            data-src={require("../" + item.largeImgs[0].src).default}
                             src={require("../" + item.largeImgs[0].src).default}
                             alt={item.title}
                             title={item.title}

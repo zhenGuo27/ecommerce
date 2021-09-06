@@ -78,8 +78,6 @@ export const insertBill = async (bill, updateCartFn, updatedUserCart) => {
     updateCartFn(updatedUserCart, false);
   }
 
-  console.log("insertBill", data);
-
   return data;
 };
 

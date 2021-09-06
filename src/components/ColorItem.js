@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const ColorItem = (props) => {
   const available = props.available ? "available" : "";
   const classes = ` swatch-element color ${props.value

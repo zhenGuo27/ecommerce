@@ -41,8 +41,8 @@ const Header = (props) => {
             <Link to={hostPath}>
               <img
                 src={logo}
-                alt="Belle Multipurpose Html Template"
-                title="Belle Multipurpose Html Template"
+                alt="logo"
+                title="logo"
               />
             </Link>
           </div>
@@ -81,8 +81,8 @@ const Header = (props) => {
               <Link to={hostPath}>
                 <img
                   src={logo}
-                  alt="Belle Multipurpose Html Template"
-                  title="Belle Multipurpose Html Template"
+                  alt="logo"
+                  title="logo"
                 />
               </Link>
             </div>

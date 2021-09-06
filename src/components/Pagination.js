@@ -5,7 +5,7 @@ const Pagination = (props) => {
     for (let i = start; i <= end; i++) {
       items.push(
         <li
-          className={i === props.page.currentPage ? "active" : ""}
+          className={i === props.page.currentPage ? "active cursorPointer" : "cursorPointer"}
           key={"pageItem_" + i}
           onClick={clickHandler.bind(null, props.pageSize, i)}
         >

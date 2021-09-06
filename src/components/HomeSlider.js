@@ -52,7 +52,6 @@ const HomeSlider = () => {
           <div className="slide slideshow--medium" key={item.title}>
             <div>
               <img
-                data-src={item.img}
                 src={item.img}
                 alt={item.title}
                 title={item.title}

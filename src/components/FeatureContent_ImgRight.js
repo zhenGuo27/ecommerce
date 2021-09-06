@@ -23,7 +23,6 @@ const FeatureContent_ImgRight = (props) => {
             </div>
             <div className="col-12 col-sm-12 col-md-6 feature-row__item text-center">
               <img
-                data-src={props.img}
                 src={props.img}
                 alt={props.title}
                 title={props.title}

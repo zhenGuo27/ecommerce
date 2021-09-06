@@ -23,8 +23,6 @@ const Login = (props) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("post response", response);
   
     if (!response.ok) {
       throw new Error("Something went wrong!");
@@ -35,8 +33,6 @@ const Login = (props) => {
       setSubmitMsg(data.content);
     } else {
       const responseData = JSON.parse(data.content);
-      console.log("responseData", responseData);
-
       const expirationTime = new Date(
         new Date().getTime() + responseData.expiration * 1000
       );

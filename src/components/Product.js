@@ -9,7 +9,6 @@ import { updateUserCart, updateCartItems } from "../actions/user-action";
 import ProductRate from "./ProductRate";
 import ColorItems from "./ColorItems";
 import SizeItems from "./SizeItems";
-import ProductSlider from "./ProductSlider";
 import parse from "html-react-parser";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
@@ -393,7 +392,6 @@ const Product = (props) => {
               key={`gallery_${index}`}
             >
               <img
-                data-src={require("../" + item).default}
                 src={require("../" + item).default}
                 alt={productData.title}
               />
@@ -610,126 +608,11 @@ const Product = (props) => {
                 </div>
               </div>
             </div>
-            {/*End Product Tabs*/}
-
-            {/* <ProductSlider
-              slider="relatedSlider"
-              title="Related Products"
-              subtitle="You can stop autoplay, increase/decrease aniamtion speed and number of grid to show and products from store admin."
-            /> */}
-
-            {/* <ProductSlider
-              slider="recentlySlider"
-              title="Recently Viewed Product"
-              subtitle="You can manage this section from store admin as describe in above section"
-            /> */}
+            {/*End Product Tabs*/}           
           </div>
           {/*#ProductSection-product-template*/}
         </div>
       )}
-
-      {/* <div className="hide">
-        <div id="sizechart">
-          <h3>WOMEN'S BODY SIZING CHART</h3>
-          <table>
-            <tbody>
-              <tr>
-                <th>Size</th>
-                <th>XS</th>
-                <th>S</th>
-                <th>M</th>
-                <th>L</th>
-                <th>XL</th>
-              </tr>
-              <tr>
-                <td>Chest</td>
-                <td>31" - 33"</td>
-                <td>33" - 35"</td>
-                <td>35" - 37"</td>
-                <td>37" - 39"</td>
-                <td>39" - 42"</td>
-              </tr>
-              <tr>
-                <td>Waist</td>
-                <td>24" - 26"</td>
-                <td>26" - 28"</td>
-                <td>28" - 30"</td>
-                <td>30" - 32"</td>
-                <td>32" - 35"</td>
-              </tr>
-              <tr>
-                <td>Hip</td>
-                <td>34" - 36"</td>
-                <td>36" - 38"</td>
-                <td>38" - 40"</td>
-                <td>40" - 42"</td>
-                <td>42" - 44"</td>
-              </tr>
-              <tr>
-                <td>Regular inseam</td>
-                <td>30"</td>
-                <td>30½"</td>
-                <td>31"</td>
-                <td>31½"</td>
-                <td>32"</td>
-              </tr>
-              <tr>
-                <td>Long (Tall) Inseam</td>
-                <td>31½"</td>
-                <td>32"</td>
-                <td>32½"</td>
-                <td>33"</td>
-                <td>33½"</td>
-              </tr>
-            </tbody>
-          </table>
-          <h3>MEN'S BODY SIZING CHART</h3>
-          <table>
-            <tbody>
-              <tr>
-                <th>Size</th>
-                <th>XS</th>
-                <th>S</th>
-                <th>M</th>
-                <th>L</th>
-                <th>XL</th>
-                <th>XXL</th>
-              </tr>
-              <tr>
-                <td>Chest</td>
-                <td>33" - 36"</td>
-                <td>36" - 39"</td>
-                <td>39" - 41"</td>
-                <td>41" - 43"</td>
-                <td>43" - 46"</td>
-                <td>46" - 49"</td>
-              </tr>
-              <tr>
-                <td>Waist</td>
-                <td>27" - 30"</td>
-                <td>30" - 33"</td>
-                <td>33" - 35"</td>
-                <td>36" - 38"</td>
-                <td>38" - 42"</td>
-                <td>42" - 45"</td>
-              </tr>
-              <tr>
-                <td>Hip</td>
-                <td>33" - 36"</td>
-                <td>36" - 39"</td>
-                <td>39" - 41"</td>
-                <td>41" - 43"</td>
-                <td>43" - 46"</td>
-                <td>46" - 49"</td>
-              </tr>
-            </tbody>
-          </table>
-          <div style={{ paddingLeft: "30px" }}>
-            <img src={require("../images/size.jpg").default} alt="" />
-          </div>
-        </div>
-      </div> */}
-      <div className="hide"></div>
       <div className="pswp" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="pswp__bg"></div>
         <div className="pswp__scroll-wrap">

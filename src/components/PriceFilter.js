@@ -85,10 +85,7 @@ const PriceFilter = (props) => {
                 placeholder="$0 - $600"
               />
             </p>
-          </div>
-          {/* <div className="col-6 text-right margin-25px-top">
-            <button className="btn btn-secondary btn--small">filter</button>
-          </div> */}
+          </div>          
         </div>
       </form>
     </div>

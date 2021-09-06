@@ -96,7 +96,6 @@ const Cart = (props) => {
   };
 
   const checkAgreeCondition = (event) => {
-    console.log("checkbox", event.target.checked);
     if (!event.target.checked) {
       setErrorMsg("please check condition.");
     } else {

@@ -27,15 +27,12 @@ const ForgetPassword = (props) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("post UpdateUserInfo", response);
   
     if (!response.ok) {
       throw new Error("Something went wrong!");
     }
   
     const data = await response.json();
-    console.log("update_data", data);
   };
 
   return (

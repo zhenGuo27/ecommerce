@@ -43,7 +43,6 @@ const ThreeColumnProducts = (props) => {
 
   useEffect(()=> {
     getTags(columnTag).then((items) => {
-      console.log("Tags", items);
       setColumnTagInfo(items);
     });
   }, []);
