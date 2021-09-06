@@ -1,4 +1,5 @@
 import $ from "jquery";
+import slick from "slick-carousel";
 import { useEffect } from "react";
 import banner1 from "../images/homeSlider/html.jpg"
 import banner2 from "../images/homeSlider/coding.jpg"

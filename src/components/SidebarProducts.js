@@ -22,7 +22,7 @@ const SidebarProducts = (props) => {
                   <div className="grid__item" key={item.id} onClick={toProduct.bind(null, item.id)}>
                     <div className="mini-list-item">
                       <div className="mini-view_image">
-                        <a className="grid-view-item__link" href="#">
+                        <a className="grid-view-item__link">
                           <img
                             className="grid-view-item__image"
                             src={require("../" + item.largeImgs[0].src).default}
@@ -31,7 +31,7 @@ const SidebarProducts = (props) => {
                         </a>
                       </div>
                       <div className="details">
-                        <a className="grid-view-item__title" href="#">
+                        <a className="grid-view-item__title">
                           {item.title}
                         </a>
                         <div className="grid-view-item__meta">

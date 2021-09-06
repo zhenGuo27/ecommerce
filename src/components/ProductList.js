@@ -56,6 +56,7 @@ const ProductList = (props) => {
   }, []);
 
   useEffect(()=> {
+    window.scrollTo(0, 0);
     // when url change update product data
     productFilterHandler();
 

@@ -26,7 +26,7 @@ const TopHeader = () => {
         <div className="d-flex justify-content-end">
           <span className="user-menu d-block d-lg-none">
             <i className="anm anm-user-al" aria-hidden="true"></i>
-            <ul class="customer-links list-inline">
+            <ul className="customer-links list-inline">
               <li>
                 {!authCtx.isLoggedIn && (
                   <Link to={hostPath + "/Login"}>Login</Link>
