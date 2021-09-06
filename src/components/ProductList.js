@@ -179,7 +179,7 @@ const ProductList = (props) => {
               <div className="sidebar_widget static-banner">
                 <img
                   src={
-                    require("../images/ProductList/fashionModel.jpg").default
+                    require("../images/ProductList/sideImg.jpg").default
                   }
                   alt="sidebar image"
                 />
