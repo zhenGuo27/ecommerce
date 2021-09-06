@@ -1,4 +1,5 @@
 import $ from "jquery";
+import "bootstrap";
 import React, { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { useHistory } from "react-router-dom";

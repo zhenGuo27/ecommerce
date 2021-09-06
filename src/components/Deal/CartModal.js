@@ -1,4 +1,5 @@
 import $ from "jquery";
+import "bootstrap";
 
 const CartModal = () => {
   const modalHandler = () => {

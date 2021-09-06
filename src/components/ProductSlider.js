@@ -1,4 +1,5 @@
 import $ from "jquery";
+import "bootstrap";
 import { useEffect, useState, Fragment } from "react";
 import slick from "slick-carousel";
 import QuickViewPopup from "./QuickViewPopup";

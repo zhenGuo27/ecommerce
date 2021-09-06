@@ -1,4 +1,5 @@
 import $ from "jquery";
+import "bootstrap";
 import { Fragment, useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../../store/auth-context";
 import { updateUserCart } from "../../actions/user-action";

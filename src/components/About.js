@@ -55,6 +55,7 @@ const About = (props) => {
         <div className="row">
           <div className="col-12 col-sm-12 col-md-12 col-lg-12 mb-12">
             <img
+              className="aboutImg"
               src={require("../images/About/about.jpg").default}
               alt="about"
             />
