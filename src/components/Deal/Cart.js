@@ -62,6 +62,7 @@ const Cart = (props) => {
     if (agreeRef.current.checked && userCartItems.length !== 0) {
       updateUserCart(cartData).then((data) => {
         if (data.returnCode !== -1) {
+          authCtx.updateCartData(cartData, false);
           history.replace(hostPath + "/Checkout");
         }
       });
@@ -238,7 +239,7 @@ const Cart = (props) => {
                 <tfoot>
                   <tr>
                     <td colSpan="6" className="text-left">
-                      <NavLink to={hostPath} className="btn--link cart-continue">
+                      <NavLink to={hostPath + "/ProductList"} className="btn--link cart-continue">
                         <i className="icon icon-arrow-circle-left"></i> Continue
                         shopping
                       </NavLink>
