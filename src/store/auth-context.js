@@ -135,8 +135,8 @@ export const AuthContextProvider = (props) => {
           newCartItem = [...item.cartItems];
         }
 
-        newCartItem.forEach((element) => {
-          const exist = item.cartItems.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
+        item.cartItems.forEach((element) => {
+          const exist = newCartItem.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
           if (!exist) {
             newCartItem.push(element);
           } else {
@@ -155,9 +155,13 @@ export const AuthContextProvider = (props) => {
         token: userToken,
         cartItems: newCartItem,
       };
-      updateUserCart(newUserCartData);
-      setUserCart(newUserCartData);
-      localStorage.setItem("userCart", JSON.stringify(newUserCartData));
+
+      updateUserCart(newUserCartData).then((data)=> {
+        if (data.returnCode !== -1) {
+          setUserCart(newUserCartData);
+          localStorage.setItem("userCart", JSON.stringify(newUserCartData));
+        }
+      });      
     });
   };
 

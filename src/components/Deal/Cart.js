@@ -149,10 +149,10 @@ const Cart = (props) => {
                     return (
                       <tr
                         className="cart__row border-bottom line1 cart-flex border-top"
-                        key={`cartItem_${item.productId}_${item.sku.id}`}
+                        key={`cartItem_${item.productId}_${item.sku.id}_${index}`}
                       >
                         <td className="cart__image-wrapper cart-flex-item">
-                          <a href="#">
+                          <a>
                             <img
                               className="cart__image"
                               src={require("../../" + item.img).default}
@@ -162,7 +162,7 @@ const Cart = (props) => {
                         </td>
                         <td className="cart__meta small--text-left cart-flex-item">
                           <div className="list-view-item__title">
-                            <a href="#">{item.title}</a>
+                            <a>{item.title}</a>
                           </div>
 
                           <div className="cart__meta-text">
