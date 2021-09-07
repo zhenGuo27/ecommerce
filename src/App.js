@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
 import { hostPath } from "./actions/sharedConst";
 import SearchFormDrawer from "./components/SearchFormDrawer";
@@ -17,11 +17,25 @@ import Register from "./components/Auth/Register";
 import CartModal from "./components/Deal/CartModal";
 import LoginModal from "./components/Deal/LoginModal";
 import About from "./components/About";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import ForgetPassword from "./components/ForgetPassword";
+import { initGA, logPageView } from "./utils/analytics";
+
+const GA_INITIALIZED  = false;
 
 function App() {
+  const location = useLocation();
   const headerType = "ProductList";
+
+  useEffect(() => {
+    if (!GA_INITIALIZED) {
+      initGA();
+    }
+  }, []);
+
+  useEffect(() => {
+    logPageView();
+  }, [location]);
 
   return (
     <Fragment>
