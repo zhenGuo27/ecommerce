@@ -139,13 +139,6 @@ export const AuthContextProvider = (props) => {
           const exist = newCartItem.some((cItem) => cItem.productId === element.productId && cItem.sku.id === element.sku.id);
           if (!exist) {
             newCartItem.push(element);
-          } else {
-            const nIndex = newCartItem.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
-            const cIndex = item.cartItems.findIndex(x=> x.productId === element.productId && x.sku.id === element.sku.id);
-
-            newCartItem[nIndex].unitPrice = item.cartItems[cIndex].unitPrice;
-            newCartItem[nIndex].quantity = item.cartItems[cIndex].quantity;
-            newCartItem[nIndex].subtotal = item.cartItems[cIndex].quantity * item.cartItems[cIndex].unitPrice;
           }
         });
       }
