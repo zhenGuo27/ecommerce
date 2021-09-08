@@ -21,17 +21,11 @@ import { Fragment, useEffect } from "react";
 import ForgetPassword from "./components/ForgetPassword";
 import { initGA, logPageView } from "./utils/analytics";
 
-const GA_INITIALIZED  = false;
+initGA();
 
 function App() {
   const location = useLocation();
   const headerType = "ProductList";
-
-  useEffect(() => {
-    if (!GA_INITIALIZED) {
-      initGA();
-    }
-  }, []);
 
   useEffect(() => {
     logPageView();
